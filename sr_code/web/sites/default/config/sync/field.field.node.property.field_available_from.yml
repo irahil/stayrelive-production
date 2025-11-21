@@ -1,0 +1,21 @@
+uuid: 74939f42-bf2f-47f0-b44c-b4244c3c2d8c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_available_from
+    - node.type.property
+  module:
+    - datetime
+id: node.property.field_available_from
+field_name: field_available_from
+entity_type: node
+bundle: property
+label: 'Available From'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

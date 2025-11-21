@@ -1,0 +1,29 @@
+uuid: 50a50932-29c2-4d97-844a-63cac6cdbb3a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_furnishing_status
+    - node.type.property
+    - taxonomy.vocabulary.furnished_status
+id: node.property.field_furnishing_status
+field_name: field_furnishing_status
+entity_type: node
+bundle: property
+label: 'Furnishing Status'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      furnished_status: furnished_status
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -1,0 +1,21 @@
+uuid: dfd08909-b071-4096-9e4c-65183f7237d7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_total_bathrooms
+    - node.type.property
+  module:
+    - options
+id: node.property.field_total_bathrooms
+field_name: field_total_bathrooms
+entity_type: node
+bundle: property
+label: 'Total Bathrooms'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_integer

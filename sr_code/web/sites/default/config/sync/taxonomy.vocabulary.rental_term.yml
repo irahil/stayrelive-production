@@ -1,0 +1,8 @@
+uuid: 086bcd28-068a-421a-bbd0-b28e1d00fc7b
+langcode: en
+status: true
+dependencies: {  }
+name: 'Rental Term'
+vid: rental_term
+description: ''
+weight: 0

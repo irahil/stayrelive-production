@@ -1,0 +1,21 @@
+uuid: 5327b1d4-7921-4d7c-be47-ab873a79de67
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_right_side_text
+    - paragraphs.paragraphs_type.50_50_text
+  module:
+    - text
+id: paragraph.50_50_text.field_right_side_text
+field_name: field_right_side_text
+entity_type: paragraph
+bundle: 50_50_text
+label: 'Right Side Text'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

@@ -1,0 +1,29 @@
+uuid: e3b7dc8e-391e-40e7-973e-327056383156
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_pricing_frequency
+    - node.type.property
+    - taxonomy.vocabulary.pricing_frequency
+id: node.property.field_pricing_frequency
+field_name: field_pricing_frequency
+entity_type: node
+bundle: property
+label: 'Pricing Frequency'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      pricing_frequency: pricing_frequency
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -1,0 +1,477 @@
+<?php
+use Symfony\Component\HttpFoundation;
+use Drupal\Core\Url;
+use Drupal\common_utilities\Utilities\commonUtil;
+use Drupal\user\Entity\User;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Template\TwigEnvironment;
+
+/**
+ * Implements hook_theme().
+ *
+ * We use hook_theme to define the templates used.
+ */
+function sr_theme($existing, $type, $theme, $path)
+{
+  return [
+    'sr_search_block' => [
+      'render element' => 'form',
+    ],
+    'sr_contact_block' => [
+      'variables' => [
+        'text' => '',
+      ],
+    ],
+    'sr_property_price_form' => [
+      'render element' => 'form',
+    ],
+    'sr_property_search_form' => [
+      'render element' => 'form',
+    ],
+    'sr_property_prefix_block' => [
+      'variables' => [
+        'text' => '',
+      ],
+    ],
+    'sr_property_suffix_block' => [
+      'variables' => [
+        'text' => '',
+      ],
+    ],
+    'sr_booking_form' => [
+      'render element' => 'form',
+    ],
+    'sr_booking_edit_form' => [
+      'render element' => 'form',
+    ],
+    'sr_booking_search_form' => [
+      'render element' => 'form',
+    ],
+    'contact_message_contact_us_form' => [
+      'render element' => 'form',
+    ],
+    'user_form' => [
+      'render element' => 'form',
+    ],
+    'sr_email_contact_us_form_internal' => [
+      'variables' => [
+        'first_name' => NULL,
+        'last_name' => NULL,
+        'email' => NULL,
+        'booking_id' => NULL,
+        'message_text' => NULL,
+        'date_time' => NULL,
+      ],
+      'template' => 'emails/sr-email-contact-us-form-internal',
+      'path' => \Drupal::service('extension.list.module')->getPath('sr') . '/templates',
+    ],
+    'sr_email_contact_us_form_user' => [
+      'variables' => [
+        'first_name' => NULL,
+        'last_name' => NULL,
+        'email' => NULL,
+        'booking_id' => NULL,
+        'message_text' => NULL,
+      ],
+      'template' => 'emails/sr-email-contact-us-form-user',
+      'path' => \Drupal::service('extension.list.module')->getPath('sr') . '/templates',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function sr_form_user_register_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id)
+{
+  $country_code = \Drupal::service('session')->get('country_code', 'default');
+  \Drupal::logger('sr_user_register')->notice('Country code used: ' . $country_code);
+
+  $form['field_phone_code']['widget']['#options']['_none'] = "Select";
+  $form['actions']['submit']['#value'] = 'Register';
+
+  $form['country_code'] = [
+    '#type' => 'hidden',
+    '#title' => "Country Code",
+    '#default_value' => $country_code,
+  ];
+
+  // Get the current route name
+  $current_route_name = \Drupal::routeMatch()->getRouteName();
+
+  if (in_array(strtolower($country_code), ['ae', 'cz']) || $current_route_name == "agent_registration.register") {
+    $form['field_is_agent']['widget']['value']['#default_value'] = 1;
+  } else {
+    $fields_to_hide = [
+      'field_agency_name',
+      'field_agent_contact_number',
+      'field_address',
+      'field_state',
+      'field_iata_status',
+      'field_company_registration_no',
+      'field_pin_code',
+      'field_registered_consultant_name',
+      'field_registered_consultant_emai',
+      'field_registered_consultant_cont',
+      'field_registered_consultant_mobi',
+      'field_finance_manager_name',
+      'field_finance_manager_contact',
+      'field_finance_manager_email',
+      'field_agent_email_address',
+      'field_company_registration_certi',
+      'field_company_url',
+      'field_branch_name',
+    ];
+    foreach ($fields_to_hide as $field) {
+      if (isset($form[$field])) {
+        $form[$field]['#access'] = FALSE;
+      }
+    }
+  }
+  $form['field_is_agent']['#attributes']['class'][] = 'hidden';
+  $form['#cache']['contexts'][] = 'session';
+}
+
+function sr_form_user_login_form_alter(&$form, &$form_state, $form_id)
+{
+  $form['#submit'][] = 'sr_user_login_submit';
+}
+
+/**
+ * Form submission handler for user_login_form().
+ *
+ * Redirects the user to the dashboard after logging in.
+ */
+function sr_user_login_submit(&$form, \Drupal\Core\Form\FormStateInterface $form_state)
+{
+  $url = Url::fromRoute('<front>', array())->toString();
+  // Check if a destination was set, probably on an exception controller.
+  // @see \Drupal\user\Form\UserLoginForm::submitForm()
+  $request = \Drupal::service('request_stack')->getCurrentRequest();
+  if (!$request->request->has('destination')) {
+    \Drupal::messenger()->addStatus("Logged in successfully!\n");
+    commonUtil::my_goto_t2($url);
+  } else {
+    $request->query->set('destination', $request->request->get('destination'));
+  }
+}
+
+function sr_preprocess_page(array &$variables)
+{
+  // $customblock = \Drupal::service('plugin.manager.block')->createInstance('sr_search_block', []);
+  // $variables['content']['sr_search_block'] = $customblock->build();
+}
+
+
+/**
+ * Implements hook_mail().
+ */
+function sr_mail($key, &$message, $params)
+{
+  $site_name = \Drupal::config('system.site')->get('name');
+  //$from = \Drupal::config('system.site')->get('mail');
+  $from = "book@stayrelive.com";
+  switch ($key) {
+    case 'booking':
+      $message['from'] = $from;
+      $message['subject'] = $params['subject'];
+      //$message['body'][] = htmlspecialchars($params['message'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+      $message['body'][] = $params['message'];
+      //$message['params']['files'] = $params['attachments'];
+      $message['headers']['Bcc'] = $params['Cc'];
+      $message['headers']['From'] = $site_name . '<' . $from . '>';
+      $message['headers']['Reply-To'] = $from;
+      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed; delsp=yes';
+      break;
+    case 'booking_confirm':
+      $message['from'] = $from;
+      $message['subject'] = $params['subject'];
+      //$message['body'][] = htmlspecialchars($params['message'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+      $message['body'][] = $params['message'];
+      //$message['params']['files'] = $params['attachments'];
+      $message['headers']['Bcc'] = $params['Cc'];
+      $message['headers']['From'] = $site_name . '<' . $from . '>';
+      $message['headers']['Reply-To'] = $from;
+      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed; delsp=yes';
+      break;
+    case 'dlp_alert':
+      $message['from'] = $from;
+      $message['subject'] = $params['subject'];
+      //$message['body'][] = htmlspecialchars($params['message'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+      $message['body'][] = $params['message'];
+      //$message['params']['files'] = $params['attachments'];
+      $message['headers']['Bcc'] = $params['Cc'];
+      $message['headers']['From'] = $site_name . '<' . $from . '>';
+      $message['headers']['Reply-To'] = $from;
+      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed; delsp=yes';
+      break;
+    case 'agent_pending_approval':
+      $user = $params['user'];
+      $message['subject'] = t('Account details for @name at @site (pending admin approval)', [
+        '@name' => $user->getDisplayName(),
+        '@site' => \Drupal::config('system.site')->get('name'),
+      ]);
+      $message['body'][] = t("Hi @name,\n\nThank you for registering as an agent. Your account is pending admin approval. You will receive another email once it's approved.\n\n-- @site Team", [
+        '@name' => $user->getDisplayName(),
+        '@site' => \Drupal::config('system.site')->get('name'),
+      ]);
+      break;
+    case 'contact_user_ack':
+      $message['subject'] = $params['subject'] ?? 'No Subject';
+      $message['body'][] = $params['body'] ?? '';
+      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8';
+      break;
+  }
+}
+
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function sr_form_contact_message_contact_us_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id)
+{
+  $current_user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+
+  if ($current_user) {
+    $email = $current_user->getEmail();
+    $first_name = $current_user->get('field_first_name')->value;
+    $last_name = $current_user->get('field_last_name')->value;
+    $form['field_first_name']['widget'][0]['value']['#default_value'] = $first_name;
+    $form['field_last_name']['widget'][0]['value']['#default_value'] = $last_name;
+    $form['field_email']['widget'][0]['value']['#default_value'] = $email;
+  }
+}
+
+
+/**
+ * Implements hook_preprocess_HOOK() for account menu.
+ */
+function sr_preprocess_menu__account(&$variables)
+{
+  // Get the country code from session
+  try {
+    $session = \Drupal::service('session');
+    $country_code = $session->get('country_code');
+  } catch (Exception $e) {
+    \Drupal::logger('sr_preprocess_menu__account')->error('Failed to retrieve session data: ' . $e->getMessage());
+    $country_code = 'default';
+  }
+  $variables['country_code'] = $country_code;
+  \Drupal::logger('sr_preprocess_menu__account')->notice("Menu country code: $country_code");
+  $variables['#cache']['contexts'][] = 'session';
+}
+
+/**
+ * Implement hook_preprocess_HOOK() for user form template.
+ */
+function sr_preprocess_form_user_login_form(&$variables)
+{
+  $country_code = \Drupal::request()->getSession()->get('country_code', 'default');
+  \Drupal::logger('country_code_login')->notice('Country code in preprocess: ' . $country_code);
+  $variables['country_code'] = $country_code;
+}
+
+/**
+ * Implements hook_mail_alter().
+ */
+function sr_mail_alter(&$message)
+{
+  // Check if this is a user-related email
+  if (isset($message['params']['account']) || isset($message['params']['user'])) {
+    $user = isset($message['params']['account']) ? $message['params']['account'] : $message['params']['user'];
+    
+    if ($user instanceof \Drupal\user\UserInterface && $user->hasField('field_is_agent')) {
+      $is_agent = (int)$user->get('field_is_agent')->value === 1;
+      // Block verification email for agents
+      if ($is_agent && $message['id'] === 'user_registrationpassword_register_confirmation_with_pass') {
+        $message['send'] = FALSE;
+      }
+      // Modify pending approval email for agents
+      if ($is_agent && $message['id'] === 'user_register_pending_approval') {
+        $message['to'] = 'testsharma220@gmail.com'; // Your admin email
+        $message['headers']['to'] = 'irahilshaikh@gmail.com';
+      }
+    }
+  }
+
+  // for contact form templete
+  if ($message['id'] === 'contact_page_mail') {
+    // Get the contact message entity from mail parameters.
+    if (isset($message['params']['contact_message']) && $message['params']['contact_message'] instanceof \Drupal\contact\MessageInterface) {
+      $contact_message = $message['params']['contact_message'];
+
+      // Manually get the field values.
+      $subject = $contact_message->get('field_subject')->value ?? '';
+      $message_text = $contact_message->get('message')->value ?? '';
+      $how_to_contact = $contact_message->get('field_how_to_contact')->value ?? '';
+      $first_name = $contact_message->get('field_first_name')->value ?? '';
+      $last_name = $contact_message->get('field_last_name')->value ?? '';
+      $email = $contact_message->get('field_email')->value ?? '';
+      $booking_id = $contact_message->get('field_booking_id')->value ?? '';
+      $phone_number = '';
+      $date_time = \Drupal::service('date.formatter')->format(time(), 'custom', 'd M Y, H:i');
+
+      // Build render array
+      $build = [
+        '#theme' => 'sr_email_contact_us_form_internal',
+        '#first_name' => Html::escape($first_name),
+        '#last_name' => Html::escape($last_name),
+        '#email' => Html::escape($email),
+        '#booking_id' => Html::escape($booking_id),
+        '#message_text' => Html::escape($message_text),
+        '#phone_number' => Html::escape($phone_number),
+        '#date_time' => Html::escape($date_time),
+      ];
+
+      $message['subject'] = 'New Customer Query for Review [#' . $booking_id . ']';
+      $html_body = \Drupal::service('renderer')->renderPlain($build);
+      $message['body'] = [$html_body];
+      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8';
+
+      // Log internal email
+      \Drupal::logger('sr')->info('Internal email prepared for contact form. To: @to, Subject: @subject', [
+        '@to' => $message['to'] ?? 'Not available',
+        '@subject' => $message['subject'],
+      ]);
+
+      // USER EMAIL (Auto-response)
+      $build_user = [
+        '#theme' => 'sr_email_contact_us_form_user',
+        '#first_name' => Html::escape($first_name),
+        '#last_name' => Html::escape($last_name),
+        '#email' => Html::escape($email),
+        '#booking_id' => Html::escape($booking_id),
+        '#message_text' => Html::escape($message_text),
+      ];
+
+      $user_html_body = \Drupal::service('renderer')->renderPlain($build_user);
+
+      $mailManager = \Drupal::service('plugin.manager.mail');
+      $module = 'sr';
+      $key = 'contact_user_ack'; 
+      $langcode = \Drupal::currentUser()->getPreferredLangcode();
+
+      $params = [
+        'subject' => "Confirmation: We've Received Your Query [# $booking_id ]",
+        'body' => $user_html_body,
+      ];
+
+      $mailManager->mail($module, $key, $email, $langcode, $params, NULL, TRUE);
+      // Log user email
+      \Drupal::logger('sr')->info('Auto-response email sent to user. To: @to, Subject: @subject', [
+        '@to' => $email,
+        '@subject' => $params['subject'],
+      ]);
+    }
+  }
+}
+
+/**
+ * Implements hook_user_insert().
+ */
+function sr_user_insert(\Drupal\user\UserInterface $user) {
+  if (!empty($user->field_is_agent->value) && $user->field_is_agent->value == 1) {
+    // Send the pending approval email
+    \Drupal::service('plugin.manager.mail')->mail('sr', 'agent_pending_approval', $user->getEmail(), $user->getPreferredLangcode(), [
+      'user' => $user,
+    ]);
+    // Set a session flag to show custom message
+    \Drupal::request()->getSession()->set('sr_agent_registration', TRUE);
+  }
+}
+
+/**
+ * Implements hook_page_attachments_alter().
+ */
+function sr_page_attachments_alter(array &$attachments) {
+  $session = \Drupal::request()->getSession();
+  if ($session && $session->get('sr_agent_registration')) {
+    // Get all status messages
+    $messages = \Drupal::messenger()->messagesByType('status');
+    
+    // Filter out the default registration message
+    $filtered_messages = array_filter((array) $messages, function($message) {
+      return strpos($message, 'A welcome message with further instructions') === FALSE;
+    });
+    
+    // Clear all status messages
+    \Drupal::messenger()->deleteByType('status');
+    
+    // Add our custom message
+    \Drupal::messenger()->addStatus(t('Thank you for applying for an account. Your account is currently pending approval by the site administrator. In the meantime, a welcome message with further instructions has been sent to your email address.'));
+    
+    // Add back any other status messages that weren't the default one
+    foreach ($filtered_messages as $message) {
+      \Drupal::messenger()->addStatus($message);
+    }
+    
+    // Clear our session flag
+    $session->remove('sr_agent_registration');
+  }
+}
+
+/**
+ * Implements hook_user_presave().
+ */
+function sr_user_presave(\Drupal\user\UserInterface $user)
+{
+  if (!$user->isNew()) {
+    return;
+  }
+
+  // If "is_agent" is 1, set status to inactive.
+  if (!empty($user->field_is_agent->value) && $user->field_is_agent->value == 1) {
+    $user->set('status', 0); // User will require admin approval.
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function sr_form_user_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $current_user = \Drupal::currentUser();
+  $roles = $current_user->getRoles();
+
+  if (in_array('authenticated', $roles) &&
+      !in_array('administrator', $roles) &&
+      !in_array('sr_admin', $roles)) {
+
+    $fields_to_hide = [
+      'field_is_agent',
+      'field_agency_name',
+      'field_agent_contact_number',
+      'field_agent_email_address',
+      'field_branch_name',
+      'field_iata_status',
+    ];
+    foreach ($fields_to_hide as $field_name) {
+      if (isset($form[$field_name])) {
+        $form[$field_name]['#access'] = FALSE;
+      }
+    }
+    if (isset($form['social_auth'])) {
+      $form['social_auth']['#access'] = FALSE;
+    }
+    if (isset($form['social_auth_links'])) {
+      $form['social_auth_links']['#access'] = FALSE;
+    }
+    
+    if (isset($form['account']['pass'])) {
+      $form['account']['pass']['#access'] = FALSE;
+    }
+    if (isset($form['account']['current_pass'])) {
+      $form['account']['current_pass']['#access'] = FALSE;
+    }
+    if (isset($form['account']['mail'])) {
+      $form['account']['mail']['#attributes']['readonly'] = 'readonly';
+      $form['account']['mail']['#disabled'] = TRUE; 
+    }
+    if (isset($form['account']['mail'])) {
+      $form['account']['mail']['#description'] = t('This email is linked with your Google account and cannot be changed.');
+    }
+  }
+}
+

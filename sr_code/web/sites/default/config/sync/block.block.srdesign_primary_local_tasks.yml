@@ -1,0 +1,22 @@
+uuid: 7e9ee65b-549f-4d37-8c6b-24665410aaea
+langcode: en
+status: true
+dependencies:
+  theme:
+    - srdesign
+_core:
+  default_config_hash: nGE3EoPQQaQCuqTUtZgw0-KIzmrqdKDzdNQf2JyPUt4
+id: srdesign_primary_local_tasks
+theme: srdesign
+region: navigation
+weight: -4
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: 'Primary tabs'
+  label_display: '0'
+  provider: core
+  primary: true
+  secondary: false
+visibility: {  }

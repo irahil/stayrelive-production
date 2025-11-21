@@ -1,0 +1,11 @@
+.webform-wrapper-contact-us {
+    max-width: 1400px;
+    margin: auto !important;
+    .js-form-wrapper {
+        flex-direction: column;
+        gap: 1.6rem;
+    }
+    @media (max-width: 768px) {
+        margin: auto 0.625rem;
+    }
+}

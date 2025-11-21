@@ -1,0 +1,30 @@
+<div class="header-filter " id="nav_search_bar" style="position:absolute; left:50%; top:30px; transform:translate(-50%,0%)">
+<ul class="">
+   <li id='cityBtn'><a href="#">City</a></li>
+   <li id='dateBtn'><a href="#">Date Range</a></li>
+   <li id='adultsBtn'><a href="#">Adults</a></li>
+   <li id='kidsBtn'><a href="#">Kids</a></li>
+</ul>
+</div>
+
+<ul class="nav flex-row align-items-center list-unstyled ms-auto currency-select">
+<li class="nav-item dropdown ms-0 ms-md-4">
+   <a  id="block-currencies-menu" class="nav-notification2 btn btn-light p-2 mb-0" href="#" role="button"
+      data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+      <span class="cf-curr-{{ selected_currency|lower }}"></span> {{ selected_currency }}
+   </a>
+   <div
+      class="dropdown-menu dropdown-animation dropdown-menu-end min-w-auto dropdown-currency shadow-lg p-0">
+      <div class="card bg-transparent">
+         <div class="card-body p-0">
+            <ul block="block-currencies" class="currency-list menu list-group list-group-flush list-unstyled">
+               {% for key_currency, value_currency in arr_currency_data %}
+               <li class="menu-item">
+                  <a href="{{ value_currency }}" class="list-group-item list-group-item-action rounded border-0 mb-1 p-3" data-drupal-link-system-path="&lt;front&gt;"><span class="cf-curr-{{ key_currency|lower }}"></span>{{ key_currency }}</a>
+               </li>
+               {% endfor %}
+            </ul>
+         </div>
+      </div>
+   </div>
+</li>

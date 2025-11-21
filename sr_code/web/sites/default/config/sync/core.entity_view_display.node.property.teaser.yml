@@ -1,0 +1,84 @@
+uuid: f3f7bf65-4025-4391-98a8-7e49b44eff88
+langcode: en
+status: false
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.property.body
+    - field.field.node.property.field_amenities
+    - field.field.node.property.field_available_from
+    - field.field.node.property.field_bills_included
+    - field.field.node.property.field_category
+    - field.field.node.property.field_currency_code
+    - field.field.node.property.field_deposit
+    - field.field.node.property.field_description
+    - field.field.node.property.field_display_address
+    - field.field.node.property.field_furnishing_status
+    - field.field.node.property.field_location_coords_latitude
+    - field.field.node.property.field_location_coords_longitude
+    - field.field.node.property.field_location_country_code
+    - field.field.node.property.field_location_postal_code
+    - field.field.node.property.field_location_town
+    - field.field.node.property.field_media
+    - field.field.node.property.field_price
+    - field.field.node.property.field_pricing_frequency
+    - field.field.node.property.field_property_number
+    - field.field.node.property.field_property_type
+    - field.field.node.property.field_reference_id
+    - field.field.node.property.field_rental_term
+    - field.field.node.property.field_status
+    - field.field.node.property.field_street_name
+    - field.field.node.property.field_total_bathrooms
+    - field.field.node.property.field_total_bedrooms
+    - field.field.node.property.field_total_living_rooms
+    - field.field.node.property.field_transaction_type
+    - node.type.property
+  module:
+    - text
+    - user
+id: node.property.teaser
+targetEntityType: node
+bundle: property
+mode: teaser
+content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_amenities: true
+  field_available_from: true
+  field_bills_included: true
+  field_category: true
+  field_currency_code: true
+  field_deposit: true
+  field_description: true
+  field_display_address: true
+  field_furnishing_status: true
+  field_location_coords_latitude: true
+  field_location_coords_longitude: true
+  field_location_country_code: true
+  field_location_postal_code: true
+  field_location_town: true
+  field_media: true
+  field_price: true
+  field_pricing_frequency: true
+  field_property_number: true
+  field_property_type: true
+  field_reference_id: true
+  field_rental_term: true
+  field_status: true
+  field_street_name: true
+  field_total_bathrooms: true
+  field_total_bedrooms: true
+  field_total_living_rooms: true
+  field_transaction_type: true

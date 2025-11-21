@@ -1,0 +1,10 @@
+services:
+  import.property:
+    class: Drupal\sr_mapping\Services\ImportProperty
+    arguments: ['@entity_type.manager']
+  sr_mapping.property_price_updater:
+    class: Drupal\sr_mapping\Services\PropertyPriceUpdater
+    arguments: ['@entity_type.manager']
+  sr_mapping.node_delete_service:
+    class: Drupal\sr_mapping\Services\NodeDeleteService
+    arguments: ['@entity_type.manager']

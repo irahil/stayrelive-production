@@ -1,0 +1,8 @@
+uuid: 05ff7a95-5f99-4eaa-b7fe-8dcb9c346a93
+langcode: en
+status: true
+dependencies: {  }
+name: 'Furnished Status'
+vid: furnished_status
+description: ''
+weight: 0

@@ -1,0 +1,25 @@
+uuid: 12c266f0-cdca-4137-9d75-fe806df6420c
+langcode: en
+status: true
+dependencies:
+  module:
+    - sr
+    - system
+  theme:
+    - srdesign
+id: srsearchblockbasic
+theme: srdesign
+region: content
+weight: -6
+provider: null
+plugin: sr_search_block
+settings:
+  id: sr_search_block
+  label: 'SR Search block: basic'
+  label_display: '0'
+  provider: sr
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '<front>'

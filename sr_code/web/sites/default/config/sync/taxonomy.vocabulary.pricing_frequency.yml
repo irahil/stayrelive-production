@@ -1,0 +1,8 @@
+uuid: d164b6aa-0b45-4e41-8b31-42739b6156dc
+langcode: en
+status: true
+dependencies: {  }
+name: 'Pricing Frequency'
+vid: pricing_frequency
+description: ''
+weight: 0

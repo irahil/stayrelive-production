@@ -1,0 +1,20 @@
+uuid: 435aba73-7df9-423c-be8b-7a7fb36f53f4
+langcode: en
+status: true
+dependencies:
+  theme:
+    - srdesign
+_core:
+  default_config_hash: Q9_2whdOj1YIomfvsIfopROW4FT_X5pY0DjdOiOaQ5U
+id: srdesign_primary_admin_actions
+theme: srdesign
+region: branding
+weight: -6
+provider: null
+plugin: local_actions_block
+settings:
+  id: local_actions_block
+  label: 'Primary admin actions'
+  label_display: '0'
+  provider: core
+visibility: {  }

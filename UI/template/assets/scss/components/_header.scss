@@ -1,0 +1,185 @@
+header {
+  background-color: rgba(255, 255, 255, 0.98);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    animation: fadeInDown 0.5s;
+    width: 100%;
+
+    .navbar-brand {
+        padding: 20px 0;
+        .navbar-brand-item {
+          @include media-breakpoint-up(xl) {
+            height: toRem(40);
+          }
+          @include media-breakpoint-up(xxl) {
+            height: toRem(60);
+            transition: height 0.5s ease;
+          }
+        }
+    }
+}
+
+.user-profile i {
+    font-size: toRem(20);
+}
+
+.avatar i {
+    font-size: toRem(36);
+}
+
+.dropdown-menu {
+    border-radius: 30px 0 30px 30px;
+    border: 1px solid $light;
+
+    .dropdown-item:hover,
+    .dropdown-item:focus {
+        background-color: transparent;
+    }
+}
+
+.dropdown-menu .currency-list, .currency-select {
+    margin: 0;
+    li {
+        padding: 0;
+        a {
+            &:hover {
+                color: $primary;
+                span {
+                    color: $primary;
+                }
+            }
+        }
+        span {
+            margin-right: 10px;
+            font-family: $fa-font-family;
+            color: $secondary;
+            font-weight: 600;
+        }
+
+        .cf-curr-aed,
+        .cf-curr-sar {
+            &::before {
+                content: "\f0d6";
+            }
+        }
+
+        .cf-curr-inr {
+            &::before {
+                content: "\e1bc";
+            }
+        }
+
+        .cf-curr-usd {
+            &::before {
+                content: "\f155";
+            }
+        }
+
+        .cf-curr-gbp {
+            &::before {
+                content: "\f154";
+            }
+        }
+
+        .cf-curr-eur {
+            &::before {
+                content: "\f153";
+            }
+        }
+
+        .cf-curr-usd {
+            &::before {
+                content: "\f155";
+            }
+        }
+    }
+}
+
+.currency-select li span {
+    margin-right: 5px;
+}
+
+.menu-icon-toggle {
+    display: block;
+    width: 40px;
+    height: 43px;
+    position: relative;
+    z-index: 9;
+    margin-top: 8px;
+    padding: 8px 8px 8px 10px!important;
+    .home & {
+      top: 50px;
+      position: absolute;
+      right: 20px;
+      top: 20px;
+    }
+    span {
+      display: block;
+      width: 50%;
+      height: 2px;
+      position: absolute;
+      top: 50%;
+      background-color: $secondary;
+      transform: translate(0, -50%);
+      transition: opacity 0.3s 0.3s;
+      .home:not(.open) & {
+        background-color: $secondary;
+      }
+    }
+    &::before,
+    &::after {
+      content: '';
+      display: block;
+      width: 50%;
+      height: 2px;
+      position: absolute;
+      background-color: $secondary;
+      transition: transform 0.3s, top 0.3s 0.3s, bottom 0.3s 0.3s;
+    }
+    &::before {
+      top: 10px;
+    }
+    &::after {
+      bottom: 10px;
+    }
+    &.show  {
+      span {
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      &::before,
+      &::after {
+        background-color: $primary;
+      }
+      &::before {
+        top: calc(50% - 1px);
+        transform: rotate(45deg);
+      }
+      &::after {
+        bottom: calc(50% - 1px);
+        transform: rotate(-45deg);
+      }
+      &::before,
+      &::after {
+        transition: top 0.3s, bottom 0.3s, transform 0.3s 0.3s;
+      }
+    }
+  }
+  
+  #block-currencies-menu {
+    padding: toRem(4) toRem(8);
+  }
+
+.floating-filters, .floating-filter {
+  display: none;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%,0%);
+    display: flex;
+    font-size: small;
+    border: 1px solid $gray-300;
+    border-radius: toRem(90);
+    padding: 5px
+}

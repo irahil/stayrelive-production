@@ -1,0 +1,133 @@
+{{ form.form_build_id }}
+{{ form.form_token }}
+{{ form.form_id }}
+<script type="text/javascript">
+   {{ form.js_town_city | raw}}
+   {{ form.search_result.gm_param_value | raw}}
+</script>
+<section class="search-results">
+<div class="search-results-container container-fluid">
+      <div class="filter-float d-none" id="original_search_component">
+         <div class="search-property position-relative">
+            <div class="d-flex justify-content-center">
+               <div class="search-container row">
+                  <div class="search-city">
+                     <span class="icon-city">
+                     <i class="fa-solid fa-building-user"></i></span>
+                     {{ form.city }}
+                  </div>
+                  <div class="search-date">
+                     <span class="icon-checkin"><i class="fa-solid fa-calendar-days"></i></span>
+                     {{ form.date }}
+                     <span class="icon-checkout"><i class="fa-solid fa-magnifying-glass-location"></i></span>
+                  </div>
+                  <div class="add-adults">
+                     <a heaf="#" class="occupants-minus" onclick="fn_occupants('adult', '-');return false;">-</a>
+                     <span class="icon-adult"><i class="fa-solid fa-person"></i></span>
+                     {{ form.occupants.adult }}
+                     <a href="#" class="occupants-plus" onclick="fn_occupants('adult', '+');return false;">+</a>
+                  </div>
+                  <div class="add-kids">
+                     <a href="#" class="occupants-minus" onclick="fn_occupants('kid', '-');return false;">-</a>
+                     <span class="icon-kids"><i class="fa-solid fa-child"></i></span>
+                     {{ form.occupants.kid }}
+                     <a href="#" class="occupants-plus" onclick="fn_occupants('kid', '+');return false;">+</a>
+                  </div>
+                  <div class="search-submit">
+                     {{ form.actions.submit }}
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="row results-filters position-sticky">
+         <div class="col-lg-6 d-flex justify-content-end filter-wrapper">
+            <ul class="nav flex-row align-items-center list-unstyled ms-auto">
+               <li class="nav-item dropdown"><a href="#" class="find-apartment">
+                  <i class="fa-solid fa-search"></i>Find Apartment</a>
+               </li>
+               <li class="nav-item dropdown"><a href="#" class="" data-bs-toggle="modal" data-bs-target="#mapmodal">
+                  <i class="fa-solid fa-sliders"></i>Filters</a>
+               </li>
+               <li class="nav-item dropdown me-0">
+                  <a href="#" class="filter-sort" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside"><i class="fa-solid fa-arrow-down-1-9"></i> Sort By</a>
+                  <div class="dropdown-menu dropdown-animation dropdown-menu-end dropdown-menu-size-md shadow-lg p-0">
+                     <div class="fieldset__wrapper"> {{ form.sort }} </div>
+                  </div>
+               </li>
+            </ul>
+         </div>
+         <div class="col-lg-2 d-flex justify-content-end">
+            <ul class="d-none d-lg-block">
+               <li class="nav-item dropdown me-0 d-none">
+                  <a href="#" class="filter-sort" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">Sort By</a>
+                  <div class="dropdown-menu dropdown-animation dropdown-menu-end dropdown-menu-size-md shadow-lg p-0">
+                  </div>
+               </li>
+            </ul>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-lg-6 show-results">
+            <div class="row">
+               <div class="results-region p-0">
+                  {{ form.search_result.result }}
+                  {{ form.search_result.pager }}
+                  {{ form.search_result.no_result }}
+               </div>
+            </div>
+         </div>
+         <div class="col-md-6 pe-0">
+            {% if form.search_result.no_result %}
+               <div id="no_google_map" style="height: 100vh;width: 100%;">
+                  <img src="{{ base_path }}themes/srdesign/assets/images/search-results/404.png">
+               </div>
+            {% else %}
+               <div id="google_map" style="height: 100vh;width: 100%;"></div>
+            {% endif %}
+         </div>
+      </div>
+      <div class="row custom-form">
+         <div class="col-md-6">
+         </div>
+      </div>
+      <div class="row custom-form">
+         <div class="col-md-6">
+         </div>
+      </div>
+   </div>
+</section>
+<div class="modal fade" id="mapmodal" tabindex="-1" aria-labelledby="mapmodalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h3 class="modal-title" id="mapmodalLabel">Search Filters</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <div class="row filter-room">
+               <div class="col-lg-9">
+                  <div class="row col-12">
+                     <div class="container">
+                        <div class="slider-track"></div>
+                        <input type="range" min="100" max="5000" value="100" id="slider-1">
+                        <input type="range" min="100" max="5000" value="5000" id="slider-2">
+                        <div class="values">
+                           From $100 To $5000
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-lg-9">{{ form.price }}</div>
+            </div>
+            <div class="row filter-amenities">
+               {{ form.amenities_list }}
+            </div>
+         </div>
+         <div class="modal-footer sticky-bottom d-flex justify-content-center">
+            {{ form.actions.reset }}
+            {{ form.actions.submit }}
+         </div>
+      </div>
+   </div>
+</div>

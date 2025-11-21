@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - booking
+id: booking_save_action
+label: 'Save bookings'
+type: booking
+plugin: entity:save_action:booking
+configuration: {  }

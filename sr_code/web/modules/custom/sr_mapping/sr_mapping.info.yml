@@ -1,0 +1,5 @@
+name: sr_mapping
+type: module
+description: 'Imports property Data.'
+core_version_requirement: ^9.3 || ^10
+package: StayRelive

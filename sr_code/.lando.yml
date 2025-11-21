@@ -1,0 +1,18 @@
+name: sr_app
+recipe: drupal10
+config:
+  webroot: web
+services:
+  pma:
+    type: phpmyadmin:5.1
+    hosts:
+      - database
+  search:
+    type: solr:7
+    portforward: true
+    core: drupal10
+    config:
+      dir: web/modules/contrib/search_api_solr/jump-start/solr7/config-set
+proxy:
+  solr:
+    - search.drupal.lndo.site:8983

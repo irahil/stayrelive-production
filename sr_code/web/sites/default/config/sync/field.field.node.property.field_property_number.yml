@@ -1,0 +1,19 @@
+uuid: a3eb223f-8906-4a34-8fa1-7843dee20818
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_property_number
+    - node.type.property
+id: node.property.field_property_number
+field_name: field_property_number
+entity_type: node
+bundle: property
+label: 'Property Number'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

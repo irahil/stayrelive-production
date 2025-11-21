@@ -1,0 +1,68 @@
+sr_quotation.form:
+  path: '/quotation/add'
+  defaults:
+    _form: '\Drupal\sr_quotation\Form\QuotationForm'
+    _title: 'Add Quotation'
+  requirements:
+    _role: 'authenticated'
+
+sr_quotation.edit:
+  path: '/quotation/{id}/edit'
+  defaults:
+    _form: '\Drupal\sr_quotation\Form\QuotationEditForm'
+    _title: 'Edit Quotation'
+  requirements:
+    _permission: 'administer site content'
+
+sr_quotation.list:
+  path: '/quotation'
+  defaults:
+    _controller: '\Drupal\sr_quotation\Controller\QuotationController::list'
+    _title: 'Quotation List'
+  requirements:
+    _permission: 'access content'
+
+sr_quotation.preview:
+  path: '/quotation/preview/{id}'
+  defaults:
+    _controller: '\Drupal\sr_quotation\Controller\QuotationController::preview'
+    _title: 'Preview Quotation'
+  requirements:
+    _permission: 'access content'
+
+sr_quotation.download:
+  path: '/quotation/{id}/download'
+  defaults:
+    _controller: '\Drupal\sr_quotation\Controller\QuotationController::download'
+    _title: 'Download Quotation PDF'
+  requirements:
+    _permission: 'access content'
+  options:
+    parameters:
+      id:
+        type: integer
+
+sr_quotation.duplicate:
+  path: '/quotation/{id}/duplicate'
+  defaults:
+    _controller: '\Drupal\sr_quotation\Controller\QuotationController::duplicate'
+    _title: 'Duplicate Quotation'
+  requirements:
+    _permission: 'access content'
+
+# preview pdf html for test purpose
+sr_quotation.pdf_preview:
+  path: '/admin/pdf-preview/{id}'
+  defaults:
+    _controller: '\Drupal\sr_quotation\Controller\QuotationController::previewHtml'
+    _title: 'PDF HTML Preview'
+  requirements:
+    _permission: 'access content'
+
+sr_quotation.delete:
+  path: '/quotation/{id}/delete'
+  defaults:
+    _controller: '\Drupal\sr_quotation\Controller\QuotationController::delete'
+    _title: 'Delete Quotation'
+  requirements:
+    _permission: 'access content'

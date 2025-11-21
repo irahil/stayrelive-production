@@ -1,0 +1,17 @@
+timepicker:
+  css:
+    theme:
+      https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css: {}
+      css/quotation-form.css: {}
+  js:
+    https://cdn.jsdelivr.net/npm/flatpickr: { type: external, minified: true }
+    js/timepicker-init.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.once
+
+quotation-dashboard-style:
+  css:
+    theme:
+      css/quotation-dashboard-style.css: {}

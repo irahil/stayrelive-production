@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <title>Booking - Multipurpose Online Booking Theme</title>
+
+   <!-- Meta Tags -->
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   <meta name="author" content="Webestica.com">
+   <meta name="description" content="Booking - Multipurpose Online Booking Theme">
+
+
+
+   <!-- Favicon -->
+   <link rel="shortcut icon" href="assets/images/favicon.ico">
+
+   <!-- Google Font -->
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@400;500;700&display=swap">
+
+   <!-- Plugins CSS -->
+   <link rel="stylesheet" type="text/css" href="assets/vendor/font-awesome/css/all.min.css">
+   <link rel="stylesheet" type="text/css" href="assets/vendor/bootstrap-icons/bootstrap-icons.css">
+   <link rel="stylesheet" type="text/css" href="assets/vendor/tiny-slider/tiny-slider.css">
+   <link rel="stylesheet" type="text/css" href="assets/vendor/glightbox/css/glightbox.css">
+   <link rel="stylesheet" type="text/css" href="assets/vendor/flatpickr/css/flatpickr.min.css">
+   <link rel="stylesheet" type="text/css" href="assets/vendor/choices/css/choices.min.css">
+
+
+   <!-- Theme CSS -->
+   <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
+
+   <!-- <script src="https://unpkg.co/gsap@3/dist/gsap.min.js"></script>
+   <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+   <script src="https://unpkg.com/gsap@3/dist/ScrollToPlugin.min.js"></script> -->
+
+</head>
+
+<body class="has-navbar-mobile">
+   <!-- Pre loader -->
+   <div class="preloader">
+      <div class="preloader-item">
+         <div class="spinner-grow text-primary"></div>
+      </div>
+   </div>
+   <!-- Header START -->
+   <header class="navbar-light header-sticky d-none">
+      <div class="search-property position-relative">
+         <div class=" d-flex justify-content-center">
+            <div data-aos-once="true" data-aos="fade-up" data-aos-delay="1000"
+               class="search-container row aos-init aos-animate">
+               <div class="search-city">
+                  <span class="icon-city">
+                     <i class="fa-solid fa-building-user"></i></span>
+                  <!-- THEME DEBUG -->
+                  <!-- THEME HOOK: 'input__hidden' -->
+                  <!-- FILE NAME SUGGESTIONS:
+                       * input--hidden.html.twig
+                       x input.html.twig
+                       -->
+                  <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                  <input autocomplete="off" data-drupal-selector="form-eb2344kwpp-lgw6a2-0upioo4ec9ww8iuel7stgynxs"
+                     type="hidden" name="form_build_id" value="form-eB2344KWPp-LGw6a2-0UpioO4EC9WW8iUel7StgynXs">
+                  <!-- END OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                  <!-- THEME DEBUG -->
+                  <!-- THEME HOOK: 'input__hidden' -->
+                  <!-- FILE NAME SUGGESTIONS:
+                       * input--hidden.html.twig
+                       x input.html.twig
+                       -->
+                  <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                  <input data-drupal-selector="edit-home" type="hidden" name="form_id" value="home">
+                  <!-- END OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                  <!-- THEME DEBUG -->
+                  <!-- THEME HOOK: 'form_element' -->
+                  <!-- FILE NAME SUGGESTIONS:
+                       x form-element--textfield.html.twig
+                       * form-element.html.twig
+                       -->
+                  <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/form-element--textfield.html.twig' -->
+                  <div class="js-form-item form-item js-form-type-textfield form-item-town-city js-form-item-town-city">
+                     <!-- THEME DEBUG -->
+                     <!-- THEME HOOK: 'form_element_label' -->
+                     <!-- BEGIN OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                     <label for="edit-town-city" class="form-item__label js-form-required form-required">City</label>
+                     <!-- END OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                     <!-- THEME DEBUG -->
+                     <!-- THEME HOOK: 'input__textfield' -->
+                     <!-- FILE NAME SUGGESTIONS:
+                          x input--textfield.html.twig
+                          x input--textfield.html.twig
+                          * input.html.twig
+                          -->
+                     <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/input--textfield.html.twig' -->
+                     <input id="autocomplete_town_city" autocomplete="off" placeholder="Select a city"
+                        data-drupal-selector="edit-town-city" type="text" name="town_city" value="" size="60"
+                        maxlength="128"
+                        class="form-text required form-element form-element--type-text form-element--api-textfield"
+                        required="required" aria-required="true">
+                     <!-- END OUTPUT from 'themes/srdesign/templates/form/input--textfield.html.twig' -->
+                  </div>
+                  <!-- END OUTPUT from 'themes/srdesign/templates/form/form-element--textfield.html.twig' -->
+               </div>
+               <div class="search-date">
+                  <span class="icon-checkin"><i class="fa-solid fa-calendar-days"></i></span>
+                  <!-- THEME DEBUG -->
+                  <!-- THEME HOOK: 'fieldset' -->
+                  <!-- BEGIN OUTPUT from 'core/themes/claro/templates/fieldset.html.twig' -->
+                  <fieldset class="SectionContainer fieldset js-form-item form-item js-form-wrapper form-wrapper"
+                     data-drupal-selector="edit-date" id="edit-date">
+                     <legend class="fieldset__legend fieldset__legend--visible">
+                        <span class="fieldset__label">Date</span>
+                     </legend>
+                     <div class="fieldset__wrapper">
+                        <!-- THEME DEBUG -->
+                        <!-- THEME HOOK: 'form_element' -->
+                        <!-- FILE NAME SUGGESTIONS:
+                             x form-element--textfield.html.twig
+                             * form-element.html.twig
+                             -->
+                        <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/form-element--textfield.html.twig' -->
+                        <div
+                           class="js-form-item form-item js-form-type-textfield form-item-date-range js-form-item-date-range">
+                           <!-- THEME DEBUG -->
+                           <!-- THEME HOOK: 'form_element_label' -->
+                           <!-- BEGIN OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                           <label for="edit-date-range" class="form-item__label">Date Range</label>
+                           <!-- END OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                           <!-- THEME DEBUG -->
+                           <!-- THEME HOOK: 'input__textfield' -->
+                           <!-- FILE NAME SUGGESTIONS:
+                                x input--textfield.html.twig
+                                x input--textfield.html.twig
+                                * input.html.twig
+                                -->
+                           <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/input--textfield.html.twig' -->
+                           <input id="flatpickr_date_range" placeholder="Dates" data-drupal-selector="edit-date-range"
+                              type="text" name="date_range" value="" size="60" maxlength="128"
+                              class="form-text form-element form-element--type-text form-element--api-textfield flatpickr-input"
+                              readonly="readonly">
+                           <!-- END OUTPUT from 'themes/srdesign/templates/form/input--textfield.html.twig' -->
+                        </div>
+                        <!-- END OUTPUT from 'themes/srdesign/templates/form/form-element--textfield.html.twig' -->
+                     </div>
+                  </fieldset>
+                  <!-- END OUTPUT from 'core/themes/claro/templates/fieldset.html.twig' -->
+                  <span class="icon-checkout"><i class="fa-solid fa-magnifying-glass-location"></i></span>
+               </div>
+               <div class="add-adults">
+                  <span class="icon-adult"><i class="fa-solid fa-person"></i></span>
+                  <!-- THEME DEBUG -->
+                  <!-- THEME HOOK: 'form_element' -->
+                  <!-- FILE NAME SUGGESTIONS:
+                       * form-element--number.html.twig
+                       x form-element.html.twig
+                       -->
+                  <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/form-element.html.twig' -->
+                  <div class="js-form-item form-item js-form-type-number form-item-adult js-form-item-adult">
+                     <!-- THEME DEBUG -->
+                     <!-- THEME HOOK: 'form_element_label' -->
+                     <!-- BEGIN OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                     <label for="edit-adult" class="form-item__label">Adult Count</label>
+                     <!-- END OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                     <!-- THEME DEBUG -->
+                     <!-- THEME HOOK: 'input__number' -->
+                     <!-- FILE NAME SUGGESTIONS:
+                          * input--number.html.twig
+                          x input.html.twig
+                          -->
+                     <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                     <input placeholder="Adults" data-drupal-selector="edit-adult" type="number" id="edit-adult"
+                        name="adult" value="" step="1"
+                        class="form-number form-element form-element--type-number form-element--api-number">
+                     <!-- END OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                  </div>
+                  <!-- END OUTPUT from 'themes/srdesign/templates/form/form-element.html.twig' -->
+               </div>
+               <div class="add-kids">
+                  <span class="icon-adult"><i class="fa-solid fa-child"></i></span>
+                  <!-- THEME DEBUG -->
+                  <!-- THEME HOOK: 'form_element' -->
+                  <!-- FILE NAME SUGGESTIONS:
+                       * form-element--number.html.twig
+                       x form-element.html.twig
+                       -->
+                  <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/form-element.html.twig' -->
+                  <div class="js-form-item form-item js-form-type-number form-item-kid js-form-item-kid">
+                     <!-- THEME DEBUG -->
+                     <!-- THEME HOOK: 'form_element_label' -->
+                     <!-- BEGIN OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                     <label for="edit-kid" class="form-item__label">Kids Count</label>
+                     <!-- END OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                     <!-- THEME DEBUG -->
+                     <!-- THEME HOOK: 'input__number' -->
+                     <!-- FILE NAME SUGGESTIONS:
+                          * input--number.html.twig
+                          x input.html.twig
+                          -->
+                     <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                     <input placeholder="Kids" data-drupal-selector="edit-kid" type="number" id="edit-kid" name="kid"
+                        value="" step="1"
+                        class="form-number form-element form-element--type-number form-element--api-number">
+                     <!-- END OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                  </div>
+                  <!-- END OUTPUT from 'themes/srdesign/templates/form/form-element.html.twig' -->
+               </div>
+               <div class="search-submit">
+                  <!-- THEME DEBUG -->
+                  <!-- THEME HOOK: 'input__submit' -->
+                  <!-- FILE NAME SUGGESTIONS:
+                       * input--submit.html.twig
+                       x input.html.twig
+                       -->
+                  <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                  <input data-drupal-selector="edit-submit" type="submit" id="edit-submit" name="op" value="Search"
+                     class="button js-form-submit form-submit">
+                  <!-- END OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+               </div>
+            </div>
+         </div>
+      </div>
+      <nav class="navbar navbar-expand-xl">
+         <div class="container-fluid">
+            <!-- Logo START -->
+            <a class="navbar-brand" href="index.html">
+               <img class="light-mode-item navbar-brand-item" src="assets/images/global/logo-1.webp" alt="logo">
+            </a>
+            <!-- Logo END -->
+            <!-- Profile and Notification START -->
+            <ul class="nav flex-row align-items-center list-unstyled ms-xl-auto">
+               <!-- Notification dropdown START -->
+               <li class="nav-item dropdown ms-0 ms-md-4">
+                  <!-- Notification button -->
+                  <a class="nav-notification btn btn-light p-0 mb-0" href="#" role="button" data-bs-toggle="dropdown"
+                     aria-expanded="false" data-bs-auto-close="outside">
+                     <i class="bi bi-bell fa-fw"></i>
+                  </a>
+                  <!-- Notification dote -->
+                  <span class="notif-badge animation-blink"></span>
+                  <!-- Notification dropdown menu START -->
+                  <div class="dropdown-menu dropdown-animation dropdown-menu-end dropdown-menu-size-md shadow-lg p-0">
+                     <div class="card bg-transparent">
+                        <!-- Card header -->
+                        <div
+                           class="card-header bg-transparent d-flex justify-content-between align-items-center border-bottom">
+                           <h6 class="m-0">Notifications <span class="badge bg-danger bg-opacity-10 text-danger ms-2">4
+                                 new</span></h6>
+                           <a class="small" href="#">Clear all</a>
+                        </div>
+                        <!-- Card body START -->
+                        <div class="card-body p-0">
+                           <ul class="list-group list-group-flush list-unstyled p-2">
+                              <!-- Notification item -->
+                              <li>
+                                 <a href="#"
+                                    class="list-group-item list-group-item-action rounded notif-unread border-0 mb-1 p-3">
+                                    <h6 class="mb-2">New! Booking flights from New York ✈️</h6>
+                                    <p class="mb-0 small">Find the flexible ticket on flights around the
+                                       world. Start searching today
+                                    </p>
+                                    <span>Wednesday</span>
+                                 </a>
+                              </li>
+                              <!-- Notification item -->
+                              <li>
+                                 <a href="#" class="list-group-item list-group-item-action rounded border-0 mb-1 p-3">
+                                    <h6 class="mb-2">Sunshine saving are here 🌞 save 30% or more on a stay
+                                    </h6>
+                                    <span>15 Nov 2022</span>
+                                 </a>
+                              </li>
+                           </ul>
+                        </div>
+                        <!-- Card body END -->
+                        <!-- Card footer -->
+                        <div class="card-footer bg-transparent text-center border-top">
+                           <a href="#" class="btn btn-sm btn-link mb-0 p-0">See all incoming activity</a>
+                        </div>
+                     </div>
+                  </div>
+                  <!-- Notification dropdown menu END -->
+               </li>
+               <!-- Notification dropdown END -->
+               <li class="nav-item dropdown ms-0 ms-md-4">
+                  <span class="cf-curr-usd"></span>
+                  <a class="nav-notification2 btn btn-light p-2 mb-0" href="#" role="button" data-bs-toggle="dropdown"
+                     aria-expanded="false" data-bs-auto-close="outside">
+                     USD
+                  </a>
+                  <!-- Notification dropdown menu START -->
+                  <div class="dropdown-menu dropdown-animation dropdown-menu-end dropdown-menu-size-md shadow-lg p-0">
+                     <div class="card bg-transparent">
+                        <!-- Card header -->
+                        <!-- Card body START -->
+                        <div class="card-body p-0">
+                           <ul class="list-group list-group-flush list-unstyled p-2">
+                              <!-- Notification item -->
+                              <li>
+                                 <span class="cf-curr-inr"></span>
+                                 <a href="#"
+                                    class="list-group-item list-group-item-action rounded notif-unread border-0 mb-1 p-3">
+                                    INR
+                                 </a>
+                              </li>
+                              <!-- Notification item -->
+                              <li>
+                                 <span class="cf-curr-pounds"></span>
+                                 <a href="#" class="list-group-item list-group-item-action rounded border-0 mb-1 p-3">
+                                    Pounds
+                                 </a>
+                              </li>
+                           </ul>
+                        </div>
+                        <!-- Card body END -->
+                     </div>
+                  </div>
+                  <!-- Notification dropdown menu END -->
+               </li>
+               <!-- Profile dropdown START -->
+               <li class="nav-item ms-4 dropdown">
+                  <!-- Avatar -->
+                  <a class="avatar avatar-sm p-0" href="#" id="profileDropdown" role="button"
+                     data-bs-auto-close="outside" data-bs-display="static" data-bs-toggle="dropdown"
+                     aria-expanded="false">
+                     <!-- <img class="avatar-img rounded-2" src="assets/images/global/01.jpg" alt="avatar"> -->
+                  </a>
+                  <ul class="dropdown-menu dropdown-animation dropdown-menu-end shadow pt-3"
+                     aria-labelledby="profileDropdown">
+                     <!-- Profile info -->
+                     <li class="px-3 mb-3">
+                        <div class="d-flex align-items-center">
+                           <!-- Avatar -->
+                           <div class="avatar me-3">
+                           </div>
+                           <div>
+                              <a class="h6 mt-2 mt-sm-0" href="#">Rahil Shaikh</a>
+                              <p class="small m-0">rahildesigns@gmail.com</p>
+                           </div>
+                        </div>
+                     </li>
+                     <!-- Links -->
+                     <li>
+                        <hr class="dropdown-divider">
+                     </li>
+                     <li><a class="dropdown-item" href="#"><i class="bi bi-bookmark-check fa-fw me-2"></i>My
+                           Bookings</a>
+                     </li>
+                     <li><a class="dropdown-item" href="#"><i class="bi bi-heart fa-fw me-2"></i>My Wishlist</a>
+                     </li>
+                     <li><a class="dropdown-item" href="#"><i class="bi bi-gear fa-fw me-2"></i>Settings</a></li>
+                     <li><a class="dropdown-item bg-danger-soft-hover" href="#"><i
+                              class="bi bi-power fa-fw me-2"></i>Sign Out</a></li>
+                  </ul>
+               </li>
+               <!-- Profile dropdown END -->
+               <li class="nav-item dropdown ms-md-4 ">
+                  <a class="nav-link btn-light p-2" href="#" id="advanceMenu" role="button" data-bs-toggle="dropdown"
+                     aria-haspopup="true" aria-expanded="false">
+                     <i class="bi bi-list"></i>
+                  </a>
+                  <ul class="dropdown-menu min-w-auto dropdown-menu-end" data-bs-popper="none">
+                     <li>
+                        <a class="dropdown-item" href="#">
+                           <i class="text-warning fa-fw bi bi-life-preserver me-2"></i>About Us
+                        </a>
+                     </li>
+                     <li>
+                        <a class="dropdown-item" href="docs/index.html" target="_blank">
+                           <i class="text-danger fa-fw bi bi-card-text me-2"></i>Blog
+                        </a>
+                     </li>
+                     <li>
+                        <a class="dropdown-item" href="#" target="_blank">
+                           <i class="text-info fa-fw bi bi-toggle-off me-2"></i>Contact Us
+                        </a>
+                     </li>
+                  </ul>
+               </li>
+            </ul>
+            <!-- Profile and Notification START -->
+            <!-- Nav item link-->
+         </div>
+      </nav>
+      <!-- Logo Nav END -->
+   </header>
+   <!-- Header END -->
+
+   <!-- **************** MAIN CONTENT START **************** -->
+   <main>
+      <section class="about-header">
+         <div class="container-fluid">
+            <div class="row">
+               <div class="col-12">
+                  <p><img src="../web/themes/srdesign/assets/images/about/header-about.webp" alt="Stay Relive"></p>
+               </div>
+            </div>
+         </div>
+      </section>
+      <section class="about-iconwrapper">
+         <div class="container">
+            <div class="row">
+               <div class="col-12 mb-4 text-center">
+                  <h3>Our Working Principle <br>Driven by</h3>
+               </div>
+            </div>
+            <div class="row">
+               <div class="col-lg-3 text-center">
+                  <p><img src="../template/assets/images/about/i1.png" alt="Stay Relive - Quality"></p>
+                  <h5>Quality</h5>
+               </div>
+               <div class="col-lg-6 text-center about-principle">
+                  <p><img src="../template/assets/images/about/i1.png" alt="Stay Relive - Integrity"></p>
+                  <h5>Integrity</h5>
+               </div>
+               <div class="col-lg-3 text-center">
+                  <p><img src="../template/assets/images/about/i1.png" alt="Stay Relive - Innovation"></p>
+                  <h5>Innovation</h5>
+               </div>
+            </div>
+         </div>
+      </section>
+      <section class="about-rowone">
+         <div class="container">
+            <div class="row">
+               <div class="col-md-6">
+                  <p><img src="../web/themes/srdesign/assets/images/about/about-rowone.webp" alt="Stay Relive"></p>
+               </div>
+               <div class="col-md-5 d-flex flex-column offset-md-1 justify-content-center">
+                  <h2>Navigating the Modern Nomadic Lifestyle</h2>
+                  <p>Being continuously on the move in the world of the modern nomad can be rather stressful.
+                     Particularly if you work in the corporate sector, where travel is more of a necessity than a
+                     passion. The quality of your stay influences the quality of your journey, your mindset, and your
+                     motivation. Thus, your accommodation choice acts as a catalyst for immersing yourself in your
+                     destination.</p>
+               </div>
+            </div>
+         </div>
+      </section>
+      <section class="about-rowtwo">
+         <div class="container">
+            <div class="row">
+               <div class="col-md-6 d-flex flex-column justify-content-center">
+                  <h2>Enhance Your Living Experience with StayRelive</h2>
+                  <p>At StayRelive, we are dedicated to assisting individuals in discovering the ideal accommodations
+                     tailored to their unique requirements. Whether you're a student seeking a cozy apartment, a family
+                     in search of a spacious home, or an expatriate planning a short or long-term stay abroad, we
+                     prioritize enhancing your living or traveling experience. Explore our curated selection of
+                     accommodations in cities renowned for their quality of life, business opportunities, and cultural
+                     richness, and embark on a journey where comfort meets convenience.</p>
+               </div>
+               <div class="col-md-5 offset-md-1 ">
+                  <p><img src="../web/themes/srdesign/assets/images/about/about-rowtwo.webp" alt="Stay Relive"></p>
+               </div>
+            </div>
+         </div>
+      </section>
+      <section class="about-rowthree">
+         <div class="container">
+            <div class="row">
+               <div class="col-md-6">
+                  <p><img src="../web/themes/srdesign/assets/images/about/about-rowthree.webp" alt="Stay Relive"></p>
+               </div>
+               <div class="col-md-5 d-flex flex-column offset-md-1 justify-content-center">
+                  <h2>Stay Housing and Serviced Apartments for Discerning Travelers</h2>
+                  <p>Discover curated accommodations tailored for sophisticated travelers seeking an elevated city
+                     experience. Explore our meticulously vetted selection of short-stay housing and serviced
+                     apartments, meticulously curated for both leisure and business stays. With our user-friendly
+                     website, your next refined city break is just a click away.</p>
+               </div>
+            </div>
+         </div>
+      </section>
+      <section class="home-hero about">
+         <div class="container-fluid">
+            <div class="row g-4 g-lg-5">
+               <div class="col-12">
+                  <div class="home-hero-image position-relative"><img
+                        src="../web/themes/srdesign/assets/images/about/about-1.webp" alt="">
+                     <div class="hero-about-copy position-absolute">
+                        <h5>Our Mission</h5>
+                        <p>To deliver delightful stay experiences to every traveler, driven by technology, data &
+                           human connections at every possible step.</p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+
+      <section class="about-scroller">
+         <div class="container-fluid cards">
+          <div class="row ab-card card-1">
+           <div class="col-12">
+             <h3 class="text-center">Navigating the Modern Nomadic Lifestyle</h3>
+           </div>
+             <div class="col-md-6">
+                 <p class="mt-7"><img src="../template/assets/images/about/about-2.png" alt="Stay Relive"></p>
+             </div>
+              <div class="col-md-5 d-flex flex-column offset-md-1 justify-content-center">
+                  <h2 class="mt-7">&nbsp;</h2>
+                  <p>Being continuously on the move in the world of the modern nomad can be rather stressful. Particularly if you work in the corporate sector, where travel is more of a necessity than a passion. The quality of your stay influences the quality of your journey, your mindset, and your motivation. Thus, your accommodation choice acts as a catalyst for immersing yourself in your destination.</p>
+              </div>
+          </div>
+     
+          <div class="row ab-card card-2">
+           <div class="col-12">
+             <h3 class="text-center">Focus on Tangible Savings</h3>
+           </div>
+           <div class="col-md-6">
+               <p class="mt-7"><img src="../template/assets/images/about/about-rowthree.png" alt="Stay Relive"></p>
+           </div>
+            <div class="col-md-5  d-flex flex-column offset-md-1 justify-content-center">
+               <h2 class="mt-7">&nbsp;</h2>
+                <p>Being continuously on the move in the world of the modern nomad can be rather stressful. Particularly if you work in the corporate sector, where travel is more of a necessity than a passion. The quality of your stay influences the quality of your journey, your mindset, and your motivation. Thus, your accommodation choice acts as a catalyst for immersing yourself in your destination.</p>
+            </div>
+        </div>
+         <div class="row ab-card card-3">
+         <div class="col-12">
+           <h3 class="text-center">Adaptation to Changing Dynamics</h3>
+         </div>
+         <div class="col-md-6">
+             <p class="mt-7"><img src="../template/assets/images/about/about-rowone.webp" alt="Stay Relive"></p>
+         </div>
+          <div class="col-md-5 d-flex flex-column offset-md-1 justify-content-center">
+             <h2 class="mt-7">&nbsp;</h2>
+              <p>Being continuously on the move in the world of the modern nomad can be rather stressful. Particularly if you work in the corporate sector, where travel is more of a necessity than a passion. The quality of your stay influences the quality of your journey, your mindset, and your motivation. Thus, your accommodation choice acts as a catalyst for immersing yourself in your destination.</p>
+          </div>
+         </div>
+         </div>
+      </section>
+
+
+
+      <section class="home-hero about">
+         <div class="container-fluid">
+            <div class="row g-4 g-lg-5">
+               <div class="col-12">
+                  <div class="home-hero-image position-relative"><img
+                        src="../web/themes/srdesign/assets/images/about/about-2.webp" alt="">
+                     <div class="hero-about-copy position-absolute">
+                        <h5>Our Values</h5>
+                        <p>At StayRelive, we champion innovation, integrity, and customer delight, utilizing technology
+                           and meaningful connections to elevate travel experiences.</p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+
+
+      <section class="about-founder">
+         <div class="container-fluid">
+            <div class="row founder-bgwrapper d-flex flex-column justify-content-center">
+               <div class="col-12 ">
+                  <div class="row">
+                     <div class="col-xl-6">
+
+                     </div>
+                     <div class="col-xl-5 founder-copy">
+                        <h2>CEO & Co-founders Ideology</h2>
+                        <p>Founded on the belief that quality accommodations are essential for a fulfilling travel
+                           experience, StayRelive reflects the visionary ideology of our Founder &amp; CEO - Shoeb Syed
+                           and
+                           other Co-founders.</p>
+                        <p>This guiding philosophy propels us to innovate relentlessly and prioritize customer delight,
+                           serving as the cornerstone of our achievements.</p>
+                        <p>Possessing profound insights into the travel sector, they consistently challenge norms and
+                           elevate benchmarks, propelling our company towards continual growth and distinction.</p>
+
+                     </div>
+                  </div>
+               </div>
+
+            </div>
+         </div>
+      </section>
+
+
+      <section class="sr-story-wrapper ">
+         <div class="container">
+            <div class="row mb-5">
+               <div class="col-12 text-center">
+                  <h3>Success Story 2023<br> A Year of Remarkable Success for StayRelive!</h3>
+
+               </div>
+            </div>
+            <div class="row">
+               <div class="sr-story col-md-3">
+                  <h3>30%
+                     <span>Revenue Surge</span>
+                  </h3>
+
+               </div>
+               <div class="sr-story col-md-3">
+                  <h3>189%
+                     <span>Revenue Growth</span>
+                  </h3>
+               </div>
+               <div class="sr-story col-md-3">
+                  <h3>23.58
+                     <span>Average Stay</span>
+                  </h3>
+               </div>
+               <div class="sr-story col-md-3">
+                  <h3>6369
+                     <span>Booked Nights</span>
+                  </h3>
+               </div>
+            </div>
+         </div>
+      </section>
+      <section class="about-ideology cards d-none">
+         <div class="container card card-3">
+            <div class="row">
+               <div class="col-md-6">
+
+               </div>
+               <div class="ideology-copy col-md-5 d-flex flex-column offset-md-1 justify-content-center">
+                  <h2>CEO & Co-founders Ideology - 3</h2>
+                  <p>Founded on the belief that quality accommodations are essential for a fulfilling travel experience,
+                     z StayRelive reflects the visionary ideology of our CEO and Co-founders. This guiding philosophy
+                     propels us
+                     to innovate relentlessly and prioritize customer delight, serving as the cornerstone of our
+                     achievements.
+                     Possessing profound insights into the travel sector, they consistently challenge norms and elevate
+                     benchmarks, propelling our company towards continual growth and distinction.</p>
+               </div>
+            </div>
+         </div>
+         <div class="container card card-2">
+            <div class="row">
+               <div class="col-md-6">
+
+               </div>
+               <div class="ideology-copy col-md-5 d-flex flex-column offset-md-1 justify-content-center">
+                  <h2>CEO & Co-founders Ideology - 2</h2>
+                  <p>Founded on the belief that quality accommodations are essential for a fulfilling travel experience,
+                     StayRelive reflects the visionary ideology of our CEO and Co-founders. This guiding philosophy
+                     propels us
+                     to innovate relentlessly and prioritize customer delight, serving as the cornerstone of our
+                     achievements.
+                     Possessing profound insights into the travel sector, they consistently challenge norms and elevate
+                     benchmarks, propelling our company towards continual growth and distinction.</p>
+               </div>
+            </div>
+         </div>
+         <div class="container card card-1">
+            <div class="row">
+               <div class="col-md-6">
+
+               </div>
+               <div class="ideology-copy col-md-5 d-flex flex-column offset-md-1 justify-content-center">
+                  <h2>CEO & Co-founders Ideology - 1</h2>
+                  <p>Founded on the belief that quality accommodations are essential for a fulfilling travel experience,
+                     StayRelive reflects the visionary ideology of our CEO and Co-founders. This guiding philosophy
+                     propels us
+                     to innovate relentlessly and prioritize customer delight, serving as the cornerstone of our
+                     achievements.
+                     Possessing profound insights into the travel sector, they consistently challenge norms and elevate
+                     benchmarks, propelling our company towards continual growth and distinction.</p>
+               </div>
+            </div>
+         </div>
+      </section>
+      <section>
+         <div class="container">
+            <div class="row">
+               <div class="col-12 text-center">
+                  <h3>Our Working Principle Driven by</h3>
+
+               </div>
+
+            </div>
+         </div>
+      </section>
+
+   </main>
+   <!-- **************** MAIN CONTENT END **************** -->
+
+   <!-- =======================
+Footer START -->
+   <footer class="bg-dark pt-5">
+      <div class="container">
+         <!-- Row START -->
+         <div class="row g-4">
+
+            <!-- Widget 1 START -->
+            <div class="col-lg-3">
+               <!-- logo -->
+               <a href="index.html">
+                  <img class="h-40px" src="assets/images/logo-light.svg" alt="logo">
+               </a>
+               <p class="my-3 text-muted">Departure defective arranging rapturous did believe him all had supported.
+               </p>
+               <p class="mb-2"><a href="#" class="text-muted text-primary-hover"><i
+                        class="bi bi-telephone me-2"></i>+1234 568 963</a> </p>
+               <p class="mb-0"><a href="#" class="text-muted text-primary-hover"><i
+                        class="bi bi-envelope me-2"></i>example@gmail.com</a></p>
+            </div>
+            <!-- Widget 1 END -->
+
+            <!-- Widget 2 START -->
+            <div class="col-lg-8 ms-auto">
+               <div class="row g-4">
+                  <!-- Link block -->
+                  <div class="col-6 col-md-3">
+                     <h5 class="text-white mb-2 mb-md-4">Page</h5>
+                     <ul class="nav flex-column text-primary-hover">
+                        <li class="nav-item"><a class="nav-link text-muted" href="#">About us</a></li>
+                        <li class="nav-item"><a class="nav-link text-muted" href="#">Contact us</a></li>
+                        <li class="nav-item"><a class="nav-link text-muted" href="#">News and Blog</a></li>
+                        <li class="nav-item"><a class="nav-link text-muted" href="#">Meet a Team</a></li>
+                     </ul>
+                  </div>
+
+                  <!-- Link block -->
+                  <div class="col-6 col-md-3">
+                     <h5 class="text-white mb-2 mb-md-4">Link</h5>
+                     <ul class="nav flex-column text-primary-hover">
+                        <li class="nav-item"><a class="nav-link text-muted" href="#">Sign up</a></li>
+                        <li class="nav-item"><a class="nav-link text-muted" href="#">Sign in</a></li>
+                        <li class="nav-item"><a class="nav-link text-muted" href="#">Privacy Policy</a></li>
+                        <li class="nav-item"><a class="nav-link text-muted" href="#">Terms</a></li>
+                        <li class="nav-item"><a class="nav-link text-muted" href="#">Cookie</a></li>
+                        <li class="nav-item"><a class="nav-link text-muted" href="#">Support</a></li>
+                     </ul>
+                  </div>
+
+                  <!-- Link block -->
+                  <div class="col-6 col-md-3">
+                     <h5 class="text-white mb-2 mb-md-4">Global Site</h5>
+                     <ul class="nav flex-column text-primary-hover">
+                        <li class="nav-item"><a class="nav-link text-muted" href="#">India</a></li>
+                        <li class="nav-item"><a class="nav-link text-muted" href="#">California</a></li>
+                        <li class="nav-item"><a class="nav-link text-muted" href="#">Indonesia</a></li>
+                        <li class="nav-item"><a class="nav-link text-muted" href="#">Canada</a></li>
+                        <li class="nav-item"><a class="nav-link text-muted" href="#">Malaysia</a></li>
+                     </ul>
+                  </div>
+
+                  <!-- Link block -->
+                  <div class="col-6 col-md-3">
+                     <h5 class="text-white mb-2 mb-md-4">Booking</h5>
+                     <ul class="nav flex-column text-primary-hover">
+                        <li class="nav-item"><a class="nav-link text-muted" href="#"><i
+                                 class="fa-solid fa-hotel me-2"></i>Hotel</a></li>
+                        <li class="nav-item"><a class="nav-link text-muted" href="#"><i
+                                 class="fa-solid fa-plane me-2"></i>Flight</a></li>
+                        <li class="nav-item"><a class="nav-link text-muted" href="#"><i
+                                 class="fa-solid fa-globe-americas me-2"></i>Tour</a></li>
+                        <li class="nav-item"><a class="nav-link text-muted" href="#"><i
+                                 class="fa-solid fa-car me-2"></i>Cabs</a></li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+            <!-- Widget 2 END -->
+
+         </div>
+         <!-- Row END -->
+
+         <!-- Tops Links -->
+         <div class="row mt-5">
+            <h5 class="mb-2 text-white">Top Links</h5>
+            <ul class="list-inline text-primary-hover lh-lg">
+               <li class="list-inline-item"><a href="#" class="text-muted">Flights</a></li>
+               <li class="list-inline-item"><a href="#" class="text-muted">Hotels</a></li>
+               <li class="list-inline-item"><a href="#" class="text-muted">Tours</a></li>
+               <li class="list-inline-item"><a href="#" class="text-muted">Cabs</a></li>
+               <li class="list-inline-item"><a href="#" class="text-muted">About</a></li>
+               <li class="list-inline-item"><a href="#" class="text-muted">Contact us</a></li>
+               <li class="list-inline-item"><a href="#" class="text-muted">Blogs</a></li>
+               <li class="list-inline-item"><a href="#" class="text-muted">Services</a></li>
+               <li class="list-inline-item"><a href="#" class="text-muted">Detail page</a></li>
+               <li class="list-inline-item"><a href="#" class="text-muted">Services</a></li>
+               <li class="list-inline-item"><a href="#" class="text-muted">Policy</a></li>
+               <li class="list-inline-item"><a href="#" class="text-muted">Testimonials</a></li>
+               <li class="list-inline-item"><a href="#" class="text-muted">Newsletters</a></li>
+               <li class="list-inline-item"><a href="#" class="text-muted">Podcasts</a></li>
+               <li class="list-inline-item"><a href="#" class="text-muted">Protests</a></li>
+               <li class="list-inline-item"><a href="#" class="text-muted">NewsCyber</a></li>
+               <li class="list-inline-item"><a href="#" class="text-muted">Education</a></li>
+               <li class="list-inline-item"><a href="#" class="text-muted">Sports</a></li>
+               <li class="list-inline-item"><a href="#" class="text-muted">Tech and Auto</a></li>
+               <li class="list-inline-item"><a href="#" class="text-muted">Opinion</a></li>
+               <li class="list-inline-item"><a href="#" class="text-muted">Share Market</a></li>
+            </ul>
+         </div>
+
+         <!-- Payment and card -->
+         <div class="row g-4 justify-content-between mt-0 mt-md-2">
+
+            <!-- Payment card -->
+            <div class="col-sm-7 col-md-6 col-lg-4">
+               <h5 class="text-white mb-2">Payment & Security</h5>
+               <ul class="list-inline mb-0 mt-3">
+                  <li class="list-inline-item">
+                     <a href="#"><img src="assets/images/element/paypal.svg" class="h-30px" alt=""></a>
+                  </li>
+                  <li class="list-inline-item">
+                     <a href="#"><img src="assets/images/element/visa.svg" class="h-30px" alt=""></a>
+                  </li>
+                  <li class="list-inline-item">
+                     <a href="#"><img src="assets/images/element/mastercard.svg" class="h-30px" alt=""></a>
+                  </li>
+                  <li class="list-inline-item">
+                     <a href="#"><img src="assets/images/element/expresscard.svg" class="h-30px" alt=""></a>
+                  </li>
+               </ul>
+            </div>
+
+            <!-- Social media icon -->
+            <div class="col-sm-5 col-md-6 col-lg-3 text-sm-end">
+               <h5 class="text-white mb-2">Follow us on</h5>
+               <ul class="list-inline mb-0 mt-3">
+                  <li class="list-inline-item"> <a class="btn btn-sm px-2 bg-facebook mb-0" href="#"><i
+                           class="fab fa-fw fa-facebook-f"></i></a> </li>
+                  <li class="list-inline-item"> <a class="btn btn-sm shadow px-2 bg-instagram mb-0" href="#"><i
+                           class="fab fa-fw fa-instagram"></i></a> </li>
+                  <li class="list-inline-item"> <a class="btn btn-sm shadow px-2 bg-twitter mb-0" href="#"><i
+                           class="fab fa-fw fa-twitter"></i></a> </li>
+                  <li class="list-inline-item"> <a class="btn btn-sm shadow px-2 bg-linkedin mb-0" href="#"><i
+                           class="fab fa-fw fa-linkedin-in"></i></a> </li>
+               </ul>
+            </div>
+         </div>
+
+         <!-- Divider -->
+         <hr class="mt-4 mb-0">
+
+         <!-- Bottom footer -->
+         <div class="row">
+            <div class="container">
+               <div class="d-lg-flex justify-content-between align-items-center py-3 text-center text-lg-start">
+                  <!-- copyright text -->
+                  <div class="text-muted text-primary-hover"> Copyrights ©2023 Booking. Build by <a
+                        href="https://www.webestica.com/" class="text-muted">Webestica</a>. </div>
+                  <!-- copyright links-->
+                  <div class="nav mt-2 mt-lg-0">
+                     <ul class="list-inline text-primary-hover mx-auto mb-0">
+                        <li class="list-inline-item me-0"><a class="nav-link py-1 text-muted" href="#">Privacy
+                              policy</a></li>
+                        <li class="list-inline-item me-0"><a class="nav-link py-1 text-muted" href="#">Terms and
+                              conditions</a></li>
+                        <li class="list-inline-item me-0"><a class="nav-link py-1 text-muted pe-0" href="#">Refund
+                              policy</a></li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </footer>
+   <!-- =======================
+Footer END -->
+
+   <!-- Back to top -->
+   <div class="back-top"></div>
+
+   <!-- Navbar mobile START -->
+   <div class="navbar navbar-mobile">
+      <ul class="navbar-nav">
+         <!-- Nav item Home -->
+         <li class="nav-item">
+            <a class="nav-link active" href="index.html"><i class="bi bi-house-door fa-fw"></i>
+               <span class="mb-0 nav-text">Home</span>
+            </a>
+         </li>
+
+         <!-- Nav item My Trips -->
+         <li class="nav-item">
+            <a class="nav-link" href="account-bookings.html"><i class="bi bi-briefcase fa-fw"></i>
+               <span class="mb-0 nav-text">My Trips</span>
+            </a>
+         </li>
+
+         <!-- Nav item Offer -->
+         <li class="nav-item">
+            <a class="nav-link" href="offer-detail.html"><i class="bi bi-percent fa-fw"></i>
+               <span class="mb-0 nav-text">Offer</span>
+            </a>
+         </li>
+
+         <!-- Nav item Account -->
+         <li class="nav-item">
+            <a class="nav-link" href="account-profile.html"><i class="bi bi-person-circle fa-fw"></i>
+               <span class="mb-0 nav-text">Account</span>
+            </a>
+         </li>
+      </ul>
+   </div>
+   <!-- Navbar mobile END -->
+
+   <!-- Bootstrap JS -->
+   <script src="assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+   <!-- Vendors -->
+
+
+
+   <!-- ThemeFunctions -->
+   <script src="assets/js/functions.js"></script>
+   <script src="assets/js/sr-about.js"></script>
+
+
+</body>
+
+</html>

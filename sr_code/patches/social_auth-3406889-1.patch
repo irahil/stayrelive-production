@@ -1,0 +1,19 @@
+diff --git a/social_auth.module b/social_auth.module
+index ec5c9f4da..5a34e67a4 100755
+--- a/social_auth.module
++++ b/social_auth.module
+@@ -105,10 +105,11 @@ function social_auth_form_user_form_alter(&$form, FormStateInterface $form_state
+  */
+ function _social_auth_can_grant_permission(AccountInterface $current_user): bool {
+   $routeMatch = Drupal::service('current_route_match');
++  $routeUser = $routeMatch->getParameter('user');
+ 
+-  // If the current user id is the same as the user id of parameter.
+-  if ($current_user->id() == $routeMatch->getParameter('user')->id()) {
+-    return TRUE;
++  // If the current user id is the same as the user id of parameter and not null
++  if ($routeUser && $current_user->id() == $routeUser->id()) {
++      return TRUE;
+   }
+ 
+   return FALSE;

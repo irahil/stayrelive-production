@@ -1,0 +1,141 @@
+.sr-container {
+    background: $light;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 15px;
+    .form-submit {
+        display: block;
+        text-align: center;
+    }
+
+    a {
+        color: $primary;
+        text-decoration: underline;
+        &:hover {
+            text-decoration: none;
+        }
+    }
+
+    .form-container {
+        background: $white;
+        outline: 3px solid $primary;
+        border: 3px solid $secondary;
+        border-radius: 0 90px 0 0;
+        justify-content: space-between;
+        padding: 30px;
+        max-width: 500px;
+        margin: 40px 0;
+
+        p img {
+            max-width: 55%;
+            @include media-breakpoint-up(lg) {
+                max-width: 50%;
+              }
+        }
+        .form-actions {
+            margin-bottom: 0;
+        }
+        .open-auth-wrapper{
+            a{
+                display: flex;
+                align-items: center;
+                justify-content: start;
+                width: 100%;
+                font-size: 0.875rem;
+                text-align: center;
+                text-decoration: none;
+                color: #fff;
+                border-radius: 5.625rem;
+                transition: background-color 0.3s, box-shadow 0.3s;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            img{
+                height: 2.5rem;
+                border-radius: 40px;
+                margin: 0.25rem 1rem 0.25rem 0.25rem;
+            }
+            .google{
+                background-color: #4285f4;
+                &:hover{
+                    box-shadow: 0 2px 4px rgba(39, 54, 86, .14), 0 1px 10px rgba(39, 54, 86, .2);
+                }
+            }
+            .facebook{
+                background-color: #3b5998;
+                margin-top: 1rem;
+                display: none;
+                &:hover{
+                    box-shadow: 0 2px 4px rgba(39, 54, 86, .14), 0 1px 10px rgba(39, 54, 86, .2);
+                }
+            }
+        }
+        .login-form__divider {
+            border-bottom: 1px solid #e3dede;
+            color: #273656;
+            font-size: 1rem;
+            line-height: 1.571rem;
+            margin-bottom: 1rem;
+            padding-top: 6px;
+            position: relative;
+            text-align: center;
+
+            span {
+                background: #fff;
+                padding: 0 0.625rem;
+                position: relative;
+                top: 10px;
+                z-index: 1;
+            }
+          
+            &::before {
+                content: "";
+                display: block;
+                height: 1px;
+                position: absolute;
+                top: 50%;
+                width: 100%;
+                z-index: 0;
+            }
+        }
+        form {
+            .col-sm-6 {
+                width: 100%;
+            }
+        }
+    }
+    .password-suggestions {
+        display: none;
+        @extend .d-none;
+    }
+    .field--name-field-company-registration-certi {
+        .details-wrapper {
+            margin: 0.625rem !important;
+            label{
+                display: none;
+            }
+            .form-managed-file__main {
+                input[type="file"] {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
+#block-srdesign-socialauthlogin{
+    display: none !important;
+}
+
+.messages-list {
+    .messages {
+        a {
+            color: $primary !important;
+            text-decoration: none !important;
+            &:hover {
+                color: $primary !important;
+                text-decoration: none !important;
+            }
+        }
+    }
+}

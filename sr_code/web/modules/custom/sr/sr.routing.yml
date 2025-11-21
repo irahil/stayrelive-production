@@ -1,0 +1,137 @@
+sr.search:
+  path: 'property/search'
+  defaults:
+    _form:  '\Drupal\sr\Form\PropertySearchForm'
+    _title: 'Property Search'
+  requirements:
+    _permission: 'access content'
+  options:
+    no_cache: 'TRUE'
+sr.booking:
+  path: 'property/booking'
+  defaults:
+    _form:  '\Drupal\sr\Form\BookingForm'
+    _title: 'Booking'
+  requirements:
+    _role: 'authenticated'
+  options:
+    no_cache: 'TRUE'
+sr.booking.confirmation:
+  path: 'property/booking/confirmation'
+  defaults:
+    _controller: '\Drupal\sr\Controller\SrController::BookingConfirmation'
+  requirements:
+    _permission: 'access content'
+  options:
+    no_cache: 'TRUE'
+sr.booking.search:
+  path: 'property/booking/search'
+  defaults:
+    _form:  '\Drupal\sr\Form\BookingSearchForm'
+    _title: 'Booking Search'
+  requirements:
+    _role: 'authenticated'
+  options:
+    no_cache: 'TRUE'
+sr.booking.edit:
+  path: 'property/booking/edit/{booking_id}'
+  defaults:
+    _form:  '\Drupal\sr\Form\BookingEditForm'
+    _title: 'Booking Edit'
+  requirements:
+    _role: 'authenticated'
+  options:
+    no_cache: 'TRUE'
+
+sr.admin_index:
+  path: '/admin/config/sr'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'StayRelive'
+  requirements:
+    _role: 'administrator'
+sr.commission.manage:
+  path: '/admin/config/sr/commission/manage'
+  defaults:
+    _form: '\Drupal\sr\Form\CommissionForm'
+    _title: 'Commission'
+  requirements:
+    _role: 'sr_admin'
+  options:
+    _admin_route: TRUE
+
+# Pending users page
+sr.pending_users_page:
+  path: '/admin/people/approval'
+  defaults:
+    _title: 'Agent Approval Dashboard'
+    _controller: '\Drupal\sr\Controller\PendingApprovalController::pendingUsers'
+  requirements:
+    _permission: 'administer users'
+
+# Pending users page
+user_registrationpassword.pending_users_page:
+  path: '/admin/people/approval'
+  defaults:
+    _title: 'Agent Approval Dashboard'
+    _controller: '\Drupal\sr\Controller\PendingApprovalController::pendingUsers'
+  requirements:
+    _permission: 'administer users'
+
+sr.approve_user:
+  path: '/user/approve/{user}'
+  defaults:
+    _controller: '\Drupal\sr\Controller\PendingApprovalController::approveUser'
+  requirements:
+    _entity_access: 'user.update'
+
+sr.reject_user:
+  path: '/user/reject/{user}'
+  defaults:
+    _controller: '\Drupal\sr\Controller\PendingApprovalController::rejectUser'
+  requirements:
+    _entity_access: 'user.block'
+
+
+sr.view_user:
+  path: '/admin/people/view/{user}'
+  defaults:
+    _controller: '\Drupal\sr\Controller\PendingApprovalController::viewUser'
+    _title: 'View User'
+  requirements:
+    _permission: 'administer users'
+    user: \d+
+
+# Rejected users
+sr.rejected_users_page:
+  path: '/admin/people/rejected'
+  defaults:
+    _title: 'Rejected Agents'
+    _controller: '\Drupal\sr\Controller\rejectedUsersController::rejectedUsers'
+  requirements:
+    _permission: 'administer users'
+
+# Approved users
+sr.approved_users_page:
+  path: '/admin/people/approved'
+  defaults:
+    _controller: '\Drupal\sr\Controller\approvedUsersController::approvedUsers'
+    _title: 'Approved Agents'
+  requirements:
+    _permission: 'administer users'
+
+agent_registration.register:
+  path: '/agent/register'
+  defaults:
+    _entity_form: 'user.register'
+    _title: 'Create new account'
+  requirements:
+    _access_user_register: 'TRUE'
+
+sr.export_csv:
+  path: '/export-csv'
+  defaults:
+    _controller: '\Drupal\sr\Controller\SrController::exportCsv'
+    _title: 'Export CSV'
+  requirements:
+    _permission: 'access content'

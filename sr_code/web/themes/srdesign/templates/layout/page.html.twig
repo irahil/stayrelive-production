@@ -1,0 +1,19 @@
+{# <main aria-label="Site main content" class="content" id="content" role="main">
+	{{ page.content }}
+</main> #}
+
+{# Check if the sidebar region has content #}
+{% if page.sidebar %}
+  <div class="container row m-auto">
+    <main aria-label="Site main content" class="content col-12 col-xl-8" id="content" role="main">
+      {{ page.content }}
+    </main>
+    <aside class="sidebar col-12 col-xl-4" role="complementary">
+      {{ page.sidebar }}
+    </aside>
+  </div>
+{% else %}
+  <main aria-label="Site main content" class="content" id="content" role="main">
+    {{ page.content }}
+  </main>
+{% endif %}

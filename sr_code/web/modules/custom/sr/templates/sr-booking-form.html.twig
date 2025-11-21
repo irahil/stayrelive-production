@@ -1,0 +1,44 @@
+<div class="page-header page-content">
+   <div class="container">
+      <div class="row">
+         <div class="col-sm-9">
+         <h3>Request to book</h3>
+         </div>
+         <div class="col-sm-3"><img src="{{ base_path }}themes/srdesign/assets/images/others/book.svg" class="mb-n4" alt="Request to book" /></div>
+      </div>
+   </div>
+</div>
+<div class="container">
+   <div class="row">
+      <div class="col-sm-8 guest-info">
+         <h3>Guest Details</h3>
+         {{ form.form_build_id }}
+         {{ form.form_token }}
+         {{ form.form_id }}
+         {{ form.booking.name }}
+         {{ form.booking.email }}
+         {{ form.booking.phone_code }}
+         {{ form.booking.phone_number }}
+         {{ form.booking.adults }}
+         {{ form.booking.kids }}
+         {{ form.booking.remarks }}
+         {{ form.booking.date_range }}
+         {{ form.booking.actions.submit }}
+      </div>
+      <div class="col-sm-4 booking-info">
+         <div class="apartment-info">
+            <a href="{{ form.property_summary.url }}">
+               <p class="apt-photo">{{ form.property_summary.image }}</p>
+               <p class="apt-location">{{ form.property_summary.address }}</p>
+            </a>
+            <p class="apt-details">{{ form.property_summary.bedrooms }} Bedrooms & {{ form.property_summary.bathrooms }} Bathroom</p>
+            <p class="apt-details">Adults : {{form.booking.occupants_markup.adults }} | Kids : {{form.booking.occupants_markup.kids }}</p>
+            <div class="apt-details">
+               <div class="date-from-box">From : {{ form.booking.dates_markup.from }} To : {{ form.booking.dates_markup.to }}</div>
+            </div>
+            <p class="apt-details">{{ form.booking.price_markup.currency }} {{ form.booking.price_markup.final_price }} for total number of {{ form.booking.price_markup.days }} day(s).</p>
+         </div>
+      </div>
+   </div>
+</div>
+</div>

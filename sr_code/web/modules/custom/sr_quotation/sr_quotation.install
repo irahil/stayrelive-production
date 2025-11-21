@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the sr_quotation module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function sr_quotation_schema() {
+  $schema['sr_quotation'] = [
+    'description' => 'Stores quotation form submissions.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+      ],
+      'checkin_date' => ['type' => 'varchar', 'length' => 50],
+      'checkout_date' => ['type' => 'varchar', 'length' => 50],
+      'checkin_time' => ['type' => 'varchar', 'length' => 50],
+      'checkout_time' => ['type' => 'varchar', 'length' => 50],
+      'nights' => ['type' => 'varchar', 'length' => 10],
+      'unit_type' => ['type' => 'varchar', 'length' => 100],
+      'apartment_size' => ['type' => 'varchar', 'length' => 50],
+      'room_type' => ['type' => 'varchar', 'length' => 100],
+      'bathrooms' => ['type' => 'varchar', 'length' => 10],
+      'adults' => ['type' => 'varchar', 'length' => 10],
+      'kids' => ['type' => 'varchar', 'length' => 10],
+      'location' => ['type' => 'varchar', 'length' => 255],
+      'distance' => ['type' => 'varchar', 'length' => 50],
+      'map_link' => ['type' => 'varchar', 'length' => 255],
+      'description' => ['type' => 'text', 'size' => 'big'],
+      'quote' => ['type' => 'varchar', 'length' => 255],
+      'taxes' => ['type' => 'varchar', 'length' => 100],
+      'fx_rate' => ['type' => 'varchar', 'length' => 100],
+      'amenities' => ['type' => 'text', 'size' => 'big'],
+      'cancellation_policy' => ['type' => 'text', 'size' => 'big'],
+      'images' => ['type' => 'text', 'size' => 'big'],
+      'rules' => ['type' => 'text', 'size' => 'big'],
+      'note' => ['type' => 'text', 'size' => 'big'],
+      'created' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => REQUEST_TIME,
+      ],
+    ],
+    'primary key' => ['id'],
+  ];
+
+  return $schema;
+}

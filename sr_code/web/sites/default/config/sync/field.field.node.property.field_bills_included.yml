@@ -1,0 +1,21 @@
+uuid: 2f9b9938-c4be-4801-b735-e686ac72f5d3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_bills_included
+    - node.type.property
+  module:
+    - options
+id: node.property.field_bills_included
+field_name: field_bills_included
+entity_type: node
+bundle: property
+label: 'Bills included'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

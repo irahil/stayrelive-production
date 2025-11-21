@@ -1,0 +1,14 @@
+services:
+  sr.services:
+    class: Drupal\sr\Services\SRService
+    arguments: ['@current_user']
+  sr.event_subscriber_user_profile:
+    class: Drupal\sr\EventSubscriber\SrUserProfileSubscriber
+    arguments: ['@request_stack', '@current_route_match', '@current_user']
+    tags:
+      - { name: 'event_subscriber' }
+  sr.sr_init_subscriber:
+    class: Drupal\sr\EventSubscriber\SrAgentLoginDisplay
+    arguments: ['@request_stack']
+    tags:
+      - { name: event_subscriber }

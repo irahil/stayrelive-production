@@ -1,0 +1,21 @@
+uuid: fd1f9188-873c-4045-8696-bdabc2b4621f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_right_side_text
+    - paragraphs.paragraphs_type.left_image_right_accordion_
+  module:
+    - text
+id: paragraph.left_image_right_accordion_.field_right_side_text
+field_name: field_right_side_text
+entity_type: paragraph
+bundle: left_image_right_accordion_
+label: 'Right Side Text'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

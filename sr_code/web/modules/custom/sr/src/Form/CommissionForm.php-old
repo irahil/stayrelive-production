@@ -1,0 +1,92 @@
+<?php
+namespace Drupal\sr\Form;
+
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\Entity\Node;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
+use Drupal\user\Entity\User;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\common_utilities\Utilities\commonUtil;
+use Drupal\Core\Form\ConfigFormBase;
+
+
+class CommissionForm extends ConfigFormBase {
+  var $arr_source = array(
+    'homelike' => 'Homelike',
+    'plumguide' => 'Plumguide',
+  );
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormId() {
+    return 'commission_settings_form';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEditableConfigNames() {
+    return [
+      'commission.settings',
+    ];
+  }
+
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    $config = $this->config('commission.settings');
+
+    foreach ($this->arr_source as $key_source => $val_source) {
+      $form['fieldset_'.$key_source] = array(
+        '#type' => 'fieldset',
+        '#title' => $this
+          ->t('Sales commission of ' . $val_source),
+        '#attributes' => array(
+            'class' => array('SectionContainer'),
+        )
+      );
+      $key_name = $key_source.'_percentage';
+      $value_percentage = $config->get($key_name);
+
+      $form['fieldset_'.$key_source][$key_name] = array(
+        '#type' => 'number',
+        '#title' => $this->t('Commission Percentage'),
+        '#required' => TRUE,
+        '#default_value' => $value_percentage ?: 0,
+        '#attributes' => array(
+          'placeholder' => array('0'),
+        ),
+        '#min' => '0',
+        '#max' => '100',
+      );
+    }
+    //'#suffix' => '%',
+
+    $form['actions'] = [
+      '#type' => 'actions',
+    ];
+
+    $form['actions']['submit'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Save'),
+      '#weight' => 110,
+    ];
+
+    return $form;
+  }
+
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+  }
+
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $config = $this->config('commission.settings');
+    foreach ($this->arr_source as $key_source => $val_source) {
+      $key_name = $key_source.'_percentage';
+      $config->set($key_name, $form_state->getValue($key_name));
+    }
+    $config->save();
+    parent::submitForm($form, $form_state);
+  }
+
+}

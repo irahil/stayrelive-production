@@ -1,0 +1,281 @@
+.home-hero.about-hero {
+  .hero-copy {
+    h1 {
+      margin-bottom: toRem(20);
+
+      @include media-breakpoint-up(xl) {
+        margin-bottom: toRem(30);
+      }
+    }
+
+    p {
+      @include media-breakpoint-up(md) {
+        line-height: toRem(30);
+      }
+    }
+  }
+}
+
+.about-header,
+.about-rowone,
+.about-rowtwo,
+.about-rowthree {
+  img {
+    @extend .bdr-radius;
+  }
+
+  h2 {
+    margin-bottom: toRem(20);
+
+    @include media-breakpoint-up(xl) {
+      margin-bottom: toRem(30);
+    }
+  }
+
+  p {
+    font-size: toRem(18);
+
+    @include media-breakpoint-up(md) {
+      font-size: toRem(14);
+    }
+
+    @include media-breakpoint-up(xxl) {
+      font-size: toRem(18);
+    }
+  }
+}
+
+.about-ideology .bg-ideology {
+  background: url('../images/about/about-ideology.png') 0 0 no-repeat;
+  background-size: contain;
+  color: $white;
+
+  .ideology-copy {
+    padding: 100px 0;
+
+    h2 {
+      color: $white;
+    }
+  }
+}
+
+.home-hero.about {
+  .home-hero-image {
+    &::after {
+      @include media-breakpoint-up(lg) {
+        height: 70vh;
+      }
+
+      @include media-breakpoint-down(lg) {
+        height: 50vh;
+      }
+    }
+
+    img {
+      @extend .bdr-radius;
+
+      @include media-breakpoint-up(lg) {
+        height: 70vh;
+      }
+
+      @include media-breakpoint-down(lg) {
+        height: 50vh;
+      }
+    }
+  }
+
+  .hero-about-copy {
+    text-align: center;
+    width: 90%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+
+    @include media-breakpoint-up(xl) {
+      width: 70%;
+    }
+  }
+
+  h5,
+  p {
+    color: $white;
+    line-height: 98%;
+  }
+
+  h5 {
+    font-size: toRem(20);
+
+    @include media-breakpoint-up(xl) {
+      font-size: toRem(28);
+    }
+
+    @include media-breakpoint-up(xxl) {
+      font-size: toRem(36);
+    }
+  }
+
+  p {
+    font-size: toRem(25);
+
+    @include media-breakpoint-up(xl) {
+      font-size: toRem(30);
+    }
+
+    @include media-breakpoint-up(xxl) {
+      font-size: toRem(38);
+    }
+  }
+
+  img {
+
+    &::after {
+      box-shadow: 0px 10px 0px 0px rgba(11, 141, 159, 1);
+      content: "";
+      @extend .bdr-radius;
+    }
+  }
+
+  .about-shadow {
+    width: 94%;
+    margin: 0 auto;
+    background-color: $light;
+    height: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+
+    @include media-breakpoint-up(md) {
+      height: 30px;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+  }
+}
+
+.about-quote {
+  blockquote {
+    &::before {
+      display: none;
+    }
+
+    p {
+      font-size: toRem(26);
+      text-align: center;
+
+      @include media-breakpoint-up(md) {
+        font-size: toRem(40);
+        line-height: 115%;
+      }
+
+      @include media-breakpoint-up(xl) {
+        font-size: toRem(40);
+      }
+
+      @include media-breakpoint-up(xxl) {
+        font-size: toRem(50);
+      }
+    }
+  }
+}
+
+.founder-bgwrapper {
+  background: url('../images/about/about-ideology.webp') 0 0 no-repeat;
+  background-position: center center;
+  background-size: cover;
+  @extend .bdr-radius;
+  margin: toRem(15) 0;
+
+  @include media-breakpoint-up(md) {
+    min-height: 600px;
+  }
+
+  @include media-breakpoint-up(xxl) {
+    min-height: 750px;
+  }
+
+  @include media-breakpoint-down(xl) {
+    min-height: toRem(350);
+    padding: toRem(50) 0;
+  }
+
+  .founder-copy {
+
+    h2,
+    p {
+      color: $white;
+    }
+
+  }
+}
+
+.sr-story-wrapper {
+  .sr-story {
+    h3 {
+      font-family: $font-family-base;
+      font-size: toRem(40);
+      text-align: center;
+
+      @include media-breakpoint-up(md) {
+        font-size: toRem(60);
+      }
+
+      @include media-breakpoint-up(xxl) {
+        font-size: toRem(90);
+      }
+
+      span {
+        display: block;
+        font-size: toRem(30);
+      }
+    }
+  }
+}
+
+.about-principle {
+  position: relative;
+
+  &::before,
+  &::after {
+    content: "";
+    background: url('../images/about/curves.png') center center no-repeat;
+  }
+
+  @include media-breakpoint-up(lg) {
+    &::before,
+    &::after {
+      position: absolute;
+      top: 35px;
+      width: 150px;
+      height: 90px;
+    }
+
+    &::before {
+      left: 0;
+    }
+
+    &::after {
+      right: 0;
+    }
+  }
+
+  @include media-breakpoint-down(lg) {
+    padding: 120px 0;
+    &::before,
+    &::after {
+      position: absolute;
+      width: 150px;
+      height: 90px;
+      
+      transform: translateX(-50%);
+    }
+
+    &::before {
+      top: 10px;
+    }
+
+    &::after {
+      bottom: 10px;
+    }
+  }
+}

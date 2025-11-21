@@ -1,0 +1,6 @@
+currency_layer_integration.form:
+  title: 'Currency Layer Integration settings'
+  route_name: currency_layer_integration.form
+  description: 'Configure settings for the Currency Layer Integration module.'
+  parent: system.admin_config_development
+  weight: 99

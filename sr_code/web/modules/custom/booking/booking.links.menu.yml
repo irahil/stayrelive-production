@@ -1,0 +1,11 @@
+entity.booking.settings:
+  title: 'Booking'
+  description: 'Configure a Booking entity type.'
+  route_name:  entity.booking.settings
+  parent: system.admin_structure
+
+entity.booking.collection:
+  title: 'Bookings'
+  description: 'List of bookings.'
+  route_name: entity.booking.collection
+  parent: system.admin_content

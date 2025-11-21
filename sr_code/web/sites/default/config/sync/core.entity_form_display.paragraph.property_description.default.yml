@@ -1,0 +1,34 @@
+uuid: eccf7ae0-20e0-409f-8539-ff9ce9479f8a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.property_description.field_heading
+    - field.field.paragraph.property_description.field_text
+    - paragraphs.paragraphs_type.property_description
+  module:
+    - text
+id: paragraph.property_description.default
+targetEntityType: paragraph
+bundle: property_description
+mode: default
+content:
+  field_heading:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_text:
+    type: text_textarea
+    weight: 1
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

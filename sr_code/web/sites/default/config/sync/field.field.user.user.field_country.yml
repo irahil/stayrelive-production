@@ -1,0 +1,30 @@
+uuid: 5b9f74d3-528c-42f5-9371-4edf9427f500
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_country
+    - taxonomy.vocabulary.country
+  module:
+    - user
+id: user.user.field_country
+field_name: field_country
+entity_type: user
+bundle: user
+label: Country
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      country: country
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

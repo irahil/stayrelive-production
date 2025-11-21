@@ -1,0 +1,28 @@
+uuid: 7f762f63-d7cc-4abf-adcb-df90d501c123
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - sr
+  theme:
+    - srdesign
+id: srdesign_srpropertyprefixblockbasic
+theme: srdesign
+region: content
+weight: -5
+provider: null
+plugin: sr_property_prefix_block
+settings:
+  id: sr_property_prefix_block
+  label: 'SR Property Prefix block: basic'
+  label_display: '0'
+  provider: sr
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      property: property

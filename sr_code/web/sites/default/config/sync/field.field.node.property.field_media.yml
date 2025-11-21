@@ -1,0 +1,19 @@
+uuid: 5584420d-0f23-4bfb-bfd8-536af4fda305
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_media
+    - node.type.property
+id: node.property.field_media
+field_name: field_media
+entity_type: node
+bundle: property
+label: Media
+description: 'Serialized array of media '
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

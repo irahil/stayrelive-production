@@ -1,0 +1,49 @@
+.page-node-type-property .apartment-photos > .container-fluid > .row .block-share-button-block> button{
+    display: none;
+}
+
+.block-share-button-block .modal .modal-dialog{
+   border: 0;
+}
+
+.block-share-button-block .modal .modal-dialog span{
+   cursor: pointer;
+   padding-left: 36px;
+}
+
+.block-share-button-block .modal .modal-dialog .copy-url{
+    background: url(../images/copy.png);
+    background-repeat: no-repeat;
+    background-size: 36px;
+    padding: 10px;
+    background-position: center left;
+}
+
+.block-share-button-block .modal .modal-dialog .share-whatsapp{
+    background: url(../images/whatsapp.png);
+    background-repeat: no-repeat;
+    background-size: 36px;
+    padding: 10px;
+    background-position: center left;
+}
+
+.block-share-button-block .modal .modal-dialog .download-pdf{
+    background: url(../images/pdf.png);
+    background-repeat: no-repeat;
+    background-size: 22px;
+    padding: 10px;
+    background-position: 8px;
+}
+
+.block-share-button-block .modal .modal-dialog .download-pdf .pdf-download-button{
+    margin-left: 36px;
+    color: black;
+    display: inline-block;
+}
+
+.block-share-button-block .modal .modal-dialog .download-pdf .pdf-download-button:focus{
+    margin-left: 36px;
+    color: black;
+    display: inline-block;
+    outline: none;
+}

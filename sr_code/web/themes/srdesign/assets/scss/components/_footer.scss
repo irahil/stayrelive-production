@@ -1,0 +1,60 @@
+footer {
+    background-color: $secondary;
+    border-radius: toRem(25);
+    color: $light;
+    padding: 50px 0;
+    margin: 0 toRem(12);
+    z-index: 10;
+    @include media-breakpoint-up(md) {
+        margin: 0 toRem(24);
+    }
+    h5 {
+        color: $light;
+    }
+    .nav-link, .btn {
+        color: $white !important;
+        &:hover {
+            color: $light !important;
+            text-decoration: underline;
+        }
+    }
+    .social-list {
+        li {
+            margin-right: 0!important;
+            a {
+                opacity: 0.5;
+                &:hover {
+                    opacity: 1;
+                    color: $white;
+                }
+
+                .fab {
+                    &:before{
+                        font-size: toRem(18);
+                    }
+                }
+                &.twiiter-icon img {
+                    width: 16px;
+                }
+            }
+        }
+    }
+    #block-footer {
+        ul {
+            li {
+                a {
+                    color: #fff !important;
+                    &:hover {
+                        color: rgb(214, 238, 242) !important;
+                        text-decoration: underline;
+                    }
+                }
+            }
+        }
+    }
+    .col-6 {
+        @media (max-width: 500px) {
+            width: 100%;
+        }
+    }
+}

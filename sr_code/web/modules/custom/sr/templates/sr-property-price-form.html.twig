@@ -1,0 +1,60 @@
+<aside class="col-xl-5 order-md-last">
+  <div data-sticky data-margin-top="100" data-sticky-for="1199">
+
+    <!-- Book now START -->
+    <div class="booking-details">
+      <div class="card-header bg-transparent">
+        <!-- Title -->
+        <h4 class="card-title mb-0">Price Summary</h4>
+        <h4 class="card-title mb-0">
+          {{ form.form_build_id }}
+          {{ form.form_token }}
+          {{ form.form_id }}
+          {{ form.date_range }}
+          {{ form.actions.submit }}
+
+        </h4>
+
+      </div>
+      <div class="row g-4 mb-3">
+        <!-- Item -->
+
+      <ul class="list-group list-group-borderless">
+        {% if form.price_summary.flag_show_price %}
+          <li class="list-group-item px-2 d-flex justify-content-between">
+            <span class="h6 fw-light mb-0">{{ form.price_summary.currency_code }} {{ form.price_summary.price }} x {{ form.price_summary.days }} Nights</span>
+            <span class="h6 fw-light mb-0">{{ form.price_summary.currency_code }} {{ form.price_summary.price_for_days }}</span>
+          </li>
+          <li class="list-group-item px-2 d-flex justify-content-between">
+            <span class="h6 fw-light mb-0">Cleaning and service fee</span>
+            <span class="h6 fw-light mb-0">Included</span>
+          </li>
+          <li class="list-group-item px-2 d-flex justify-content-between">
+            <span class="h6 fw-light mb-0">Taxes</span>
+            <span class="h6 fw-light mb-0">Included</span>
+          </li>
+          <li
+            class="list-group-item bg-light d-flex justify-content-between rounded-2 px-2 mt-2">
+            <span class="h5 fw-normal mb-0 ps-1">Deposit </span>
+            <span class="h5 fw-normal mb-0">{{ form.price_summary.currency_code }} {{ form.price_summary.deposit }}</span>
+          </li>
+          <li
+            class="list-group-item bg-light d-flex justify-content-between rounded-2 px-2 mt-2">
+            <span class="h5 fw-normal mb-0 ps-1">Total </span>
+            <span class="h5 fw-normal mb-0">{{ form.price_summary.currency_code }} {{ form.price_summary.final_price }}</span>
+          </li>
+        {% else %}
+          <li class="list-group-item px-2 d-flex justify-content-between">
+            <span class="h6 fw-light mb-0">Price on Demand</span>
+            <span class="h6 fw-light mb-0"></span>
+          </li>
+        {% endif %}
+      </ul>
+      {% if form.price_summary.flag_product_detail == true %}
+      <div class="d-grid gap-2">
+        <a href="{{ form.price_summary.booking_url }}" class="btn mb-0">Request to book</a>
+      </div>
+      {% endif %}
+
+    </div>
+  </aside>

@@ -1,0 +1,70 @@
+<script type="text/javascript">
+{{ form.js_town_city | raw}}
+{{ form.search_result.gm_param_value | raw}}
+</script>
+<section class="search-results pt-1">
+   <div class="search-results-container container-fluid">
+  <div class="row">
+              <div class="results-filters d-flex justify-content-end">
+                  <ul>
+                     <li><a href="#" class="ms-2" data-bs-toggle="modal" data-bs-target="#mapmodal"><i class="bi bi-eye-fill me-1"></i>Filters</a></li>
+                  </ul>
+               </div>
+            </div>
+      <div class="row">
+         <div class="col-lg-6 show-results">
+            
+            <div class="row">
+
+               <div class="results-region">
+                  {{ form.search_result.result }}
+                  {{ form.search_result.pager }}
+                  {{ form.search_result.no_result }}
+               </div>
+            </div>
+         </div>
+         <div class="col-md-6 pe-0">
+               <div id="google_map" style="height: 100vh;width: 100%;"></div>
+         </div>
+      </div>
+      <div class="row custom-form">
+         <div class="col-md-6">
+         </div>
+      </div>
+      <div class="row custom-form">
+         <div class="col-md-6">
+         </div>
+      </div>
+   </div>
+</section>
+
+ <div class="modal fade" id="mapmodal" tabindex="-1" aria-labelledby="mapmodalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <!-- Title -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mapmodalLabel">Search Filters</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Map -->
+                <div class="modal-body">
+                  {{ form.form_build_id }}
+                  {{ form.form_token }}
+                  {{ form.form_id }}
+                  {{ form.filter.sort }}
+                  {{ form.filter.country_code }}
+                  {{ form.filter.town_city }}
+                  {{ form.filter.date }}
+                  {{ form.filter.price }}
+                  {{ form.filter.room }}
+                  {{ form.filter.occupants }}
+                  {{ form.filter.amenities }}
+                  {{ form.filter.actions.submit }}
+                </div>
+                <!-- Button -->
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,36 @@
+<div class="container">
+   <div class="row">
+      <div class="col-sm-8 guest-info">
+      <h3>Booking Details</h3>
+         {{ form.form_build_id }}
+         {{ form.form_token }}
+         {{ form.form_id }}
+         {{ form.booking_id }}
+         {{ form.pid }}
+         {{ form.currency_code }}
+         {{ form.price }}
+         {{ form.hidden_status }}
+         {{ form.booking.status }}
+         {{ form.booking.name }}
+         {{ form.booking.email }}
+         {{ form.booking.phone_code }}
+         {{ form.booking.phone_number }}
+         {{ form.booking.price_info }}
+         {{ form.booking.date }}
+         {{ form.booking.occupants }}
+         {{ form.booking.remarks }}
+         {{ form.booking.actions.submit }}
+         {{ form.error }}
+      </div>
+     <div class="col-sm-4 booking-info">
+      <div class="apartment-info">
+      <a href="{{ form.property_summary.url }}">
+         <p class="apt-photo">{{ form.property_summary.image }}</p>
+         <p class="apt-location">{{ form.property_summary.address }}</p>
+      </a>
+      <p class="apt-details">{{ form.property_summary.bedrooms }} Bedrooms(s) & {{ form.property_summary.bathrooms }} Bathroom(s)</p>
+
+      </div>
+     </div>
+   </div>
+ </div>

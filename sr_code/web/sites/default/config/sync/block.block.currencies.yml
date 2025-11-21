@@ -1,0 +1,25 @@
+uuid: c9778e14-f93c-4903-96f8-46560941c6b6
+langcode: en
+status: false
+dependencies:
+  config:
+    - system.menu.currencies
+  module:
+    - system
+  theme:
+    - srdesign
+id: currencies
+theme: srdesign
+region: branding
+weight: -4
+provider: null
+plugin: 'system_menu_block:currencies'
+settings:
+  id: 'system_menu_block:currencies'
+  label: Currencies
+  label_display: visible
+  provider: system
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

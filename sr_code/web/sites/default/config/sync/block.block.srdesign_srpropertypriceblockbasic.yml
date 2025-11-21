@@ -1,0 +1,28 @@
+uuid: b9bd9ed7-71fa-4b70-bd5b-c76614c1f6d6
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - sr
+  theme:
+    - srdesign
+id: srdesign_srpropertypriceblockbasic
+theme: srdesign
+region: content
+weight: -3
+provider: null
+plugin: sr_property_price_block
+settings:
+  id: sr_property_price_block
+  label: 'SR Property Price block: basic'
+  label_display: '0'
+  provider: sr
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      property: property

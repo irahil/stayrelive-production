@@ -1,0 +1,8 @@
+uuid: cec094f7-f3dd-4f19-9460-5645bf8619d8
+langcode: en
+status: true
+dependencies: {  }
+id: currencies
+label: Currencies
+description: Currencies
+locked: false

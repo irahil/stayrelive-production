@@ -1,0 +1,4 @@
+services:
+  currency_layer_integration.services:
+    class: Drupal\currency_layer_integration\Services\CLService
+    arguments: ['@current_user']

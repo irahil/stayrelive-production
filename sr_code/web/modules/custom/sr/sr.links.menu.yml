@@ -1,0 +1,20 @@
+sr.admin:
+  title: 'StayRelive'
+  description: ''
+  parent: system.admin
+  weight: 10
+  route_name: sr.admin_index
+
+sr.admin.import:
+  parent: sr.admin
+  title: 'Manage commission'
+  route_name: sr.commission.manage
+  description: 'Stayrelive manage commission'
+  weight: 99
+
+sr.admin.approval:
+  parent: sr.admin
+  title: 'Approval Dashboard'
+  route_name: user_registrationpassword.pending_users_page
+  description: 'Approve or reject pending user accounts.'
+  weight: 100

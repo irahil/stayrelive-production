@@ -1,0 +1,19 @@
+uuid: 5c67da0d-fe70-40b9-8f6d-d8d105bd0c77
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_street_name
+    - node.type.property
+id: node.property.field_street_name
+field_name: field_street_name
+entity_type: node
+bundle: property
+label: 'Street Name'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

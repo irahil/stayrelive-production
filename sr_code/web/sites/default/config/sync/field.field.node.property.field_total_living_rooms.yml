@@ -1,0 +1,21 @@
+uuid: 7c756f1e-daab-447f-a713-6718d38730f1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_total_living_rooms
+    - node.type.property
+  module:
+    - options
+id: node.property.field_total_living_rooms
+field_name: field_total_living_rooms
+entity_type: node
+bundle: property
+label: 'Total Living Rooms'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_integer

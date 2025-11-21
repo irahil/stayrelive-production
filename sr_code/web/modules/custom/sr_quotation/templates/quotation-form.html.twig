@@ -1,0 +1,85 @@
+<div class="quotation-form-page">
+	<div class="quotation-form-container">
+		<h2 class="form-title text-center mb-4">Get a Quotation</h2>
+
+		<div class="quotation-form-sections">
+
+			{# ---------------- Booking Information ---------------- #}
+			<div class="form-section">
+				<h3 class="section-title">Booking Information</h3>
+				<div class="form-grid two-cols">
+					{{ form.booking_info.dates.check_in_date }}
+					{{ form.booking_info.dates.check_out_date }}
+					{{ form.booking_info.times.check_in_time }}
+					{{ form.booking_info.times.check_out_time }}
+					{{ form.booking_info.nights }}
+				</div>
+			</div>
+
+			{# ---------------- Property Information ---------------- #}
+			<div class="form-section">
+				<h3 class="section-title">Property Information</h3>
+				<div class="form-grid two-cols">
+					{{ form.property_info.unit_type }}
+					{{ form.property_info.room_details.room_type }}
+					{{ form.property_info.room_details.bathrooms }}
+					{{ form.property_info.apartment_size }}
+					{{ form.property_info.occupancy.adults }}
+					{{ form.property_info.occupancy.kids }}
+					{{ form.property_info.location_details.location }}
+					{{ form.property_info.location_details.distance }}
+					{{ form.property_info.map_link }}
+					{{ form.property_info.description }}
+				</div>
+			</div>
+
+			{# ---------------- Pricing & Financials ---------------- #}
+			<div class="form-section">
+				<h3 class="section-title">Pricing & Financials</h3>
+				<div class="form-grid three-cols">
+					{{ form.financials.quote }}
+					{{ form.financials.taxes }}
+					{{ form.financials.fx_rate }}
+				</div>
+			</div>
+
+			{# ---------------- Amenities & Policies ---------------- #}
+			<div class="form-section">
+				<h3 class="section-title">Amenities & Policies</h3>
+
+				<div class="form-grid one-col">
+					<div class="amenities-section">
+						{{ form.extras.amenities }}
+					</div>
+
+					<div class="policies-section">
+						{{ form.extras.cancellation_policy }}
+					</div>
+
+					<div class="rules-section">
+						{{ form.extras.rules }}
+					</div>
+
+					<div class="note-section">
+						{{ form.extras.note }}
+					</div>
+				</div>
+			</div>
+
+			{# ---------------- Images ---------------- #}
+			<div class="form-section">
+				<h3 class="section-title">Property Images</h3>
+				{{ form.images.apartment_images }}
+			</div>
+
+			{# ---------------- Hidden Fields & Submit ---------------- #}
+			{{ form.form_build_id }}
+			{{ form.form_token }}
+			{{ form.form_id }}
+
+			<div class="form-actions text-center mt-4">
+				{{ form.actions.submit }}
+			</div>
+		</div>
+	</div>
+</div>

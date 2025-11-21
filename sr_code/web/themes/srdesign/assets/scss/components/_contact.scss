@@ -1,0 +1,59 @@
+.webform-wrapper-contact-us {
+    max-width: 1400px;
+    margin: auto !important;
+    .js-form-wrapper {
+        flex-direction: column;
+        gap: 1.6rem;
+    }
+    @media (max-width: 768px) {
+        margin: auto 0.625rem;
+    }
+}
+
+.contact-message-contact-us-form {
+    .contact-form-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+
+        @media (max-width: 1024px) {
+            gap: 20px;
+        }
+
+        @media (max-width: 992px) {
+            grid-template-columns: 1fr;
+        }
+
+        .contact-form-image {
+            background: url(../images/contact/contact-bg.webp) no-repeat;
+            background-size: cover;
+            background-position: center;
+            border-radius: 1.5625rem;
+        }
+        .contact-form-content {
+            h2 {
+                font-size: 36px;
+            }
+            
+            padding: 0 2rem;
+
+            @media (max-width: 1200px) {
+                padding: 0;
+            }
+            input:not([type="radio"]),
+            select ,
+            textarea {
+                width: 100%;
+                max-width: 100% !important;
+            }
+            .form-radios {
+                display: flex;
+                gap: 30px;
+                flex-wrap: wrap;
+            }
+            textarea {
+                max-height: 10rem;
+            }
+        }
+    }
+}

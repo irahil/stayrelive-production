@@ -1,0 +1,312 @@
+/* .quotation-form-wrapper {
+  background: #fff;
+  border-radius: 10px;
+  padding: 30px;
+  max-width: 900px;
+  margin: 30px auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+.form-title {
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 25px;
+  color: #222;
+}
+
+.quotation-form .form-grid {
+  display: grid;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.quotation-form .two-cols {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.quotation-form .one-col {
+  grid-template-columns: 1fr;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #0074bd;
+  outline: none;
+}
+
+.form-actions {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.form-actions input[type="submit"],
+.form-actions button {
+  background: #0074bd;
+  color: #fff;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.form-actions input[type="submit"]:hover,
+.form-actions button:hover {
+  background: #005a93;
+}
+
+@media (max-width: 600px) {
+  .quotation-form-wrapper {
+    padding: 20px;
+  }
+  .form-title {
+    font-size: 1.3rem;
+  }
+} */
+
+
+.quotation-form-page {
+  background: #e9f6fa;
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.quotation-form-container {
+  background: #fff;
+  padding: 2rem 3rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  width: 100%;
+}
+
+.form-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1b3b5d;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.form-section {
+  margin-bottom: 2.5rem;
+}
+
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #00567e;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #cce5ee;
+  padding-bottom: 0.4rem;
+}
+
+.form-grid {
+  display: grid;
+  gap: 1rem 1.5rem;
+}
+
+.form-grid.two-cols {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.form-grid.three-cols {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.form-grid.one-col {
+  grid-template-columns: 1fr;
+}
+
+.form-actions {
+  text-align: center;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+select,
+textarea {
+  width: 100%;
+  border: 1px solid #d6e4ed;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  background: #f7fbfc;
+}
+
+input[type="submit"],
+button[type="submit"] {
+  background-color: #0074b8;
+  color: #fff;
+  border: none;
+  padding: 10px 30px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+input[type="submit"]:hover,
+button[type="submit"]:hover {
+  background-color: #005a8a;
+}
+
+/* --- Amenities Section Styling --- */
+.amenities-section .form-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+/* .amenities-section label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #cfd8dc;
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-size: 14px;
+  background: #fff;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+} */
+
+.quotation-form-page .amenities-section .form-checkboxes .js-form-type-checkbox{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    margin-left: 0px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: border-color 0.2s 
+ease, background-color 0.2s 
+ease;
+    box-sizing: border-box;
+}
+.quotation-form-page .amenities-section .form-checkboxes .js-form-type-checkbox .form-boolean{
+  border-radius: 12px;
+}
+.quotation-form-page .amenities-section .form-checkboxes .js-form-type-checkbox .form-item__label{
+  padding-left: 0.1rem;
+  top:0;
+}
+
+/* .amenities-section input[type="checkbox"],
+.amenities-section input[type="radio"] {
+  display: none;
+} */
+
+/* .amenities-section input[type="checkbox"]:checked + label,
+.amenities-section input[type="radio"]:checked + label {
+  background: #e8f6ff;
+  border-color: #0074b8;
+  color: #0074b8;
+  box-shadow: inset 0 0 0 2px #0074b8;
+} */
+
+/* --- Section Titles --- */
+.quotation-form-page .quotation-form-sections .fieldset__label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #00567e;
+  margin-bottom: 0.5rem;
+}
+.quotation-form-page .quotation-form-sections .form-item__label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #00567e;
+  margin-bottom: 0.5rem;
+}
+
+/* --- Full-width Text Areas --- */
+.policies-section textarea,
+.rules-section textarea,
+.note-section textarea {
+  width: 100% !important;
+  min-height: 120px;
+  border-radius: 10px;
+  background: #f7fbfc;
+  border: 1px solid #d6e4ed;
+  padding: 12px;
+  font-size: 14px;
+  resize: vertical;
+}
+
+/* --- Improve Field Alignment --- */
+.policies-section,
+.rules-section,
+.note-section {
+  margin-bottom: 1.5rem;
+}
+
+/* --- Optional: make radio/checkbox groups uniform --- */
+.form-type-checkboxes .form-item,
+.form-type-radios .form-item {
+  display: inline-block;
+  margin-right: 0.6rem;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .amenities-section label {
+    flex: 1 1 48%;
+    text-align: center;
+  }
+}
+
+.timepicker-wrapper,
+.datepicker-wrapper {
+  position: relative;
+}
+
+.time-icon,
+.date-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  cursor: pointer;
+}
+
+.quotation-form-page .quotation-form-sections .form-textarea-wrapper textarea {
+    padding: 1.25rem;
+    background-color: rgb(214, 238, 242);
+    color: #192452;
+    border-radius: 1.25rem;
+    font-size: 1.125rem;
+    max-width: 50rem;
+}

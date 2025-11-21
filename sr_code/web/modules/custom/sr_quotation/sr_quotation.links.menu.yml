@@ -1,0 +1,6 @@
+sr_quotation.admin:
+  title: 'Quotations'
+  description: 'Manage property quotations'
+  route_name: sr_quotation.list
+  parent: system.admin_content
+  weight: 100

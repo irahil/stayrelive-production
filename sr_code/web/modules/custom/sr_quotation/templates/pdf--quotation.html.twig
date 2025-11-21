@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SilverDoor - Apartment Options</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            color-adjust: exact !important;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background-color: white;
+            color: #2c3e50;
+            width: 210mm;
+            margin: 0 auto;
+            padding: 0;
+            line-height: 1.4;
+        }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            background: white;
+            page-break-after: always;
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 42px;
+            font-weight: 300;
+            color: #34495e;
+            margin-bottom: 30px;
+            letter-spacing: 3px;
+        }
+
+        .header-title {
+            font-size: 20px;
+            color: #34495e;
+            margin-bottom: 30px;
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            color: #34495e;
+            margin-bottom: 15px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        /* Main layout table */
+        .main-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        /* Enquiry table styling */
+        .enquiry-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+
+        .enquiry-table .combined-cell {
+            background-color: #E7ECEB;
+            padding: 10px 15px;
+            font-size: 12px;
+            color: #34495e;
+            border-radius: 4px 0 0 4px;
+            vertical-align: middle;
+            width: 45%;
+        }
+
+        .enquiry-table .icon-container {
+            width: 35px;
+            height: 35px;
+            background-color: red;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+            margin-right: 12px;
+        }
+
+        {# .enquiry-table .icon-container svg {
+            width: 18px;
+            height: 18px;
+            fill: white;
+        } #}
+
+        .enquiry-table .value-cell {
+            padding: 10px 15px;
+            font-size: 12px;
+            color: #34495e;
+            background-color: #fff;
+            border-radius: 0 4px 4px 0;
+            border: 1.5px solid #E7ECEB;
+            vertical-align: middle;
+            width: 55%;
+        }
+
+        /* Contact section styling */
+        .contact-box {
+            background-color: #E7ECEB;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .contact-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .contact-photo-cell {
+            width: 80px;
+            vertical-align: top;
+            padding-right: 15px;
+        }
+
+        .contact-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: #d5d5d5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .contact-info h3 {
+            font-size: 16px;
+            color: #34495e;
+            margin-bottom: 4px;
+            margin-top: 0;
+        }
+
+        .contact-info p {
+            font-size: 11px;
+            color: #34495e;
+            margin-bottom: 2px;
+        }
+
+        .contact-note {
+            font-size: 11px;
+            line-height: 1.5;
+            color: #34495e;
+            margin-top: 12px;
+        }
+
+        .contact-note a {
+            color: #5dade2;
+            text-decoration: none;
+        }
+
+        /* Comments section */
+        .comments-box {
+            background-color: #E7ECEB;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 12px;
+            color: #34495e;
+            min-height: 80px;
+        }
+
+        /* Apartment options section */
+        .options-section {
+            margin-top: 30px;
+        }
+
+        .apartment-card {
+            border: 1px solid #d5d5d5;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            page-break-inside: avoid;
+        }
+
+        .apartment-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .apartment-image-cell {
+            width: 350px;
+            vertical-align: top;
+            padding-right: 20px;
+        }
+
+        .apartment-image {
+            width: 100%;
+            height: 220px;
+            border-radius: 5px;
+            overflow: hidden;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+        }
+
+        .apartment-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .apartment-details h3 {
+            font-size: 16px;
+            color: #34495e;
+            margin-bottom: 8px;
+            margin-top: 0;
+        }
+
+        .apartment-address {
+            font-size: 13px;
+            color: #34495e;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+
+        .details-table .label-cell {
+            width: 160px;
+            color: #34495e;
+            font-weight: 500;
+            padding: 2px 0;
+            vertical-align: top;
+        }
+
+        .details-table .value-cell {
+            color: #34495e;
+            padding: 2px 0;
+            vertical-align: top;
+        }
+
+        .sustainability-row {
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .eco-icon {
+            width: 25px;
+            height: 25px;
+            background-color: #a8d5ba;
+            border-radius: 50%;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        {# .icon-container {
+    background-color: #dcdcdc;
+    border-radius: 50rem;
+} #}
+
+        /* Print-specific styles */
+        @media print {
+            body {
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            .page {
+                margin: 0;
+                padding: 20mm;
+                box-shadow: none;
+            }
+
+            .apartment-card {
+                page-break-inside: avoid;
+            }
+            
+            /* Force background colors in print */
+            .enquiry-table .combined-cell,
+            .contact-box,
+            .comments-box {
+                background-color: #E7ECEB !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .enquiry-table .icon-container {
+                background-color: #dcdcdc !important;
+                -webkit-print-color-adjust: exact;
+                border-radius: 50% !important;
+                print-color-adjust: exact;
+            }
+
+            .contact-photo {
+                background-color: #d5d5d5 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .eco-icon {
+                background-color: #a8d5ba !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="logo">SilverDoor</div>
+        
+        <h1 class="header-title">HI JAWAD, I'VE FOUND 2 APARTMENT OPTIONS FOR YOU.</h1>
+        
+        <table class="main-table">
+            <tr>
+                <td width="50%" valign="top">
+                    <h2 class="section-title">YOUR ENQUIRY</h2>
+                    
+                    <table class="enquiry-table">
+                        <tbody>
+                            <tr>
+                                <td class="combined-cell">
+                                    Reserving company name:
+                                </td>
+                                <td class="value-cell">Stay Relive</td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="combined-cell">
+                                <div style="width: 35px; height: 35px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; margin-right: 12px; background-color: green;">
+                                    <img src="http://stayrelive.local.com:8888/modules/custom/sr_quotation/images/icons/user-icon-round-grey-icon_1076610-44912.jpg" alt="Darlington Apartment">
+                                </div>
+                                    Guest name:
+                          
+                                </td>
+                                <td class="value-cell">TBC</td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="combined-cell">
+                                    <span class="icon-container">
+                                        <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
+                                    </span>
+                                    SilverDoor reference:
+                                </td>
+                                <td class="value-cell">E-319669</td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="combined-cell">
+                                    <span class="icon-container">
+                                        <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
+                                    </span>
+                                    Check-in date:
+                                </td>
+                                <td class="value-cell">15 January 2025</td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="combined-cell">
+                                    <span class="icon-container">
+                                        <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
+                                    </span>
+                                    Check-out date:
+                                </td>
+                                <td class="value-cell">14 April 2025</td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="combined-cell">
+                                    <span class="icon-container">
+                                        <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                                    </span>
+                                    Number of nights:
+                                </td>
+                                <td class="value-cell">89</td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="combined-cell">
+                                    <span class="icon-container">
+                                        <svg viewBox="0 0 24 24"><path d="M7 13c1.66 0 3-1.34 3-3S8.66 7 7 7s-3 1.34-3 3 1.34 3 3 3zm12-6h-8v7H3V7H1v10h22v-6c0-2.21-1.79-4-4-4z"/></svg>
+                                    </span>
+                                    Apartment type:
+                                </td>
+                                <td class="value-cell">Studio</td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="combined-cell">
+                                    <span class="icon-container">
+                                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                    </span>
+                                    Location:
+                                </td>
+                                <td class="value-cell">United Kingdom - Darlington</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                
+                <td width="50%" valign="top">
+                    <h2 class="section-title">YOUR SILVERDOOR CONTACT</h2>
+                    
+                    <div class="contact-box">
+                        <table class="contact-table">
+                            <tbody>
+                                <tr>
+                                    <td class="contact-photo-cell">
+                                        <div class="contact-photo">
+                                            KD
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="contact-info">
+                                            <h3>Katie Dufton</h3>
+                                            <p>katedufton@silverdoor.com</p>
+                                            <p>+44 (0)2080908090</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <p class="contact-note">
+                            If you would like to make a reservation at one of these properties you must <a href="#">click here</a> to read and accept the terms before proceeding.
+                        </p>
+                    </div>
+                    
+                    <h2 class="section-title" style="margin-top: 20px;">COMMENTS FROM KATIE</h2>
+                    <div class="comments-box">
+                        Please see available,
+                    </div>
+                </td>
+            </tr>
+        </table>
+        
+        <div class="options-section">
+            <h2 class="section-title">YOUR OPTIONS</h2>
+            
+            <div class="apartment-card">
+                <table class="apartment-table">
+                    <tbody>
+                        <tr>
+                            <td class="apartment-image-cell">
+                                <div class="apartment-image">
+                                    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1024&h=768&fit=crop" alt="Darlington Apartment">
+                                </div>
+                            </td>
+                            
+                            <td valign="top">
+                                <div class="apartment-details">
+                                    <h3>1. Darlington Apartments by MPH</h3>
+                                    <p class="apartment-address">The Coachman,135 Victoria Road,Darlington,DLI 5BP,United Kingdom</p>
+                                    
+                                    <table class="details-table">
+                                        <tbody>
+                                            <tr>
+                                                <td class="label-cell">Apartment type:</td>
+                                                <td class="value-cell">16X1 bedroom,1 bathroom</td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td class="label-cell">Apartment size:</td>
+                                                <td class="value-cell">Approx. 49 sqm</td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td class="label-cell">Rate:</td>
+                                                <td class="value-cell">£65.00 ex tax (avg. per night)</td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td class="label-cell">Tax Applicable:</td>
+                                                <td class="value-cell"></td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td class="label-cell">Cancellation Policy:</td>
+                                                <td class="value-cell">30 days notice</td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td class="label-cell">Housekeeping:</td>
+                                                <td class="value-cell">Once weekly</td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td class="label-cell">Travel Notes:</td>
+                                                <td class="value-cell">Train:Darlington-13 minute walk</td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td class="label-cell">Apartment Description:</td>
+                                                <td class="value-cell">
+                                                    Double bed<br>
+                                                    1 bathroom<br>
+                                                    Fully equipped kitchen
+                                                </td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td colspan="2" class="sustainability-cell">
+                                                    <div class="sustainability-row">
+                                                        <span class="eco-icon"></span>
+                                                        <span class="label-cell" style="display: inline; vertical-align: middle;">Sustainability:</span>
+                                                        <span class="value-cell" style="display: inline; vertical-align: middle;">14.34 kg CO2e</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Second apartment option -->
+            <div class="apartment-card">
+                <table class="apartment-table">
+                    <tbody>
+                        <tr>
+                            <td class="apartment-image-cell">
+                                <div class="apartment-image">
+                                    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1024&h=768&fit=crop" alt="Darlington Apartment">
+                                </div>
+                            </td>
+                            
+                            <td valign="top">
+                                <div class="apartment-details">
+                                    <h3>2. Second Apartment Option</h3>
+                                    <p class="apartment-address">Address of the second apartment option</p>
+                                    
+                                    <table class="details-table">
+                                        <tbody>
+                                            <tr>
+                                                <td class="label-cell">Apartment type:</td>
+                                                <td class="value-cell">Studio, 1 bathroom</td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td class="label-cell">Apartment size:</td>
+                                                <td class="value-cell">Approx. 35 sqm</td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td class="label-cell">Rate:</td>
+                                                <td class="value-cell">£55.00 ex tax (avg. per night)</td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td class="label-cell">Tax Applicable:</td>
+                                                <td class="value-cell"></td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td class="label-cell">Cancellation Policy:</td>
+                                                <td class="value-cell">14 days notice</td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td class="label-cell">Housekeeping:</td>
+                                                <td class="value-cell">Twice weekly</td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td class="label-cell">Travel Notes:</td>
+                                                <td class="value-cell">Bus: City Center - 5 minute walk</td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td class="label-cell">Apartment Description:</td>
+                                                <td class="value-cell">
+                                                    Queen bed<br>
+                                                    Kitchenette<br>
+                                                    Living area
+                                                </td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td colspan="2" class="sustainability-cell">
+                                                    <div class="sustainability-row">
+                                                        <span class="eco-icon"></span>
+                                                        <span class="label-cell" style="display: inline; vertical-align: middle;">Sustainability:</span>
+                                                        <span class="value-cell" style="display: inline; vertical-align: middle;">10.25 kg CO2e</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

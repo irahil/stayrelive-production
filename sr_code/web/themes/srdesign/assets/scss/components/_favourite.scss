@@ -1,0 +1,133 @@
+.page-header {
+    background-color: $primary;
+    display: block;
+    padding: toRem(50) 0;
+    margin-bottom: 50px;
+
+    h3 {
+        color: $white;
+    }
+}
+
+.placeholder {
+    opacity: 1 !important;
+    cursor: text !important;
+    background-color: transparent !important;
+}
+
+@keyframes animate {
+    0% {
+      background-position: left;
+    }
+    100% {
+      background-position: right;
+    }
+}
+
+.path-viewfavouritepage-1 {
+    .views-row {
+        .result-list {
+            border-radius: 1.875rem;
+            position: relative;
+            transition: $transition-base;
+            &:hover {
+                background-color: $primary-light;
+                img {
+                    opacity: 0.8;
+                }
+                .result-title a {
+                    color: $secondary;
+                }
+            }
+            .result-image  {
+                overflow: hidden;
+                position: relative;
+                border-radius: 1.875rem;
+                background-color: #000;
+                margin-bottom: 0.625rem;
+                img {
+                    width: 100%;
+                    height: 15.625rem;
+                    object-fit: cover;
+                    transition: $transition-base;
+                }
+            }
+            .result-title {
+                padding: 0 0.9375rem;
+                h3 {
+                    font-size: 1.375rem;
+                    margin-bottom: 0.3125rem;
+                    a {
+                        color: $secondary;
+                    }
+                }
+            }
+            .result-room , .result-price {
+                padding: 0 0.9375rem;
+            }
+            .flag-link {
+                position: absolute;
+                top: -16px;
+                right: -16px;
+            }
+            .flag-waiting .ajax-progress--throbber{
+                display: none;
+            }
+            .flag-link .action-flag a{
+                background: url(/themes/srdesign/assets/images/common/heart.png) no-repeat;
+                height: 5.625rem;
+                width: 5.625rem;
+                font-size: 0;
+                outline: none;
+                display: block;
+                background-position: left;
+                background-size: 2900%;
+            }
+            .flag-link .action-unflag a{
+                background: url(/themes/srdesign/assets/images/common/heart.png) no-repeat;
+                height: 5.625rem;
+                width: 5.625rem;
+                font-size: 0;
+                outline: none;
+                display: block;
+                background-size: 2900%;
+                animation: animate 0.4s steps(28) 1;
+                background-position: right;
+            }
+        }
+    }
+}
+
+.result-list {
+    position: relative;
+.flag-link {
+    position: absolute;
+    top: -16px;
+    right: 0;
+  
+    .action-flag a {
+      background: url(/themes/srdesign/assets/images/common/heart.png) no-repeat;
+      height: 5.625rem;
+      width: 5.625rem;
+      font-size: 0;
+      outline: none;
+      background-position: left;
+      background-size: 2900%;
+    }
+  
+    .action-unflag a {
+      background: url(/themes/srdesign/assets/images/common/heart.png) no-repeat;
+      height: 5.625rem;
+      width: 5.625rem;
+      font-size: 0;
+      outline: none;
+      background-size: 2900%;
+      animation: animate 0.4s steps(28) 1;
+      background-position: right;
+    }
+  }
+  
+  .flag-waiting .ajax-progress--throbber {
+    display: none;
+  }
+}

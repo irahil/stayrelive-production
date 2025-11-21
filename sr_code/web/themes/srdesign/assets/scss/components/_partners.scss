@@ -1,0 +1,144 @@
+.partners{
+    .partner-wrapper{
+        h2{
+            color: $black;
+            font-size: 2rem;
+            span{
+                color: #0B8D9F;
+            }
+        }
+        .bordered{
+            border-bottom: 2px dashed $primary;
+            width: fit-content;
+            margin: 40px auto;
+        }
+        border: 1px solid #D7D7D7;
+        box-shadow: 0px 9px 32px 4px rgba(25, 36, 82, 0.1019607843);
+        border-radius: 1rem;
+        padding: 1.6rem;
+        margin: 6rem 0;
+        .col-lg-6{
+            img{
+                height: 24rem;
+                width: 100%;
+                border-radius: 1.6rem;
+                object-fit: cover;
+            }
+        }
+        .col-lg-4{
+            position: relative;
+            margin-bottom: 2rem;
+            span{
+                position: absolute;
+                top: -10%;
+                left: 14%;
+                z-index: 1;
+                color: #D7D7D7;
+                font-size: 12rem;
+                font-weight: 600;
+                font-family: "Poppins", sans-serif;
+                @media (max-width: 376px) {
+                    left: -6%;
+                }
+            }
+            .card{
+                width: 70%;
+                float: right;
+                text-align: center;
+                padding: 2rem;
+                z-index: 2;
+                background: radial-gradient(circle, #fff 40%, #edf3f4 100%);
+                @media (max-width: 376px) {
+                    width: 90%;
+                }
+                &::after{
+                    content: "";
+                    position: absolute;
+                    top: 4%;
+                    left: 4%;
+                    width: 92%;
+                    height: 92%;
+                    border: 1px solid $primary;
+                    border-radius: 1rem;
+                    z-index: 2;
+                }
+                h4{
+                    font-family: 'Poppins', sans-serif;
+                    font-weight: 600;
+                }
+                img{
+                    height: 90px;
+                    width: 90px;
+                    margin: auto;
+                }
+                p{
+                    text-align: left;
+                }
+            }
+        }
+    }
+    .partner-webform{
+        h2{
+            margin: 40px auto;
+            text-align: center;
+        }
+        .webform-submission-partners-contact-form-form{
+            #edit-flexbox-02{
+                flex-direction: row;
+                .webform-flexbox{
+                    flex-direction: column;
+                    gap: 1rem;
+                }
+            }
+            .form-item__label{
+                font-weight: 500;
+            }
+            .fieldset__label{
+                font-weight: 500;
+            }
+            input.form-element,
+            select.form-element,
+            textarea.form-element {
+                background-color: transparent !important;
+                border-radius: .625rem;
+                font-size: 1.125rem;
+                max-width: 100%;
+            }
+            .form-item-others{
+                width: 50%;
+            }
+            .form-checkboxes{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                @media (max-width: 768px){
+                    flex-direction: column;
+                    align-items: start;
+                }
+            }
+            .form-actions{
+                display: block;
+                .form-submit{
+                    background-color: #0B8D9F;
+                    border-radius: .4rem;
+                    color: #fff;
+                    display: block;
+                    padding: 16px 60px;
+                    text-transform: uppercase;
+                    transition: all 0.3s ease-in-out;
+                    font-family: 'Poppins';
+                    font-weight: 200;
+                }
+            }
+        }
+    }
+    .get-started{
+        background: radial-gradient(circle, #fff 40%, #edf3f4 100%);
+        h2{
+            font-size: 3rem;
+            font-weight: 600;
+            text-align: center;
+            padding: 30px 0;
+        }
+    }
+}

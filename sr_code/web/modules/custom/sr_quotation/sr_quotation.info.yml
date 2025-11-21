@@ -1,0 +1,7 @@
+name: 'Quotation Module'
+type: module
+description: 'Allows admin to create property quotations and download as PDF.'
+core_version_requirement: ^9 || ^10
+package: 'Custom'
+dependencies:
+  - drupal:file

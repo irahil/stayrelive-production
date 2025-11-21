@@ -1,0 +1,124 @@
+.booking-search {
+    .table-responsive {
+        font-size: 14px;
+        padding: 0 !important;
+        .fieldset__wrapper {
+            margin: 0 !important;
+        }
+        .form-item-status {
+            float: left;
+        }
+        .form-actions {
+            display: inline-table;
+            margin-left: 16px;
+        }
+        fieldset {
+            overflow: hidden;
+            overflow-x: auto;
+            box-shadow: none;
+            border: none;
+        }
+        table {
+            thead {
+                tr {
+                    border-radius: 0.75rem;
+                    th {
+                        text-wrap: nowrap;
+                        background-color: $light;
+                    }
+                }
+            }
+            width: 100%; 
+            tr:nth-child(2n) {
+                border-bottom: 1px solid $gray-700;
+            }
+            td:nth-last-child(4),
+            td:nth-last-child(5) {
+                text-wrap: nowrap;
+            }
+            a.pending {
+                width: 11.25rem;
+                display: block;
+                text-align: center;
+                padding: 0.5rem 0.75rem;
+                border-radius: 0.75rem;
+                text-decoration: none;
+                color: $black;
+                text-wrap: nowrap;
+                background-color: $orange;
+                transition: none;
+            }
+            a.confirmed {
+                width: 11.25rem;
+                display: block;
+                text-align: center;
+                padding: 0.5rem 0.75rem;
+                border-radius: 0.75rem;
+                text-decoration: none;
+                color: $white;
+                text-wrap: nowrap;
+                background-color: $dark-green;
+                transition: none;
+            }
+            a.cancelled {
+                width: 11.25rem;
+                display: block;
+                text-align: center;
+                padding: 0.5rem 0.75rem;
+                border-radius: 0.75rem;
+                text-decoration: none;
+                color: $white;
+                text-wrap: nowrap;
+                background-color: $red;
+                transition: none;
+            }
+        }
+    }
+    .table-footer {
+        float: right;
+
+        a {
+            background-color: #0B8D9F;
+            border-radius: 5.625rem;
+            color: rgb(214, 238, 242);
+            display: block;
+            padding: 16px 24px 16px 24px;
+            min-width: 120px;
+            text-transform: uppercase;
+            transition: all 0.3s ease-in-out;
+
+            &:hover {
+                color: #0B8D9F;
+                background-color: rgb(214, 238, 242);
+            }
+        }
+    }
+}
+
+/** Property Analysis **/
+.path-viewproperty-analysispage-1 {
+    .view-property-analysis {
+        .view-filters {
+            form {
+                border-radius: 25px;
+            }
+        }
+        .view-content {
+            table {
+                border-radius: 25px;
+                overflow: hidden;
+
+                tr {
+                    &:nth-child(even) {
+                        background-color: #f8f8f8;
+                    }
+
+                    td {
+                        height: 3rem;
+                        border-bottom: 1px solid #f8f8f8;
+                    }
+                }
+            }
+        }
+    }  
+}

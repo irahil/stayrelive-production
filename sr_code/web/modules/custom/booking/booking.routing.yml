@@ -1,0 +1,7 @@
+entity.booking.settings:
+  path: 'admin/structure/booking'
+  defaults:
+    _form: '\Drupal\booking\Form\BookingSettingsForm'
+    _title: 'Booking'
+  requirements:
+    _permission: 'administer booking'

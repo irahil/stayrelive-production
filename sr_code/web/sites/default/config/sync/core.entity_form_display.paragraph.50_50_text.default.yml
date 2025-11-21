@@ -1,0 +1,34 @@
+uuid: b29f80e3-2c9a-4270-b68d-75088a048b26
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.50_50_text.field_left_side_text
+    - field.field.paragraph.50_50_text.field_right_side_text
+    - paragraphs.paragraphs_type.50_50_text
+  module:
+    - text
+id: paragraph.50_50_text.default
+targetEntityType: paragraph
+bundle: 50_50_text
+mode: default
+content:
+  field_left_side_text:
+    type: text_textarea
+    weight: 0
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_right_side_text:
+    type: text_textarea
+    weight: 1
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

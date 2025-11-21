@@ -1,0 +1,8 @@
+uuid: 7b9c43bd-fd6e-4294-b434-51f4083e9e8d
+langcode: en
+status: true
+dependencies: {  }
+name: 'Availability Status'
+vid: availability_status
+description: 'Property Availability Status'
+weight: 0

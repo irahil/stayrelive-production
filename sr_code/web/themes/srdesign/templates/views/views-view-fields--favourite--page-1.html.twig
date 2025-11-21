@@ -1,0 +1,19 @@
+<div class="result-list">
+  <div class="result-image">
+    {% set image_url = fields.field_media.content['url'] %}
+    <img src="{{ image_url }}" alt="{{ fields.title.content|escape('html_attr') }}">
+  </div>
+  <div class="result-title">
+    <h3>{{ fields.title.content }}</h3>
+  </div>
+  <div class="result-room">
+    <span><i class="fa-solid fa-bed"></i> {{ fields.field_total_bathrooms.content }} bedroom &</span>
+    <span><i class="fa-solid fa-shower"></i> {{ fields.field_total_bedrooms.content }} bathroom</span>
+  </div>
+  <div class="result-price pb-3">
+    <span><i class="fa-solid fa-credit-card"></i> Price USD {{ fields.field_price.content }} - Per Month</span>
+  </div>
+  <div class="flag-link">
+    {{ fields.link_flag.content }}
+  </div>
+</div>

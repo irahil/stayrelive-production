@@ -1,0 +1,183 @@
+.apartment-photos {
+    padding-bottom: 20px;
+}
+
+.apartment-gallery {
+    .gallery-end .card {
+        border-bottom-right-radius: 90px;
+    }
+    .card {
+        border-radius: 0;
+        .card-img-overlay {
+            z-index: 100;
+        }
+    }
+}
+
+.icon-gallery {
+    background-color: $white;
+    color: $secondary;
+    padding: 10px 15px;
+    border-radius: 90px;
+    margin-right: 10px;
+    text-decoration: none;
+
+    &::before {
+        font-family: $fa-font-family;
+        content: "\f03e";
+        color: $secondary;
+        margin-right: 10px;
+    }
+
+    &:hover {
+        background-color: $gray-400;
+        color: $secondary;
+    }
+}
+
+.icon-share {
+    background-color: $white;
+    padding: 10px 15px;
+    border-radius: 90px;
+    color: $primary;
+    display: none;
+
+    &:hover {
+        background-color: $gray-400;
+    }
+
+    &::before {
+        font-family: $fa-font-family;
+        content: "\f14d";
+        color: $primary;
+    }
+}
+
+.main-content-property {
+    @include media-breakpoint-down(xl) {
+        margin-top: toRem(15);
+    }
+}
+
+.booking-details {
+    background-color: $light;
+    border-radius: 250px 0 0 250px;
+    padding: 150px 50px 150px 65px;
+    .card-header input.form-element {
+        background-color: $white;
+    }
+
+    #edit-submit {
+        display: none;
+    }
+
+    .btn {
+        background-color: $secondary;
+        color: $light;
+        &:hover {
+            background-color: $primary;
+            color: $white;
+        }
+    }
+}
+
+.property-details {
+    padding: toRem(5) 0 toRem(15) 0;
+    @include media-breakpoint-up(md) {
+        columns: 2;
+    }
+
+    li {
+        padding-top: toRem(7);
+        text-transform: capitalize;
+
+        &:before {
+            font-family: $fa-font-family;
+            content: "\f00c";
+            color: $secondary;
+            margin-right: 10px;
+            font-weight: $font-weight-semibold;
+        }
+    }
+}
+
+
+    .field--name-field-display-address,
+    .field--name-field-description .field__label,
+    .field--name-field-category, .field--name-field-heading {
+        display: none;
+    }
+
+
+.apartment-rooms {
+    padding: 20px 0;
+    @include media-breakpoint-down(lg) {
+        flex-direction: column;
+    }
+    span {
+        margin-right: 30px;
+        font-size: toRem(18);
+        @include media-breakpoint-down(lg) {
+            margin-bottom: toRem(15);
+        }
+    }
+}
+
+#n-gmap {
+    #google_map {
+        border-radius: toRem(20);
+        width: 100%;
+        height: toRem(300);
+    }
+}
+
+.location-map {
+    li a {
+        padding: 0;
+        color: $secondary;
+        .field__item{
+            &:before {
+              content: "\f3c5";
+              color: $secondary;
+              font-family: $fa-font-family;
+              font-weight: $font-weight-semibold;
+              margin-right: 10px;
+            }
+        }
+        &:hover {
+            color: $primary;
+        }
+    }
+}
+
+.apartment-info {
+    font-size: toRem(18);
+    color: $secondary;
+
+    a {
+        color: $primary;
+        text-decoration: underline;
+
+        &:hover {
+            text-decoration: none;
+        }
+    }
+
+    .apt-photo{
+        img {
+            width: 100%;
+            border-radius: toRem(20);
+        }
+    }
+}
+
+.booking-info legend {
+    display: none;
+}
+
+
+.tbl-booking a {
+    color: $primary;
+    text-decoration: underline;
+}
+

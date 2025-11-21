@@ -1,0 +1,25 @@
+uuid: 637dd620-d7b1-48eb-8ec7-87cb38762fa9
+langcode: en
+status: true
+dependencies:
+  module:
+    - sr
+    - system
+  theme:
+    - srdesign
+id: srdesign_srcontactblockbasic
+theme: srdesign
+region: content
+weight: -1
+provider: null
+plugin: sr_contact_block
+settings:
+  id: sr_contact_block
+  label: 'SR Contact block: basic'
+  label_display: '0'
+  provider: sr
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '<front>'

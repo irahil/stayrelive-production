@@ -1,0 +1,10 @@
+uuid: 34458c59-5acb-4ae8-8498-bcc9ec8edfb6
+langcode: en
+status: true
+dependencies: {  }
+id: left_image_right_accordion_
+label: 'Left Image Right Accordion '
+icon_uuid: null
+icon_default: null
+description: 'Left Image Right Accordion '
+behavior_plugins: {  }

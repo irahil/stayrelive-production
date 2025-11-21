@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Booking - Multipurpose Online Booking Theme</title>
+    <!-- Meta Tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Webestica.com">
+    <meta name="description" content="Booking - Multipurpose Online Booking Theme">
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico">
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@400;500;700&display=swap">
+    <!-- Plugins CSS -->
+    <link rel="stylesheet" type="text/css" href="assets/vendor/font-awesome/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/vendor/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="assets/vendor/tiny-slider/tiny-slider.css">
+    <link rel="stylesheet" type="text/css" href="assets/vendor/glightbox/css/glightbox.css">
+    <link rel="stylesheet" type="text/css" href="assets/vendor/flatpickr/css/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/vendor/choices/css/choices.min.css">
+    <!-- Theme CSS -->
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+</head>
+
+<body class="has-navbar-mobile path-frontpage">
+    <!-- Pre loader -->
+    <div class="preloader">
+        <div class="preloader-item">
+            <div class="spinner-grow"></div>
+        </div>
+    </div>
+    <!-- Header START -->
+    <header class="navbar-light header-sticky d-none">
+        <div class="search-property position-relative">
+            <div class=" d-flex justify-content-center">
+                <div data-aos-once="true" data-aos="fade-up" data-aos-delay="1000"
+                    class="search-container row aos-init aos-animate">
+                    <div class="search-city">
+                        <span class="icon-city">
+                            <i class="fa-solid fa-building-user"></i></span>
+                        <!-- THEME DEBUG -->
+                        <!-- THEME HOOK: 'input__hidden' -->
+                        <!-- FILE NAME SUGGESTIONS:
+                        * input--hidden.html.twig
+                        x input.html.twig
+                        -->
+                        <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                        <input autocomplete="off"
+                            data-drupal-selector="form-eb2344kwpp-lgw6a2-0upioo4ec9ww8iuel7stgynxs" type="hidden"
+                            name="form_build_id" value="form-eB2344KWPp-LGw6a2-0UpioO4EC9WW8iUel7StgynXs">
+                        <!-- END OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                        <!-- THEME DEBUG -->
+                        <!-- THEME HOOK: 'input__hidden' -->
+                        <!-- FILE NAME SUGGESTIONS:
+                        * input--hidden.html.twig
+                        x input.html.twig
+                        -->
+                        <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                        <input data-drupal-selector="edit-home" type="hidden" name="form_id" value="home">
+                        <!-- END OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                        <!-- THEME DEBUG -->
+                        <!-- THEME HOOK: 'form_element' -->
+                        <!-- FILE NAME SUGGESTIONS:
+                        x form-element--textfield.html.twig
+                        * form-element.html.twig
+                        -->
+                        <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/form-element--textfield.html.twig' -->
+                        <div
+                            class="js-form-item form-item js-form-type-textfield form-item-town-city js-form-item-town-city">
+                            <!-- THEME DEBUG -->
+                            <!-- THEME HOOK: 'form_element_label' -->
+                            <!-- BEGIN OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                            <label for="edit-town-city"
+                                class="form-item__label js-form-required form-required">City</label>
+                            <!-- END OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                            <!-- THEME DEBUG -->
+                            <!-- THEME HOOK: 'input__textfield' -->
+                            <!-- FILE NAME SUGGESTIONS:
+                           x input--textfield.html.twig
+                           x input--textfield.html.twig
+                           * input.html.twig
+                           -->
+                            <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/input--textfield.html.twig' -->
+                            <input id="autocomplete_town_city" autocomplete="off" placeholder="Select a city"
+                                data-drupal-selector="edit-town-city" type="text" name="town_city" value="" size="60"
+                                maxlength="128"
+                                class="form-text required form-element form-element--type-text form-element--api-textfield"
+                                required="required" aria-required="true">
+                            <!-- END OUTPUT from 'themes/srdesign/templates/form/input--textfield.html.twig' -->
+                        </div>
+                        <!-- END OUTPUT from 'themes/srdesign/templates/form/form-element--textfield.html.twig' -->
+                    </div>
+                    <div class="search-date">
+                        <span class="icon-checkin"><i class="fa-solid fa-calendar-days"></i></span>
+                        <!-- THEME DEBUG -->
+                        <!-- THEME HOOK: 'fieldset' -->
+                        <!-- BEGIN OUTPUT from 'core/themes/claro/templates/fieldset.html.twig' -->
+                        <fieldset class="SectionContainer fieldset js-form-item form-item js-form-wrapper form-wrapper"
+                            data-drupal-selector="edit-date" id="edit-date">
+                            <legend class="fieldset__legend fieldset__legend--visible">
+                                <span class="fieldset__label">Date</span>
+                            </legend>
+                            <div class="fieldset__wrapper">
+                                <!-- THEME DEBUG -->
+                                <!-- THEME HOOK: 'form_element' -->
+                                <!-- FILE NAME SUGGESTIONS:
+                              x form-element--textfield.html.twig
+                              * form-element.html.twig
+                              -->
+                                <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/form-element--textfield.html.twig' -->
+                                <div
+                                    class="js-form-item form-item js-form-type-textfield form-item-date-range js-form-item-date-range">
+                                    <!-- THEME DEBUG -->
+                                    <!-- THEME HOOK: 'form_element_label' -->
+                                    <!-- BEGIN OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                                    <label for="edit-date-range" class="form-item__label">Date Range</label>
+                                    <!-- END OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                                    <!-- THEME DEBUG -->
+                                    <!-- THEME HOOK: 'input__textfield' -->
+                                    <!-- FILE NAME SUGGESTIONS:
+                                 x input--textfield.html.twig
+                                 x input--textfield.html.twig
+                                 * input.html.twig
+                                 -->
+                                    <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/input--textfield.html.twig' -->
+                                    <input id="flatpickr_date_range" placeholder="Dates"
+                                        data-drupal-selector="edit-date-range" type="text" name="date_range" value=""
+                                        size="60" maxlength="128"
+                                        class="form-text form-element form-element--type-text form-element--api-textfield flatpickr-input"
+                                        readonly="readonly">
+                                    <!-- END OUTPUT from 'themes/srdesign/templates/form/input--textfield.html.twig' -->
+                                </div>
+                                <!-- END OUTPUT from 'themes/srdesign/templates/form/form-element--textfield.html.twig' -->
+                            </div>
+                        </fieldset>
+                        <!-- END OUTPUT from 'core/themes/claro/templates/fieldset.html.twig' -->
+                        <span class="icon-checkout"><i class="fa-solid fa-magnifying-glass-location"></i></span>
+                    </div>
+                    <div class="add-adults">
+                        <span class="icon-adult"><i class="fa-solid fa-person"></i></span>
+                        <!-- THEME DEBUG -->
+                        <!-- THEME HOOK: 'form_element' -->
+                        <!-- FILE NAME SUGGESTIONS:
+                        * form-element--number.html.twig
+                        x form-element.html.twig
+                        -->
+                        <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/form-element.html.twig' -->
+                        <div class="js-form-item form-item js-form-type-number form-item-adult js-form-item-adult">
+                            <!-- THEME DEBUG -->
+                            <!-- THEME HOOK: 'form_element_label' -->
+                            <!-- BEGIN OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                            <label for="edit-adult" class="form-item__label">Adult Count</label>
+                            <!-- END OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                            <!-- THEME DEBUG -->
+                            <!-- THEME HOOK: 'input__number' -->
+                            <!-- FILE NAME SUGGESTIONS:
+                           * input--number.html.twig
+                           x input.html.twig
+                           -->
+                            <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                            <input placeholder="Adults" data-drupal-selector="edit-adult" type="number" id="edit-adult"
+                                name="adult" value="" step="1"
+                                class="form-number form-element form-element--type-number form-element--api-number">
+                            <!-- END OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                        </div>
+                        <!-- END OUTPUT from 'themes/srdesign/templates/form/form-element.html.twig' -->
+                    </div>
+                    <div class="add-kids">
+                        <span class="icon-adult"><i class="fa-solid fa-child"></i></span>
+                        <!-- THEME DEBUG -->
+                        <!-- THEME HOOK: 'form_element' -->
+                        <!-- FILE NAME SUGGESTIONS:
+                        * form-element--number.html.twig
+                        x form-element.html.twig
+                        -->
+                        <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/form-element.html.twig' -->
+                        <div class="js-form-item form-item js-form-type-number form-item-kid js-form-item-kid">
+                            <!-- THEME DEBUG -->
+                            <!-- THEME HOOK: 'form_element_label' -->
+                            <!-- BEGIN OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                            <label for="edit-kid" class="form-item__label">Kids Count</label>
+                            <!-- END OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                            <!-- THEME DEBUG -->
+                            <!-- THEME HOOK: 'input__number' -->
+                            <!-- FILE NAME SUGGESTIONS:
+                           * input--number.html.twig
+                           x input.html.twig
+                           -->
+                            <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                            <input placeholder="Kids" data-drupal-selector="edit-kid" type="number" id="edit-kid"
+                                name="kid" value="" step="1"
+                                class="form-number form-element form-element--type-number form-element--api-number">
+                            <!-- END OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                        </div>
+                        <!-- END OUTPUT from 'themes/srdesign/templates/form/form-element.html.twig' -->
+                    </div>
+                    <div class="search-submit">
+                        <!-- THEME DEBUG -->
+                        <!-- THEME HOOK: 'input__submit' -->
+                        <!-- FILE NAME SUGGESTIONS:
+                        * input--submit.html.twig
+                        x input.html.twig
+                        -->
+                        <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                        <input data-drupal-selector="edit-submit" type="submit" id="edit-submit" name="op"
+                            value="Search" class="button js-form-submit form-submit">
+                        <!-- END OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-xl">
+            <div class="container-fluid">
+                <!-- Logo START -->
+                <a class="navbar-brand" href="index.html">
+                    <img class="light-mode-item navbar-brand-item" src="assets/images/global/logo-1.png" alt="logo">
+                </a>
+                <!-- Logo END -->
+                <!-- Profile and Notification START -->
+                <ul class="nav flex-row align-items-center list-unstyled ms-xl-auto">
+                    <!-- Notification dropdown START -->
+                    <li class="nav-item dropdown ms-0 ms-md-4">
+                        <!-- Notification button -->
+                        <a class="nav-notification btn btn-light p-0 mb-0" href="#" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                            <i class="bi bi-bell fa-fw"></i>
+                        </a>
+                        <!-- Notification dote -->
+                        <span class="notif-badge animation-blink"></span>
+                        <!-- Notification dropdown menu START -->
+                        <div
+                            class="dropdown-menu dropdown-animation dropdown-menu-end dropdown-menu-size-md shadow-lg p-0">
+                            <div class="card bg-transparent">
+                                <!-- Card header -->
+                                <div
+                                    class="card-header bg-transparent d-flex justify-content-between align-items-center border-bottom">
+                                    <h6 class="m-0">Notifications <span
+                                            class="badge bg-danger bg-opacity-10 text-danger ms-2">4 new</span></h6>
+                                    <a class="small" href="#">Clear all</a>
+                                </div>
+                                <!-- Card body START -->
+                                <div class="card-body p-0">
+                                    <ul class="list-group list-group-flush list-unstyled p-2">
+                                        <!-- Notification item -->
+                                        <li>
+                                            <a href="#"
+                                                class="list-group-item list-group-item-action rounded notif-unread border-0 mb-1 p-3">
+                                                <h6 class="mb-2">New! Booking flights from New York ✈️</h6>
+                                                <p class="mb-0 small">Find the flexible ticket on flights around the
+                                                    world. Start searching today
+                                                </p>
+                                                <span>Wednesday</span>
+                                            </a>
+                                        </li>
+                                        <!-- Notification item -->
+                                        <li>
+                                            <a href="#"
+                                                class="list-group-item list-group-item-action rounded border-0 mb-1 p-3">
+                                                <h6 class="mb-2">Sunshine saving are here 🌞 save 30% or more on a stay
+                                                </h6>
+                                                <span>15 Nov 2022</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- Card body END -->
+                                <!-- Card footer -->
+                                <div class="card-footer bg-transparent text-center border-top">
+                                    <a href="#" class="btn btn-sm btn-link mb-0 p-0">See all incoming activity</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Notification dropdown menu END -->
+                    </li>
+                    <!-- Notification dropdown END -->
+                    <li class="nav-item dropdown ms-0 ms-md-4">
+                        <span class="cf-curr-usd"></span>
+                        <a class="nav-notification2 btn btn-light p-2 mb-0" href="#" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                            USD
+                        </a>
+                        <!-- Notification dropdown menu START -->
+                        <div
+                            class="dropdown-menu dropdown-animation dropdown-menu-end dropdown-menu-size-md shadow-lg p-0">
+                            <div class="card bg-transparent">
+                                <!-- Card header -->
+                                <!-- Card body START -->
+                                <div class="card-body p-0">
+                                    <ul class="list-group list-group-flush list-unstyled p-2">
+                                        <!-- Notification item -->
+                                        <li>
+                                            <span class="cf-curr-inr"></span>
+                                            <a href="#"
+                                                class="list-group-item list-group-item-action rounded notif-unread border-0 mb-1 p-3">
+                                                INR
+                                            </a>
+                                        </li>
+                                        <!-- Notification item -->
+                                        <li>
+                                            <span class="cf-curr-pounds"></span>
+                                            <a href="#"
+                                                class="list-group-item list-group-item-action rounded border-0 mb-1 p-3">
+                                                Pounds
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- Card body END -->
+                            </div>
+                        </div>
+                        <!-- Notification dropdown menu END -->
+                    </li>
+                    <!-- Profile dropdown START -->
+                    <li class="nav-item ms-4 dropdown">
+                        <!-- Avatar -->
+                        <a class="avatar avatar-sm p-0" href="#" id="profileDropdown" role="button"
+                            data-bs-auto-close="outside" data-bs-display="static" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <!-- <img class="avatar-img rounded-2" src="assets/images/global/01.jpg" alt="avatar"> -->
+                        </a>
+                        <ul class="dropdown-menu dropdown-animation dropdown-menu-end shadow pt-3"
+                            aria-labelledby="profileDropdown">
+                            <!-- Profile info -->
+                            <li class="px-3 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <!-- Avatar -->
+                                    <div class="avatar me-3">
+                                    </div>
+                                    <div>
+                                        <a class="h6 mt-2 mt-sm-0" href="#">Rahil Shaikh</a>
+                                        <p class="small m-0">rahildesigns@gmail.com</p>
+                                    </div>
+                                </div>
+                            </li>
+                            <!-- Links -->
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-bookmark-check fa-fw me-2"></i>My
+                                    Bookings</a>
+                            </li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-heart fa-fw me-2"></i>My Wishlist</a>
+                            </li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-gear fa-fw me-2"></i>Settings</a></li>
+                            <li><a class="dropdown-item bg-danger-soft-hover" href="#"><i
+                                        class="bi bi-power fa-fw me-2"></i>Sign Out</a></li>
+                        </ul>
+                    </li>
+                    <!-- Profile dropdown END -->
+                    <li class="nav-item dropdown ms-md-4 ">
+                        <a class="nav-link btn-light p-2" href="#" id="advanceMenu" role="button"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="bi bi-list"></i>
+                        </a>
+                        <ul class="dropdown-menu min-w-auto dropdown-menu-end" data-bs-popper="none">
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <i class="text-warning fa-fw bi bi-life-preserver me-2"></i>About Us
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="docs/index.html" target="_blank">
+                                    <i class="text-danger fa-fw bi bi-card-text me-2"></i>Blog
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#" target="_blank">
+                                    <i class="text-info fa-fw bi bi-toggle-off me-2"></i>Contact Us
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <!-- Profile and Notification START -->
+                <!-- Nav item link-->
+            </div>
+        </nav>
+        <!-- Logo Nav END -->
+    </header>
+    <!-- Header END -->
+    <!-- **************** MAIN CONTENT START **************** -->
+    <main>
+        <section class="">
+            <div class="container-fluid">
+        </section>
+        <section class="home-hero p-0 ">
+            <div class="container-fluid">
+                <div class="row hero-wrapper ">
+                    <div class="col-lg-12 home-hero-image d-flex align-items-center justify-content-end">
+                        <h1>Find Apartments <span>wherever you travel</span></h1>
+                        <div class="hero-slider">
+                            <div><img src="assets/images/home/paris.webp" alt="StayRelive"></div>
+                            <div><img src="assets/images/home/hero.webp" alt="StayRelive"></div>
+                            <div><img src="assets/images/home/paris.webp" alt="StayRelive"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            </div>
+            <div class="search-property position-relative">
+                <div class=" d-flex justify-content-center">
+                    <div class="search-container row">
+                        <h1>Find Apartments <span>wherever you travel</span></h1>
+                        <div class="search-city">
+                            <span class="icon-city">
+                                <i class="fa-solid fa-building-user"></i></span>
+                            <input autocomplete="off"
+                                data-drupal-selector="form-20g2cz1dh7dzecib7v-edzfj7us4-j60fptsghmicr0" type="hidden"
+                                name="form_build_id" value="form-20G2cz1dh7dZEcIb7V_eDzfj7uS4_J60fptSGHmicR0" />
+                            <input data-drupal-selector="edit-home" type="hidden" name="form_id" value="home" />
+                            <div
+                                class="js-form-item form-item js-form-type-textfield form-item-town-city js-form-item-town-city">
+                                <label for="edit-town-city" class="form-item__label">City</label>
+                                <input id="autocomplete_town_city" autocomplete="off" placeholder="Select a city"
+                                    data-drupal-selector="edit-town-city" type="text" name="town_city" value=""
+                                    size="60" maxlength="128"
+                                    class="form-text form-element form-element--type-text form-element--api-textfield" />
+                            </div>
+                        </div>
+                        <div class="search-date">
+                            <span class="icon-checkin"><i class="fa-solid fa-calendar-days"></i></span>
+                            <fieldset
+                                class="SectionContainer fieldset js-form-item form-item js-form-wrapper form-wrapper"
+                                data-drupal-selector="edit-date" id="edit-date">
+                                <legend class="fieldset__legend fieldset__legend--visible">
+                                    <span class="fieldset__label">Date</span>
+                                </legend>
+                                <div class="fieldset__wrapper">
+                                    <div
+                                        class="js-form-item form-item js-form-type-textfield form-item-date-range js-form-item-date-range">
+                                        <label for="edit-date-range" class="form-item__label">Date Range</label>
+                                        <!-- END OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                                        <input id="flatpickr_date_range" placeholder="Dates"
+                                            data-drupal-selector="edit-date-range" type="text" name="date_range"
+                                            value="" size="60" maxlength="128"
+                                            class="form-text form-element form-element--type-text form-element--api-textfield" />
+                                        <!-- END OUTPUT from 'themes/srdesign/templates/form/input--textfield.html.twig' -->
+                                    </div>
+                                    <!-- END OUTPUT from 'themes/srdesign/templates/form/form-element--textfield.html.twig' -->
+                                </div>
+                            </fieldset>
+                            <!-- END OUTPUT from 'core/themes/claro/templates/fieldset.html.twig' -->
+                            <span class="icon-checkout"><i class="fa-solid fa-magnifying-glass-location"></i></span>
+                        </div>
+                        <div class="add-adults">
+                            <div class="w-100">
+                                <label class="form-label">Guests & rooms</label>
+                                <div class="dropdown guest-selector me-2 form-item">
+                                    <input type="text" placeholder="Add Guests"
+                                        class="form-guest-selector  form-element form-control selection-result"
+                                        value="Add Guests" data-bs-auto-close="outside" data-bs-toggle="dropdown">
+                                    <!-- dropdown items -->
+                                    <ul class="dropdown-menu guest-selector-dropdown">
+                                        <!-- Adult -->
+                                        <li class="d-flex justify-content-between">
+                                            <div>
+                                                <h6 class="mb-0">Adults</h6>
+                                                <small>Ages 13 or above</small>
+                                            </div>
+                                            <div class="hstack gap-1 align-items-center">
+                                                <button type="button" class="btn btn-link adult-remove p-0 mb-0"><i
+                                                        class="bi bi-dash-circle fs-5 fa-fw"></i></button>
+                                                <h6 class="guest-selector-count mb-0 adults">2</h6>
+                                                <button type="button" class="btn btn-link adult-add p-0 mb-0"><i
+                                                        class="bi bi-plus-circle fs-5 fa-fw"></i></button>
+                                            </div>
+                                        </li>
+                                        <!-- Divider -->
+                                        <li class="dropdown-divider"></li>
+                                        <!-- Child -->
+                                        <li class="d-flex justify-content-between">
+                                            <div>
+                                                <h6 class="mb-0">Child</h6>
+                                                <small>Ages 13 below</small>
+                                            </div>
+                                            <div class="hstack gap-1 align-items-center">
+                                                <button type="button" class="btn btn-link child-remove p-0 mb-0"><i
+                                                        class="bi bi-dash-circle fs-5 fa-fw"></i></button>
+                                                <h6 class="guest-selector-count mb-0 child">0</h6>
+                                                <button type="button" class="btn btn-link child-add p-0 mb-0"><i
+                                                        class="bi bi-plus-circle fs-5 fa-fw"></i></button>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="search-submit">
+                            <span class="icon-search"><i class="fa-solid fa-magnifying-glass-location"></i>
+                                <input data-drupal-selector="edit-submit" type="submit" id="edit-submit" name="op"
+                                    value="Search" class="button js-form-submit form-submit" />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="city-carousel ">
+            <div class="container-fluid">
+               <div class="row d-flex ">
+                  <div class="col-md-6 ">
+                     <div class="tab-content" id="ex1-content">
+                        <div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel"
+                           aria-labelledby="ex1-tab-1">
+                           <div class="cities-wrapper d-flex">
+                              <div class="city-wrapper show-top mb-4">
+                                 <a href="#">
+                                    <div class="city-details">
+                                       <h5>Seattle</h5>
+                                       <h6>230 + <span>Apartments</span></h6>
+                                    </div>
+                                    <img src="../template/assets/images/home/city/seattle.webp" alt="" srcset="">
+                                 </a>
+                              </div>
+                              <div class="city-wrapper show-bottom mb-4">
+                                 <a href="#">
+                                    <div class="city-details">
+                                       <h5>New York</h5>
+                                       <h6>230 + <span>Apartments</span></h6>
+                                    </div>
+                                    <img src="../template/assets/images/home/city/new-york.webp" alt="" srcset="">
+                                 </a>
+                              </div>
+                              <div class="city-wrapper show-top  mb-4">
+                                 <a href="#">
+                                    <div class="city-details">
+                                       <h5>New Jersey</h5>
+                                       <h6>230 + <span>Apartments</span></h6>
+                                    </div>
+                                    <img src="../template/assets/images/home/city/new-jersey.webp" alt="" srcset="">
+                                 </a>
+                              </div>
+                              <div class="city-wrapper show-top  mb-4">
+                                 <a href="#">
+                                    <div class="city-details">
+                                       <h5>Boston</h5>
+                                       <h6>230 + <span>Apartments</span></h6>
+                                    </div>
+                                    <img src="../template/assets/images/home/city/boston.webp" alt="" srcset="">
+                                 </a>
+                              </div>
+                              <div class="city-wrapper show-top  mb-4">
+                                 <a href="#">
+                                    <div class="city-details">
+                                       <h5>Los Angeles</h5>
+                                       <h6>230 + <span>Apartments</span></h6>
+                                    </div>
+                                    <img src="../template/assets/images/home/city/los-angeles.webp" alt="" srcset="">
+                                 </a>
+                              </div>
+                              <div class="city-wrapper show-top  mb-4">
+                                <a href="#">
+                                   <div class="city-details">
+                                      <h5>Los Angeles</h5>
+                                      <h6>230 + <span>Apartments</span></h6>
+                                   </div>
+                                   <img src="../template/assets/images/home/city/los-angeles.webp" alt="" srcset="">
+                                </a>
+                             </div>
+                           </div>
+                        </div>
+                        <div class="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
+                           Tab 2 content
+                        </div>
+                        <div class="tab-pane fade" id="ex1-tabs-3" role="tabpanel" aria-labelledby="ex1-tab-3">
+                           Tab 3 content
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-md-3 offset-md-1 ps-md-0">
+                     <h3>Discover your perfect global stay</h3>
+                     <p>Our global network offers serviced apartments and aparthotels in 150+ cities, ensuring swift
+                        access to fitting accommodations at competitive prices.
+                     </p>
+                     <ul class="continent-list" id="ex1" role="tablist">
+                        <li class="nav-item" role="presentation">
+                           <a class="nav-link active" id="ex1-tab-3" data-bs-toggle="tab" href="#ex1-tabs-3" role="tab"
+                              aria-controls="ex1-tabs-3" aria-selected="false">North America</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                           <a class="nav-link " id="ex1-tab-1" data-bs-toggle="tab" href="#ex1-tabs-1"
+                              role="tab" aria-controls="ex1-tabs-1" aria-selected="true">Asia</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                           <a class="nav-link" id="ex1-tab-2" data-bs-toggle="tab" href="#ex1-tabs-2" role="tab"
+                              aria-controls="ex1-tabs-2" aria-selected="false">Europe</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                           <a class="nav-link" id="ex1-tab-3" data-bs-toggle="tab" href="#ex1-tabs-3" role="tab"
+                              aria-controls="ex1-tabs-3" aria-selected="false">Middle East</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                           <a class="nav-link" id="ex1-tab-3" data-bs-toggle="tab" href="#ex1-tabs-3" role="tab"
+                              aria-controls="ex1-tabs-3" aria-selected="false">Middle East</a>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </section>
+        <section class="why-we">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <h3 class="text-center">Why We are here</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-xl-3 ">
+                        <div class="why-we-wrapper icon-one">
+                            <h4>Booking Simplified</h4>
+                            <p>We have simplified the process of booking Serviced Apartments online to provide travelers
+                                with a seamless booking experience that allows them to book the best Apartment that fits
+                                their lifestyle and meets any of their special requirements in terms of size, amenities,
+                                and location.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-3">
+                        <div class="why-we-wrapper icon-two">
+                            <h4>Bespoke Serviced Apartments</h4>
+                            <p>The most difficult aspect of renting or arranging an apartment for your trip is finding
+                                the appropriate fit. We provide tailor-made apartments to suit your needs. Our booking
+                                tool assists you in discovering and evaluating acceptable solutions so that you may book
+                                conveniently with us.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-3">
+                        <div class="why-we-wrapper icon-three">
+                            <h4>Safety like Home</h4>
+                            <p>Property partners and onsite Affiliates conduct a thorough inspection of our Apartments'
+                                hygiene, security, and safety compliance regularly. This enables us to solve any hygiene
+                                and safety gaps, as well as conduct frequent validation of Apartments advertised on our
+                                platform.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-3">
+                        <div class="why-we-wrapper icon-four">
+                            <h4>Hospitality</h4>
+                            <p>We are known for our hospitality. Our team makes sure that you don’t feel like customers
+                                and feel welcomed like you are among family. We collaborate with partners to ensure you
+                                have access to all of the information and guidance you need to feel connected to the
+                                niceties of your community.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="simplify-search">
+            <div class="container-fluid">
+                <div class="row ">
+                    <div class="col-12 ">
+                        <div class="simplify-wrapper ">
+                            <div class="row">  
+                            <div class="col-md-6   d-flex simplify-title">
+                                <h3>Simplifies the search and booking process</h3>
+                                <p>Our mission revolves around curating delightful stay experiences, combining
+                                    technology, data, and human interactions throughout the journey.</p>
+                            </div>
+                            <div class="col-md-6 col-xl-5 offset-xl-1  pe-xl-0 ">
+                                <img src="../template/assets/images/home/home-splash.png" alt="">
+                            </div>
+                        </div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="city-carousel ">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <div class="abc">
+
+                            <nav>
+                                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
+                                        data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home"
+                                        aria-selected="true">Business traveler</button>
+                                    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab"
+                                        data-bs-target="#nav-profile" type="button" role="tab"
+                                        aria-controls="nav-profile" aria-selected="false">Medical traveler</button>
+                                    <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab"
+                                        data-bs-target="#nav-contact" type="button" role="tab"
+                                        aria-controls="nav-contact" aria-selected="false">Leisure traveler</button>
+                                    <button class="nav-link" id="nav-contact-tab2" data-bs-toggle="tab"
+                                        data-bs-target="#nav-contact2" type="button" role="tab"
+                                        aria-controls="nav-contact2" aria-selected="false">Student traveler</button>
+                                </div>
+                            </nav>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
+                            aria-labelledby="nav-home-tab">
+                            <div class="row">
+                                <div class="col-md-6">business-travellers</div>
+                                <div class="col-md-6">
+                                    <h3>Business travelers</h3>
+                                    <p>We know from our own experience how complicated, expensive, and time-consuming it
+                                        is to find temporary serviced accommodation when moving to a new city for
+                                        work.For business travellers shuttling across overseas offices, project
+                                        locations and client offices where travel is imminent, we have studio and 1-bed
+                                        serviced apartments, designed for working executives offering quality living
+                                        solutions with all the comforts of home.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                            <div class="row">
+                                <div class="col-md-6">Medical-travellers</div>
+                                <div class="col-md-6">
+                                    <h3>Medical travelers</h3>
+                                    <p>Recognizing the challenges of seeking accommodations near hospitals, particularly
+                                        during medical travels, StayRelive empathizes with your concerns.</p>
+                                    <p>Our specialized expertise lies in aiding travelers seeking suitable lodging,
+                                        particularly for medical treatment. We focus on destinations such as</p>
+                                    <ul>
+                                        <li><strong>Germany</strong></li>
+                                        <li><strong>UK</strong></li>
+                                        <li><strong>UAE</strong></li>
+                                        <li><strong>India</strong></li>
+                                        <li><strong>Malaysia</strong></li>
+                                        <li><strong>Thailand</strong></li>
+                                        <li><strong>Turkey</strong></li>
+                                    </ul>
+                                    <p>Our mission is to provide the right accommodation solutions to ensure your
+                                        comfort and convenience while undergoing medical procedures.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="nav-contact2" role="tabpanel" aria-labelledby="nav-contact-tab2">
+                            <div class="row">
+                                <div class="col-md-6">Leisure travellers</div>
+                                <div class="col-md-6">
+                                    <h3>Leisure travelers</h3>
+                                    <p>Catering to leisure travelers, we understand that genuine experiences within the
+                                        cities they explore hold paramount importance. To meet their desires, we offer a
+                                        variety of apartments situated in the heart of urban centers, spanning economy,
+                                        mid-range, and luxury categories, ensuring a personalized choice based on
+                                        individual preferences.</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">Leisure travellers</div>
+                                <div class="col-md-6">
+                                    <h3>Leisure travelers</h3>
+                                    <p>Catering to leisure travelers, we understand that genuine experiences within the
+                                        cities they explore hold paramount importance. To meet their desires, we offer a
+                                        variety of apartments situated in the heart of urban centers, spanning economy,
+                                        mid-range, and luxury categories, ensuring a personalized choice based on
+                                        individual preferences.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            </div>
+        </section>
+    </main>
+    <!-- **************** MAIN CONTENT END **************** -->
+    <!-- =======================
+         Footer START -->
+    <footer class="">
+        <div class="container-fluid">
+            <!-- Row START -->
+            <!-- Bottom footer -->
+            <div class="row">
+                <div class="container-fluid">
+                    <div class="d-lg-flex justify-content-between align-items-center py-3 text-center text-lg-start">
+                        <!-- copyright text -->
+                        <div class="text-muted text-primary-hover"> Copyrights ©2023</div>
+                        <!-- copyright links-->
+                        <div class="nav mt-2 mt-lg-0">
+                            <ul class="list-inline mb-0 mt-3">
+                                <li class="list-inline-item"> <a class="btn btn-sm px-2 bg-facebook mb-0" href="#"><i
+                                            class="fab fa-fw fa-facebook-f"></i></a> </li>
+                                <li class="list-inline-item"> <a class="btn btn-sm shadow px-2 bg-instagram mb-0"
+                                        href="#"><i class="fab fa-fw fa-instagram"></i></a> </li>
+                                <li class="list-inline-item"> <a class="btn btn-sm shadow px-2 bg-twitter mb-0"
+                                        href="#"><i class="fab fa-fw fa-twitter"></i></a> </li>
+                                <li class="list-inline-item"> <a class="btn btn-sm shadow px-2 bg-linkedin mb-0"
+                                        href="#"><i class="fab fa-fw fa-linkedin-in"></i></a> </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- =======================
+         Footer END -->
+    <!-- Back to top -->
+    <div class="back-top"></div>
+    <!-- Bootstrap JS -->
+    <script src="assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Vendors -->
+    <script src="assets/vendor/tiny-slider/tiny-slider.js"></script>
+    <script src="assets/vendor/choices/js/choices.min.js"></script>
+    <!-- ThemeFunctions -->
+    <script src="assets/js/functions.js"></script>
+    <script src="assets/js/home.js"></script>
+    <script>
+        let slider = tns({
+            container: '.hero-slider',
+            items: 1,
+            autoplay: true,
+            controls: false,
+            arrowKeys: false,
+            autoplayButtonOutput: false
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,20 @@
+uuid: 49c2865f-4bad-4b97-9e36-e688ea3762b2
+langcode: en
+status: true
+dependencies:
+  module:
+    - currency_layer_integration
+  theme:
+    - srdesign
+id: srdesign_currencylayermenublockbasic
+theme: srdesign
+region: branding
+weight: -3
+provider: null
+plugin: cf_menu_block
+settings:
+  id: cf_menu_block
+  label: 'Currency Layer Menu block: basic'
+  label_display: '0'
+  provider: currency_layer_integration
+visibility: {  }

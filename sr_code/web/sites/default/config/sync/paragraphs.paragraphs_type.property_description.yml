@@ -1,0 +1,10 @@
+uuid: 18fcad4f-0437-4018-a664-940eef352278
+langcode: en
+status: true
+dependencies: {  }
+id: property_description
+label: 'Property Description'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

@@ -1,0 +1,23 @@
+uuid: 3f89babf-6cde-4601-ab0a-6ab396c51102
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - srdesign
+id: sitebranding
+theme: srdesign
+region: branding
+weight: -5
+provider: null
+plugin: system_branding_block
+settings:
+  id: system_branding_block
+  label: 'Site branding'
+  label_display: '0'
+  provider: system
+  use_site_logo: true
+  use_site_name: false
+  use_site_slogan: false
+visibility: {  }

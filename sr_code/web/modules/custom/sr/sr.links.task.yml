@@ -1,0 +1,17 @@
+sr.pending_users_tab:
+  route_name: sr.pending_users_page
+  title: 'Pending Agents'
+  base_route: sr.pending_users_page
+  weight: 0
+
+sr.approved_users_tab:
+  route_name: sr.approved_users_page
+  title: 'Approved Agents'  
+  base_route: sr.pending_users_page
+  weight: 1
+
+sr.rejected_users_tab:
+  route_name: sr.rejected_users_page
+  title: 'Rejected Agents'
+  base_route: sr.pending_users_page
+  weight: 2

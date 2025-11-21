@@ -1,0 +1,22 @@
+uuid: 5f82514f-04e2-4e2f-85e9-c814ddebf883
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - srdesign
+_core:
+  default_config_hash: erQSEZF2XUjNmgTl0uNRBzmg18ZGXwUcw2FhApoeuHk
+id: srdesign_content
+theme: srdesign
+region: content
+weight: -4
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Main page content'
+  label_display: '0'
+  provider: system
+visibility: {  }

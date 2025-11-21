@@ -1,0 +1,19 @@
+uuid: b5fcb03a-7c71-4bc6-a383-b9309918a679
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_reference_id
+    - node.type.property
+id: node.property.field_reference_id
+field_name: field_reference_id
+entity_type: node
+bundle: property
+label: 'Reference ID'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

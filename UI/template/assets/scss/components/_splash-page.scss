@@ -1,0 +1,34 @@
+.home-box {
+    background-color: #fff;
+    padding: 100px;
+    border-radius: 100px;
+    border: 5px solid #1D234F;
+
+    .logo {
+        margin-bottom: 20px;
+    }
+
+    h3 {
+        color: #208F9D;
+    }
+}
+
+.home:before {
+    background: url("../images/common/home.jpg") center center no-repeat;
+    background-size: cover;
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+}
+
+.home-image {
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}

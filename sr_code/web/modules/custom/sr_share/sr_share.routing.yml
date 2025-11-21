@@ -1,0 +1,16 @@
+pdf_export.export:
+  path: '/pdf-export/{node}'
+  defaults:
+    _controller: '\Drupal\sr_share\Controller\PdfController::generatePdf'
+    _title: 'Generate PDF'
+  requirements:
+    _permission: 'access content'
+
+favourite.save_node_to_session:
+  path: '/custom/save-node-to-session'
+  defaults:
+    _controller: '\Drupal\sr_share\Controller\FavouriteController::saveNodeToSession'
+    _title: 'Save Node to Session'
+  requirements:
+    _permission: 'access content'
+  methods: [POST]

@@ -1,0 +1,40 @@
+sr_lib:
+  version: VERSION
+  js:
+    js/sr.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+sr_autocomplete_lib:
+  version: VERSION
+  css:
+    theme:
+      css/sr_autocomplate.css: {}
+  js:
+    js/sr_autocomplete.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+sr_gmap_lib:
+  version: VERSION
+  js:
+    js/sr_map.js: {}
+    https://maps.googleapis.com/maps/api/js?key=AIzaSyBd7hoeq3JClkyQ2MQ33_jqPbzRhuB1WiA&callback=initMap: { type: external, attributes: { async: true } }
+  dependencies:
+    - core/jquery
+    - core/drupal
+sr_gmap_lib_single:
+  version: VERSION
+  js:
+    js/sr_map_single.js: {}
+    https://maps.googleapis.com/maps/api/js?key=AIzaSyBd7hoeq3JClkyQ2MQ33_jqPbzRhuB1WiA&callback=initMap: { type: external, attributes: { async: true } }
+  dependencies:
+    - core/jquery
+    - core/drupal
+sr_occupants:
+  version: VERSION
+  js:
+    js/sr_occupants.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal

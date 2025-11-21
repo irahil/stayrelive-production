@@ -1,0 +1,17 @@
+<?php
+
+/**
+* Implements hook_theme().
+*
+* We use hook_theme to define the templates used.
+*/
+function currency_layer_integration_theme($existing, $type, $theme, $path) {
+  return [
+    'cf_menu_block' => [
+      'variables' => [
+        'arr_currency_data' => NULL,
+        'selected_currency' => NULL,
+      ],
+    ],
+  ];
+ }

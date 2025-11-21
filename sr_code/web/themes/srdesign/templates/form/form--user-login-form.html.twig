@@ -1,0 +1,41 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a 'form' element.
+ *
+ * Available variables
+ * - attributes: A list of HTML attributes for the wrapper element.
+ * - children: The child elements of the form.
+ *
+ * @see template_preprocess_form()
+ *
+ * @ingroup themeable
+ */
+#}
+<div class="sr-container">
+  <div class="form-container">
+    <p class="text-center pb-3">
+    <img src="{{ base_path }}sites/default/files/sr-logo.png" alt="StayRelive">
+  </p>
+    {% if country_code in ['ae'] %}
+      {# <p>do not show social login button for these countries</p> #}
+    {% else %}
+      <div class="open-auth-wrapper">
+        <a href="{{ base_path }}user/login/google" class="google">
+          <img src="{{ base_path }}themes/srdesign/assets/images/common/google.jpg" alt="Google Icon" />
+          <div class="text">Login with Google</div>
+        </a>
+        <a href="{{ base_path }}user/login/facebook" class="facebook">
+          <img src="{{ base_path }}themes/srdesign/assets/images/common/facebook.png" alt="Facebook Icon" />
+          <div class="text">Login Using Facebook</div>
+        </a>
+      </div>
+    <div class="login-form__divider"><span>or</span></div>
+    {% endif %}
+    <form{{ attributes }}>
+      {{ children }}
+    </form>
+    <p class="pt-3 text-center"><a href="{{ base_path }}user/password">Forgot Password</a></p>
+    <p class="pt-3 text-center">Don't have an account yet? <a href="{{ base_path }}user/register">Create account</a></p>
+  </div>
+</div>

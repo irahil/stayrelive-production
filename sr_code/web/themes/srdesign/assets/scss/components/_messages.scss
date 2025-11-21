@@ -1,0 +1,36 @@
+.messages-list {
+   margin: 0; 
+}
+
+.messages-list__wrapper {
+    padding: toRem(20) 0;
+    .messages {
+        background: $white;
+        border: 3px solid $secondary;
+        border-radius: 0 90px 0 0;
+        color: $primary;;
+        outline: 3px solid $primary;
+        
+        margin: 15px 15px 0 15px;
+        @include media-breakpoint-down(lg) {
+            border-radius: 0 60px 0 0;
+        }
+        h2 {
+            font-size: toRem(24);
+        }
+        .messages__content {
+            font-size: toRem(20);
+        }
+
+        .messages__header {
+            display: none;
+        }
+    
+        a {
+            color: $light;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}

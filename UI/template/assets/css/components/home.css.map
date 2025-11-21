@@ -1,0 +1,1 @@
+{"version":3,"sources":["components/home.scss","components/home.css"],"names":[],"mappings":"AAAA;EACI,wBAAA;ACCJ","file":"home.css","sourcesContent":["body {\r\n    border: 2px dashed green;\r\n}","body {\n  border: 2px dashed green;\n}"]}

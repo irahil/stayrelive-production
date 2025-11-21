@@ -1,0 +1,10 @@
+uuid: 9bbb95f8-96a4-441a-b7b8-6ac2cf1e4e9b
+langcode: en
+status: true
+dependencies: {  }
+id: 50_50_text
+label: '50 50 Text'
+icon_uuid: null
+icon_default: null
+description: '50 50 Text'
+behavior_plugins: {  }

@@ -1,0 +1,25 @@
+uuid: 77cf3323-bbc7-4f94-aacd-51fc55082ab6
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.user.compact
+    - field.field.user.user.field_contact_number
+    - field.field.user.user.field_country
+    - field.field.user.user.field_first_name
+    - field.field.user.user.field_last_name
+  module:
+    - user
+_core:
+  default_config_hash: 00zr_RBdTjPjBGITD3h4c1ESQZimjdVCcHGt1trLqIY
+id: user.user.compact
+targetEntityType: user
+bundle: user
+mode: compact
+content: {  }
+hidden:
+  field_contact_number: true
+  field_country: true
+  field_first_name: true
+  field_last_name: true
+  member_for: true

@@ -1,0 +1,21 @@
+uuid: 7f984e22-a4b4-424f-9b61-2b29701dc816
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_left_side_text
+    - paragraphs.paragraphs_type.50_50_text
+  module:
+    - text
+id: paragraph.50_50_text.field_left_side_text
+field_name: field_left_side_text
+entity_type: paragraph
+bundle: 50_50_text
+label: 'Left Side Text'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

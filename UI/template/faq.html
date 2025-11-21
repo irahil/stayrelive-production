@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Booking - Multipurpose Online Booking Theme</title>
+
+    <!-- Meta Tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Webestica.com">
+    <meta name="description" content="Booking - Multipurpose Online Booking Theme">
+
+
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@400;500;700&display=swap">
+
+    <!-- Plugins CSS -->
+    <link rel="stylesheet" type="text/css" href="assets/vendor/font-awesome/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/vendor/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="assets/vendor/tiny-slider/tiny-slider.css">
+    <link rel="stylesheet" type="text/css" href="assets/vendor/glightbox/css/glightbox.css">
+    <link rel="stylesheet" type="text/css" href="assets/vendor/flatpickr/css/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/vendor/choices/css/choices.min.css">
+
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
+</head>
+
+<body class="has-navbar-mobile">
+    <!-- Pre loader -->
+    <div class="preloader">
+        <div class="preloader-item">
+            <div class="spinner-grow text-primary"></div>
+        </div>
+    </div>
+    <!-- Header START -->
+    <header class="navbar-light header-sticky d-none">
+        <div class="search-property position-relative">
+           <div class=" d-flex justify-content-center">
+              <div data-aos-once="true" data-aos="fade-up" data-aos-delay="1000"
+                 class="search-container row aos-init aos-animate">
+                 <div class="search-city">
+                    <span class="icon-city">
+                    <i class="fa-solid fa-building-user"></i></span>
+                    <!-- THEME DEBUG -->
+                    <!-- THEME HOOK: 'input__hidden' -->
+                    <!-- FILE NAME SUGGESTIONS:
+                       * input--hidden.html.twig
+                       x input.html.twig
+                       -->
+                    <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                    <input autocomplete="off"
+                       data-drupal-selector="form-eb2344kwpp-lgw6a2-0upioo4ec9ww8iuel7stgynxs" type="hidden"
+                       name="form_build_id" value="form-eB2344KWPp-LGw6a2-0UpioO4EC9WW8iUel7StgynXs">
+                    <!-- END OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                    <!-- THEME DEBUG -->
+                    <!-- THEME HOOK: 'input__hidden' -->
+                    <!-- FILE NAME SUGGESTIONS:
+                       * input--hidden.html.twig
+                       x input.html.twig
+                       -->
+                    <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                    <input data-drupal-selector="edit-home" type="hidden" name="form_id" value="home">
+                    <!-- END OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                    <!-- THEME DEBUG -->
+                    <!-- THEME HOOK: 'form_element' -->
+                    <!-- FILE NAME SUGGESTIONS:
+                       x form-element--textfield.html.twig
+                       * form-element.html.twig
+                       -->
+                    <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/form-element--textfield.html.twig' -->
+                    <div
+                       class="js-form-item form-item js-form-type-textfield form-item-town-city js-form-item-town-city">
+                       <!-- THEME DEBUG -->
+                       <!-- THEME HOOK: 'form_element_label' -->
+                       <!-- BEGIN OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                       <label for="edit-town-city"
+                          class="form-item__label js-form-required form-required">City</label>
+                       <!-- END OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                       <!-- THEME DEBUG -->
+                       <!-- THEME HOOK: 'input__textfield' -->
+                       <!-- FILE NAME SUGGESTIONS:
+                          x input--textfield.html.twig
+                          x input--textfield.html.twig
+                          * input.html.twig
+                          -->
+                       <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/input--textfield.html.twig' -->
+                       <input id="autocomplete_town_city" autocomplete="off" placeholder="Select a city"
+                          data-drupal-selector="edit-town-city" type="text" name="town_city" value="" size="60"
+                          maxlength="128"
+                          class="form-text required form-element form-element--type-text form-element--api-textfield"
+                          required="required" aria-required="true">
+                       <!-- END OUTPUT from 'themes/srdesign/templates/form/input--textfield.html.twig' -->
+                    </div>
+                    <!-- END OUTPUT from 'themes/srdesign/templates/form/form-element--textfield.html.twig' -->
+                 </div>
+                 <div class="search-date">
+                    <span class="icon-checkin"><i class="fa-solid fa-calendar-days"></i></span>
+                    <!-- THEME DEBUG -->
+                    <!-- THEME HOOK: 'fieldset' -->
+                    <!-- BEGIN OUTPUT from 'core/themes/claro/templates/fieldset.html.twig' -->
+                    <fieldset class="SectionContainer fieldset js-form-item form-item js-form-wrapper form-wrapper"
+                       data-drupal-selector="edit-date" id="edit-date">
+                       <legend class="fieldset__legend fieldset__legend--visible">
+                          <span class="fieldset__label">Date</span>
+                       </legend>
+                       <div class="fieldset__wrapper">
+                          <!-- THEME DEBUG -->
+                          <!-- THEME HOOK: 'form_element' -->
+                          <!-- FILE NAME SUGGESTIONS:
+                             x form-element--textfield.html.twig
+                             * form-element.html.twig
+                             -->
+                          <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/form-element--textfield.html.twig' -->
+                          <div
+                             class="js-form-item form-item js-form-type-textfield form-item-date-range js-form-item-date-range">
+                             <!-- THEME DEBUG -->
+                             <!-- THEME HOOK: 'form_element_label' -->
+                             <!-- BEGIN OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                             <label for="edit-date-range" class="form-item__label">Date Range</label>
+                             <!-- END OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                             <!-- THEME DEBUG -->
+                             <!-- THEME HOOK: 'input__textfield' -->
+                             <!-- FILE NAME SUGGESTIONS:
+                                x input--textfield.html.twig
+                                x input--textfield.html.twig
+                                * input.html.twig
+                                -->
+                             <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/input--textfield.html.twig' -->
+                             <input id="flatpickr_date_range" placeholder="Dates"
+                                data-drupal-selector="edit-date-range" type="text" name="date_range" value=""
+                                size="60" maxlength="128"
+                                class="form-text form-element form-element--type-text form-element--api-textfield flatpickr-input"
+                                readonly="readonly">
+                             <!-- END OUTPUT from 'themes/srdesign/templates/form/input--textfield.html.twig' -->
+                          </div>
+                          <!-- END OUTPUT from 'themes/srdesign/templates/form/form-element--textfield.html.twig' -->
+                       </div>
+                    </fieldset>
+                    <!-- END OUTPUT from 'core/themes/claro/templates/fieldset.html.twig' -->
+                    <span class="icon-checkout"><i class="fa-solid fa-magnifying-glass-location"></i></span>
+                 </div>
+                 <div class="add-adults">
+                    <span class="icon-adult"><i class="fa-solid fa-person"></i></span>
+                    <!-- THEME DEBUG -->
+                    <!-- THEME HOOK: 'form_element' -->
+                    <!-- FILE NAME SUGGESTIONS:
+                       * form-element--number.html.twig
+                       x form-element.html.twig
+                       -->
+                    <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/form-element.html.twig' -->
+                    <div class="js-form-item form-item js-form-type-number form-item-adult js-form-item-adult">
+                       <!-- THEME DEBUG -->
+                       <!-- THEME HOOK: 'form_element_label' -->
+                       <!-- BEGIN OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                       <label for="edit-adult" class="form-item__label">Adult Count</label>
+                       <!-- END OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                       <!-- THEME DEBUG -->
+                       <!-- THEME HOOK: 'input__number' -->
+                       <!-- FILE NAME SUGGESTIONS:
+                          * input--number.html.twig
+                          x input.html.twig
+                          -->
+                       <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                       <input placeholder="Adults" data-drupal-selector="edit-adult" type="number" id="edit-adult"
+                          name="adult" value="" step="1"
+                          class="form-number form-element form-element--type-number form-element--api-number">
+                       <!-- END OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                    </div>
+                    <!-- END OUTPUT from 'themes/srdesign/templates/form/form-element.html.twig' -->
+                 </div>
+                 <div class="add-kids">
+                    <span class="icon-adult"><i class="fa-solid fa-child"></i></span>
+                    <!-- THEME DEBUG -->
+                    <!-- THEME HOOK: 'form_element' -->
+                    <!-- FILE NAME SUGGESTIONS:
+                       * form-element--number.html.twig
+                       x form-element.html.twig
+                       -->
+                    <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/form-element.html.twig' -->
+                    <div class="js-form-item form-item js-form-type-number form-item-kid js-form-item-kid">
+                       <!-- THEME DEBUG -->
+                       <!-- THEME HOOK: 'form_element_label' -->
+                       <!-- BEGIN OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                       <label for="edit-kid" class="form-item__label">Kids Count</label>
+                       <!-- END OUTPUT from 'core/themes/claro/templates/form-element-label.html.twig' -->
+                       <!-- THEME DEBUG -->
+                       <!-- THEME HOOK: 'input__number' -->
+                       <!-- FILE NAME SUGGESTIONS:
+                          * input--number.html.twig
+                          x input.html.twig
+                          -->
+                       <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                       <input placeholder="Kids" data-drupal-selector="edit-kid" type="number" id="edit-kid"
+                          name="kid" value="" step="1"
+                          class="form-number form-element form-element--type-number form-element--api-number">
+                       <!-- END OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                    </div>
+                    <!-- END OUTPUT from 'themes/srdesign/templates/form/form-element.html.twig' -->
+                 </div>
+                 <div class="search-submit">
+                    <!-- THEME DEBUG -->
+                    <!-- THEME HOOK: 'input__submit' -->
+                    <!-- FILE NAME SUGGESTIONS:
+                       * input--submit.html.twig
+                       x input.html.twig
+                       -->
+                    <!-- BEGIN OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                    <input data-drupal-selector="edit-submit" type="submit" id="edit-submit" name="op"
+                       value="Search" class="button js-form-submit form-submit">
+                    <!-- END OUTPUT from 'themes/srdesign/templates/form/input.html.twig' -->
+                 </div>
+              </div>
+           </div>
+        </div>
+        <nav class="navbar navbar-expand-xl">
+           <div class="container-fluid">
+              <!-- Logo START -->
+              <a class="navbar-brand" href="index.html">
+              <img class="light-mode-item navbar-brand-item" src="assets/images/global/logo-1.webp" alt="logo">
+              </a>
+              <!-- Logo END -->
+              <!-- Profile and Notification START -->
+              <ul class="nav flex-row align-items-center list-unstyled ms-xl-auto">
+                 <!-- Notification dropdown START -->
+                 <li class="nav-item dropdown ms-0 ms-md-4">
+                    <!-- Notification button -->
+                    <a class="nav-notification btn btn-light p-0 mb-0" href="#" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                    <i class="bi bi-bell fa-fw"></i>
+                    </a>
+                    <!-- Notification dote -->
+                    <span class="notif-badge animation-blink"></span>
+                    <!-- Notification dropdown menu START -->
+                    <div
+                       class="dropdown-menu dropdown-animation dropdown-menu-end dropdown-menu-size-md shadow-lg p-0">
+                       <div class="card bg-transparent">
+                          <!-- Card header -->
+                          <div
+                             class="card-header bg-transparent d-flex justify-content-between align-items-center border-bottom">
+                             <h6 class="m-0">Notifications <span
+                                class="badge bg-danger bg-opacity-10 text-danger ms-2">4 new</span></h6>
+                             <a class="small" href="#">Clear all</a>
+                          </div>
+                          <!-- Card body START -->
+                          <div class="card-body p-0">
+                             <ul class="list-group list-group-flush list-unstyled p-2">
+                                <!-- Notification item -->
+                                <li>
+                                   <a href="#"
+                                      class="list-group-item list-group-item-action rounded notif-unread border-0 mb-1 p-3">
+                                      <h6 class="mb-2">New! Booking flights from New York ✈️</h6>
+                                      <p class="mb-0 small">Find the flexible ticket on flights around the
+                                         world. Start searching today
+                                      </p>
+                                      <span>Wednesday</span>
+                                   </a>
+                                </li>
+                                <!-- Notification item -->
+                                <li>
+                                   <a href="#"
+                                      class="list-group-item list-group-item-action rounded border-0 mb-1 p-3">
+                                      <h6 class="mb-2">Sunshine saving are here 🌞 save 30% or more on a stay
+                                      </h6>
+                                      <span>15 Nov 2022</span>
+                                   </a>
+                                </li>
+                             </ul>
+                          </div>
+                          <!-- Card body END -->
+                          <!-- Card footer -->
+                          <div class="card-footer bg-transparent text-center border-top">
+                             <a href="#" class="btn btn-sm btn-link mb-0 p-0">See all incoming activity</a>
+                          </div>
+                       </div>
+                    </div>
+                    <!-- Notification dropdown menu END -->
+                 </li>
+                 <!-- Notification dropdown END -->
+                 <li class="nav-item dropdown ms-0 ms-md-4">
+                    <span class="cf-curr-usd"></span>
+                    <a class="nav-notification2 btn btn-light p-2 mb-0" href="#" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                    USD
+                    </a>
+                    <!-- Notification dropdown menu START -->
+                    <div
+                       class="dropdown-menu dropdown-animation dropdown-menu-end dropdown-menu-size-md shadow-lg p-0">
+                       <div class="card bg-transparent">
+                          <!-- Card header -->
+                          <!-- Card body START -->
+                          <div class="card-body p-0">
+                             <ul class="list-group list-group-flush list-unstyled p-2">
+                                <!-- Notification item -->
+                                <li>
+                                   <span class="cf-curr-inr"></span>
+                                   <a href="#"
+                                      class="list-group-item list-group-item-action rounded notif-unread border-0 mb-1 p-3">
+                                   INR
+                                   </a>
+                                </li>
+                                <!-- Notification item -->
+                                <li>
+                                   <span class="cf-curr-pounds"></span>
+                                   <a href="#"
+                                      class="list-group-item list-group-item-action rounded border-0 mb-1 p-3">
+                                   Pounds
+                                   </a>
+                                </li>
+                             </ul>
+                          </div>
+                          <!-- Card body END -->
+                       </div>
+                    </div>
+                    <!-- Notification dropdown menu END -->
+                 </li>
+                 <!-- Profile dropdown START -->
+                 <li class="nav-item ms-4 dropdown">
+                    <!-- Avatar -->
+                    <a class="avatar avatar-sm p-0" href="#" id="profileDropdown" role="button"
+                       data-bs-auto-close="outside" data-bs-display="static" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                       <!-- <img class="avatar-img rounded-2" src="assets/images/global/01.jpg" alt="avatar"> -->
+                    </a>
+                    <ul class="dropdown-menu dropdown-animation dropdown-menu-end shadow pt-3"
+                       aria-labelledby="profileDropdown">
+                       <!-- Profile info -->
+                       <li class="px-3 mb-3">
+                          <div class="d-flex align-items-center">
+                             <!-- Avatar -->
+                             <div class="avatar me-3">
+                             </div>
+                             <div>
+                                <a class="h6 mt-2 mt-sm-0" href="#">Rahil Shaikh</a>
+                                <p class="small m-0">rahildesigns@gmail.com</p>
+                             </div>
+                          </div>
+                       </li>
+                       <!-- Links -->
+                       <li>
+                          <hr class="dropdown-divider">
+                       </li>
+                       <li><a class="dropdown-item" href="#"><i class="bi bi-bookmark-check fa-fw me-2"></i>My
+                          Bookings</a>
+                       </li>
+                       <li><a class="dropdown-item" href="#"><i class="bi bi-heart fa-fw me-2"></i>My Wishlist</a>
+                       </li>
+                       <li><a class="dropdown-item" href="#"><i class="bi bi-gear fa-fw me-2"></i>Settings</a></li>
+                       <li><a class="dropdown-item bg-danger-soft-hover" href="#"><i
+                          class="bi bi-power fa-fw me-2"></i>Sign Out</a></li>
+                    </ul>
+                 </li>
+                 <!-- Profile dropdown END -->
+                 <li class="nav-item dropdown ms-md-4 ">
+                    <a class="nav-link btn-light p-2" href="#" id="advanceMenu" role="button"
+                       data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="bi bi-list"></i>
+                    </a>
+                    <ul class="dropdown-menu min-w-auto dropdown-menu-end" data-bs-popper="none">
+                       <li>
+                          <a class="dropdown-item" href="#">
+                          <i class="text-warning fa-fw bi bi-life-preserver me-2"></i>About Us
+                          </a>
+                       </li>
+                       <li>
+                          <a class="dropdown-item" href="docs/index.html" target="_blank">
+                          <i class="text-danger fa-fw bi bi-card-text me-2"></i>Blog
+                          </a>
+                       </li>
+                       <li>
+                          <a class="dropdown-item" href="#" target="_blank">
+                          <i class="text-info fa-fw bi bi-toggle-off me-2"></i>Contact Us
+                          </a>
+                       </li>
+                    </ul>
+                 </li>
+              </ul>
+              <!-- Profile and Notification START -->
+              <!-- Nav item link-->
+           </div>
+        </nav>
+        <!-- Logo Nav END -->
+     </header>
+    <!-- Header END -->
+
+    <!-- **************** MAIN CONTENT START **************** -->
+    <main>
+        <div class="page-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h3>
+                            FAQ's
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row g-4 justify-content-between sr-faq">
+                <div class="field field--name-field-right-side-text field--type-text-long field--label-hidden field__item col-12">
+                    <div class="accordion" id="sr-list-types">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                                                                                                                                                    How will I know the name of the apartment? Can I find it on Google?
+                                                                                                                                                                                                                                            </button>
+                            </h2>
+                            <div class="accordion-collapse show" id="collapseOne" aria-labelledby="headingOne" data-bs-parent="#sr-list-types">
+                                <div class="accordion-body">
+                                    <p>
+                                        The name of the apartment is not disclosed till the time you confirm. You will be given an accurate location, property type, amenities and all inclusion that if offer with all all verified details, that will help you to arrive at a decision to confirm.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                                                                                                                                                    How will the guest get the keys or access to the apartment?
+                                                                                                                                                                                                                                            </button>
+                            </h2>
+                            <div class="accordion-collapse collapse" id="collapseTwo" aria-labelledby="headingTwo" data-bs-parent="#sr-list-types">
+                                <div class="accordion-body">
+                                    <p>
+                                        In some apartments, you can collect the key from the reception or the key box, and in some, you will be meeting the host and the keys will be handed out to you.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                                                                                                                                                                    Will there be any representative from your company while checking in the apartment?
+                                                                                                                                                                                                                                            </button>
+                            </h2>
+                            <div class="accordion-collapse collapse" id="collapseThree" aria-labelledby="headingThree" data-bs-parent="#sr-list-types">
+                                <div class="accordion-body">
+                                    <p>
+                                        StayRelive representative will not be present at the time of check-in but you will be given the name and number of your host or local representative that will meet you and hand you over your apartment keys.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFour">
+                                <strong><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                                                                                                                                                                    Will there be someone who will give the client the orientation tour of the Apartment?
+                                                                                                                                                                                                                                            </button></strong>
+                            </h2>
+                            <div class="accordion-collapse collapse" id="collapseFour" aria-labelledby="headingFour" data-bs-parent="#sr-list-types">
+                                <div class="accordion-body">
+                                    <p>
+                                        Yes, most of the time the host will give you the orientation tour of the Apartment.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFive">
+                                <strong><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                                                                                                                                                                    Are the apartments checked and cleaned before the guest checks in?
+                                                                                                                                                                                                                                            </button></strong>
+                            </h2>
+                            <div class="accordion-collapse collapse" id="collapseFive" aria-labelledby="headingFive" data-bs-parent="#sr-list-types">
+                                <div class="accordion-body">
+                                    <p>
+                                        Yes, the apartments are checked and cleaned before the clients checks in.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingSix">
+                                <strong><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                                                                                                                                                                                    Where can I find the Apartment Rules?
+                                                                                                                                                                                                                                            </button></strong>
+                            </h2>
+                            <div class="accordion-collapse collapse" id="collapseSix" aria-labelledby="headingSix" data-bs-parent="#sr-list-types">
+                                <div class="accordion-body">
+                                    <p>
+                                        The Apartment rules will be emailed to you well in advance before the check-in.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading7">
+                                <strong><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse7" aria-expanded="false" aria-controls="collapseSix">
+                                                                                                                                                                                    Does the guest have to pay the deposit amount at the time of check-in?
+                                                                                                                                                                                                                                            </button></strong>
+                            </h2>
+                            <div class="accordion-collapse collapse" id="collapse7" aria-labelledby="heading7" data-bs-parent="#sr-list-types">
+                                <div class="accordion-body">
+                                    <p>
+                                        Yes, the deposit has to be paid in some Apartment at the time of check-in and this information will be shared with you before confirming the bookings. The amount deposited will be refunded back to you after you check out of the apartment.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading8">
+                                <strong><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse8" aria-expanded="false" aria-controls="collapse8">Does the guest have to pay the Tourism Fee daily or can it be paid at the end of the stay? The tourism Fee has to be paid daily.
+                                                                                                                                                                                    
+                                                                                                                                                                                                                                            </button></strong>
+                            </h2>
+                            <div class="accordion-collapse collapse" id="collapse8" aria-labelledby="heading8" data-bs-parent="#sr-list-types">
+                                <div class="accordion-body">
+                                    <p>
+                                        The tourism Fee has to be paid daily.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading9">
+                                <strong><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse9" aria-expanded="false" aria-controls="collapse9">
+                                                                                                                                                                                    
+                                                                                                                                                                                    Will I be charged if the guest doesn’t arrive at the Apartment as scheduled?                                            </button></strong>
+                            </h2>
+                            <div class="accordion-collapse collapse" id="collapse9" aria-labelledby="heading9" data-bs-parent="#sr-list-types">
+                                <div class="accordion-body">
+                                    <p>
+                                        There is a specific time allotted to check-in for different Apartments. If you don’t check in at the allotted time you will have to pay the additional charges.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading10">
+                                <strong><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse10" data-bs-target="#collapse" aria-expanded="false" aria-controls="collapse10">
+                                                                                                                                                                                    Can I change the name of the guest without/ before informing StayRelive?
+                                                                                                                                                                                                                                            </button></strong>
+                            </h2>
+                            <div class="accordion-collapse collapse" id="collapse10" aria-labelledby="heading10" data-bs-parent="#sr-list-types">
+                                <div class="accordion-body">
+                                    <p>
+                                        No, the name of the guest cannot be changed before informing StayRelive. If the voucher has been issued and there are modifications required in the booking details then additional charges will be incurred for any changes.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading11">
+                                <strong><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse11" data-bs-target="#collapse11" aria-expanded="false" aria-controls="collapse11">
+                                                                                                                                                                                    Do I get charged if I want to change the guest’s name after the voucher is been issued?
+                                                                                                                                                                                    
+                                                                                                                                                                                                                                            </button></strong>
+                            </h2>
+                            <div class="accordion-collapse collapse" id="collapse" aria-labelledby="heading" data-bs-parent="#sr-list-types">
+                                <div class="accordion-body">
+                                    <p>
+                                        Yes, since the voucher has already been issued a certain amount will be charged.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading12">
+                                <strong><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse12" aria-expanded="false" aria-controls="collapse12">Who do the guests contact if they have any issues at the stay or while staying?
+                                                                                                                                                                                    
+                                                                                                                                                                                                                                            </button></strong>
+                            </h2>
+                            <div class="accordion-collapse collapse" id="collapse12" aria-labelledby="heading" data-bs-parent="#sr-list-types">
+                                <div class="accordion-body">
+                                    <p>
+                                        You will be provided with the host’s contact number so you can contact the host for any issue or assistance required during the stay.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading13">
+                                <strong><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse13" aria-expanded="false" aria-controls="collapse13">How much in advance can I make the reservation?</button></strong>
+                            </h2>
+                            <div class="accordion-collapse collapse" id="collapse13" aria-labelledby="heading" data-bs-parent="#sr-list-types">
+                                <div class="accordion-body">
+                                    <p>
+                                        The reservation can be made as soon as possible depending on the availability.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading14">
+                                <strong><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse14" aria-expanded="false" aria-controls="collapse14">What is the usual check-in &amp; check-out time?</button></strong>
+                            </h2>
+                            <div class="accordion-collapse collapse" id="collapse14" aria-labelledby="heading" data-bs-parent="#sr-list-types">
+                                <div class="accordion-body">
+                                    <p>
+                                        The check-in and check-out time vary for different properties depending upon the Apartment’s timing and policy and is shown on the Apartment booking web page.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading15">
+                                <strong><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse15" aria-expanded="false" aria-controls="collapse1">What is the difference between Available and Request status? Available means the room is available and can be booked instantly?</button></strong>
+                            </h2>
+                            <div class="accordion-collapse collapse" id="collapse15" aria-labelledby="heading" data-bs-parent="#sr-list-types">
+                                <div class="accordion-body">
+                                    <p>
+                                        On- Request means rooms can be checked and requested, but confirmation is subjected to availability and StayRelive will circle back with the property partner to help you with the booking status within 24-48 hours.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading16">
+                                <strong><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse16" aria-expanded="false" aria-controls="collapse16">Under whose name can the reservation be made?</button></strong>
+                            </h2>
+                            <div class="accordion-collapse collapse" id="collapse16" aria-labelledby="heading" data-bs-parent="#sr-list-types">
+                                <div class="accordion-body">
+                                    <p>
+                                        The reservation should be made under the name of the person who will be checking in and staying at the Apartment. Different names should be given from different rooms booked.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading17">
+                                <strong><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse17" aria-expanded="false" aria-controls="collapse1">How do I know if the reservation is confirmed? We will be sending you a confirmation email on the given email id.</button></strong>
+                            </h2>
+                            <div class="accordion-collapse collapse" id="collapse17" aria-labelledby="heading" data-bs-parent="#sr-list-types">
+                                <div class="accordion-body">
+                                    <p>
+                                        We will be sending you a confirmation email on the given email id.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading18">
+                                <strong><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse18" aria-expanded="false" aria-controls="collapse1">Who do the guests contact if they have any issues at the stay or while staying?</button></strong>
+                            </h2>
+                            <div class="accordion-collapse collapse" id="collapse18" aria-labelledby="heading" data-bs-parent="#sr-list-types">
+                                <div class="accordion-body">
+                                    <p>
+                                        We will be sending you a confirmation email on the given email id.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading19">
+                                <strong><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse19" aria-expanded="false" aria-controls="collapse19">What are the payment options available?</button></strong>
+                            </h2>
+                            <div class="accordion-collapse collapse" id="collapse19" aria-labelledby="heading" data-bs-parent="#sr-list-types">
+                                <div class="accordion-body">
+                                    <p>
+                                        You can pay using a VISA or Master or AMEX credit card, Bank Transfers in 7 currencies i.e.; USD, GBP, EURO, CAD, SAR, AED &amp; INR, Virtual Credit Cards, Forex Cards or multi-currency cards.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading20">
+                                <strong><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse20" aria-expanded="false" aria-controls="collapse20">Will the rate of exchange change if I have confirmed the booking today and make the payment after 2 days?</button></strong>
+                            </h2>
+                            <div class="accordion-collapse collapse" id="collapse20" aria-labelledby="heading" data-bs-parent="#sr-list-types">
+                                <div class="accordion-body">
+                                    <p>
+                                        The rate of exchange will be taken on the day you do the payment for your booking.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading21">
+                                <strong><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse21" aria-expanded="false" aria-controls="collapse21">Why does the Rate of the apartment keeps changing?</button></strong>
+                            </h2>
+                            <div class="accordion-collapse collapse" id="collapse21" aria-labelledby="heading" data-bs-parent="#sr-list-types">
+                                <div class="accordion-body">
+                                    <p>
+                                        Rates are dynamic and can keep changing according to availability and demand.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- **************** MAIN CONTENT END **************** -->
+
+    <!-- =======================
+Footer START -->
+    <footer class="bg-dark pt-5">
+        <div class="container">
+            <!-- Row START -->
+            <div class="row g-4">
+
+                <!-- Widget 1 START -->
+                <div class="col-lg-3">
+                    <!-- logo -->
+                    <a href="index.html">
+                        <img class="h-40px" src="assets/images/logo-light.svg" alt="logo">
+                    </a>
+                    <p class="my-3 text-muted">Departure defective arranging rapturous did believe him all had supported.
+                    </p>
+                    <p class="mb-2"><a href="#" class="text-muted text-primary-hover"><i
+								class="bi bi-telephone me-2"></i>+1234 568 963</a> </p>
+                    <p class="mb-0"><a href="#" class="text-muted text-primary-hover"><i
+								class="bi bi-envelope me-2"></i>example@gmail.com</a></p>
+                </div>
+                <!-- Widget 1 END -->
+
+                <!-- Widget 2 START -->
+                <div class="col-lg-8 ms-auto">
+                    <div class="row g-4">
+                        <!-- Link block -->
+                        <div class="col-6 col-md-3">
+                            <h5 class="text-white mb-2 mb-md-4">Page</h5>
+                            <ul class="nav flex-column text-primary-hover">
+                                <li class="nav-item"><a class="nav-link text-muted" href="#">About us</a></li>
+                                <li class="nav-item"><a class="nav-link text-muted" href="#">Contact us</a></li>
+                                <li class="nav-item"><a class="nav-link text-muted" href="#">News and Blog</a></li>
+                                <li class="nav-item"><a class="nav-link text-muted" href="#">Meet a Team</a></li>
+                            </ul>
+                        </div>
+
+                        <!-- Link block -->
+                        <div class="col-6 col-md-3">
+                            <h5 class="text-white mb-2 mb-md-4">Link</h5>
+                            <ul class="nav flex-column text-primary-hover">
+                                <li class="nav-item"><a class="nav-link text-muted" href="#">Sign up</a></li>
+                                <li class="nav-item"><a class="nav-link text-muted" href="#">Sign in</a></li>
+                                <li class="nav-item"><a class="nav-link text-muted" href="#">Privacy Policy</a></li>
+                                <li class="nav-item"><a class="nav-link text-muted" href="#">Terms</a></li>
+                                <li class="nav-item"><a class="nav-link text-muted" href="#">Cookie</a></li>
+                                <li class="nav-item"><a class="nav-link text-muted" href="#">Support</a></li>
+                            </ul>
+                        </div>
+
+                        <!-- Link block -->
+                        <div class="col-6 col-md-3">
+                            <h5 class="text-white mb-2 mb-md-4">Global Site</h5>
+                            <ul class="nav flex-column text-primary-hover">
+                                <li class="nav-item"><a class="nav-link text-muted" href="#">India</a></li>
+                                <li class="nav-item"><a class="nav-link text-muted" href="#">California</a></li>
+                                <li class="nav-item"><a class="nav-link text-muted" href="#">Indonesia</a></li>
+                                <li class="nav-item"><a class="nav-link text-muted" href="#">Canada</a></li>
+                                <li class="nav-item"><a class="nav-link text-muted" href="#">Malaysia</a></li>
+                            </ul>
+                        </div>
+
+                        <!-- Link block -->
+                        <div class="col-6 col-md-3">
+                            <h5 class="text-white mb-2 mb-md-4">Booking</h5>
+                            <ul class="nav flex-column text-primary-hover">
+                                <li class="nav-item"><a class="nav-link text-muted" href="#"><i
+											class="fa-solid fa-hotel me-2"></i>Hotel</a></li>
+                                <li class="nav-item"><a class="nav-link text-muted" href="#"><i
+											class="fa-solid fa-plane me-2"></i>Flight</a></li>
+                                <li class="nav-item"><a class="nav-link text-muted" href="#"><i
+											class="fa-solid fa-globe-americas me-2"></i>Tour</a></li>
+                                <li class="nav-item"><a class="nav-link text-muted" href="#"><i
+											class="fa-solid fa-car me-2"></i>Cabs</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Widget 2 END -->
+
+            </div>
+            <!-- Row END -->
+
+            <!-- Tops Links -->
+            <div class="row mt-5">
+                <h5 class="mb-2 text-white">Top Links</h5>
+                <ul class="list-inline text-primary-hover lh-lg">
+                    <li class="list-inline-item"><a href="#" class="text-muted">Flights</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-muted">Hotels</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-muted">Tours</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-muted">Cabs</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-muted">About</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-muted">Contact us</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-muted">Blogs</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-muted">Services</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-muted">Detail page</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-muted">Services</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-muted">Policy</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-muted">Testimonials</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-muted">Newsletters</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-muted">Podcasts</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-muted">Protests</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-muted">NewsCyber</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-muted">Education</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-muted">Sports</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-muted">Tech and Auto</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-muted">Opinion</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-muted">Share Market</a></li>
+                </ul>
+            </div>
+
+            <!-- Payment and card -->
+            <div class="row g-4 justify-content-between mt-0 mt-md-2">
+
+                <!-- Payment card -->
+                <div class="col-sm-7 col-md-6 col-lg-4">
+                    <h5 class="text-white mb-2">Payment & Security</h5>
+                    <ul class="list-inline mb-0 mt-3">
+                        <li class="list-inline-item">
+                            <a href="#"><img src="assets/images/element/paypal.svg" class="h-30px" alt=""></a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="#"><img src="assets/images/element/visa.svg" class="h-30px" alt=""></a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="#"><img src="assets/images/element/mastercard.svg" class="h-30px" alt=""></a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="#"><img src="assets/images/element/expresscard.svg" class="h-30px" alt=""></a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Social media icon -->
+                <div class="col-sm-5 col-md-6 col-lg-3 text-sm-end">
+                    <h5 class="text-white mb-2">Follow us on</h5>
+                    <ul class="list-inline mb-0 mt-3">
+                        <li class="list-inline-item"> <a class="btn btn-sm px-2 bg-facebook mb-0" href="#"><i
+									class="fab fa-fw fa-facebook-f"></i></a> </li>
+                        <li class="list-inline-item"> <a class="btn btn-sm shadow px-2 bg-instagram mb-0" href="#"><i
+									class="fab fa-fw fa-instagram"></i></a> </li>
+                        <li class="list-inline-item"> <a class="btn btn-sm shadow px-2 bg-twitter mb-0" href="#"><i
+									class="fab fa-fw fa-twitter"></i></a> </li>
+                        <li class="list-inline-item"> <a class="btn btn-sm shadow px-2 bg-linkedin mb-0" href="#"><i
+									class="fab fa-fw fa-linkedin-in"></i></a> </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <hr class="mt-4 mb-0">
+
+            <!-- Bottom footer -->
+            <div class="row">
+                <div class="container">
+                    <div class="d-lg-flex justify-content-between align-items-center py-3 text-center text-lg-start">
+                        <!-- copyright text -->
+                        <div class="text-muted text-primary-hover"> Copyrights ©2023 Booking. Build by <a href="https://www.webestica.com/" class="text-muted">Webestica</a>. </div>
+                        <!-- copyright links-->
+                        <div class="nav mt-2 mt-lg-0">
+                            <ul class="list-inline text-primary-hover mx-auto mb-0">
+                                <li class="list-inline-item me-0"><a class="nav-link py-1 text-muted" href="#">Privacy
+										policy</a></li>
+                                <li class="list-inline-item me-0"><a class="nav-link py-1 text-muted" href="#">Terms and
+										conditions</a></li>
+                                <li class="list-inline-item me-0"><a class="nav-link py-1 text-muted pe-0" href="#">Refund policy</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- =======================
+Footer END -->
+
+    <!-- Back to top -->
+    <div class="back-top"></div>
+
+    <!-- Navbar mobile START -->
+    <div class="navbar navbar-mobile">
+        <ul class="navbar-nav">
+            <!-- Nav item Home -->
+            <li class="nav-item">
+                <a class="nav-link active" href="index.html"><i class="bi bi-house-door fa-fw"></i>
+					<span class="mb-0 nav-text">Home</span>
+				</a>
+            </li>
+
+            <!-- Nav item My Trips -->
+            <li class="nav-item">
+                <a class="nav-link" href="account-bookings.html"><i class="bi bi-briefcase fa-fw"></i>
+					<span class="mb-0 nav-text">My Trips</span>
+				</a>
+            </li>
+
+            <!-- Nav item Offer -->
+            <li class="nav-item">
+                <a class="nav-link" href="offer-detail.html"><i class="bi bi-percent fa-fw"></i>
+					<span class="mb-0 nav-text">Offer</span>
+				</a>
+            </li>
+
+            <!-- Nav item Account -->
+            <li class="nav-item">
+                <a class="nav-link" href="account-profile.html"><i class="bi bi-person-circle fa-fw"></i>
+					<span class="mb-0 nav-text">Account</span>
+				</a>
+            </li>
+        </ul>
+    </div>
+    <!-- Navbar mobile END -->
+
+    <!-- Bootstrap JS -->
+    <script src="assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Vendors -->
+    <script src="assets/vendor/tiny-slider/tiny-slider.js"></script>
+    <script src="assets/vendor/glightbox/js/glightbox.js"></script>
+    <script src="assets/vendor/flatpickr/js/flatpickr.min.js"></script>
+    <script src="assets/vendor/choices/js/choices.min.js"></script>
+
+    <!-- ThemeFunctions -->
+    <script src="assets/js/functions.js"></script>
+    <script>
+        // Initialize and add the map
+        let map;
+
+        async function initMap() {
+            // The location of Uluru
+            const position = {
+                lat: -25.344,
+                lng: 131.031
+            };
+            // Request needed libraries.
+            //@ts-ignore
+            const {
+                Map
+            } = await google.maps.importLibrary("maps");
+            const {
+                AdvancedMarkerElement
+            } = await google.maps.importLibrary("marker");
+
+            // The map, centered at Uluru
+            map = new Map(document.getElementById("map"), {
+                zoom: 4,
+                center: position,
+                mapId: "DEMO_MAP_ID",
+            });
+
+            // The marker, positioned at Uluru
+            const marker = new AdvancedMarkerElement({
+                map: map,
+                position: position,
+                title: "Uluru",
+            });
+        }
+
+        initMap();
+    </script>
+
+</body>
+
+</html>

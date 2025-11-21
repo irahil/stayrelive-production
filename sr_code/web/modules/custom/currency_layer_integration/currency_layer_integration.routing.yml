@@ -1,0 +1,16 @@
+currency_layer_integration.form:
+  path: '/admin/config/development/currency_layer_integration'
+  defaults:
+    _form: '\Drupal\currency_layer_integration\Form\CLAdminForm'
+    _title: 'Currency Layer Integration Module settings'
+  requirements:
+    _permission: 'administer site configuration'
+currency_layer_integration.change:
+  path: 'currency_layer_integration/setcurrency/{currency}'
+  defaults:
+    _controller:  '\Drupal\currency_layer_integration\Controller\CFController::setCurrency'
+    _title: 'Change Currency'
+  requirements:
+    _permission: 'access content'
+  options:
+    no_cache: 'TRUE'

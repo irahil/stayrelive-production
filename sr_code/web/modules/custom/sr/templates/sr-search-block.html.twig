@@ -1,0 +1,609 @@
+<script type="text/javascript">
+   {{ form.js_town_city | raw}}
+</script>
+<section class="home-hero p-0">
+   <div class="container-fluid">
+      <div class="row hero-wrapper">
+         <div class="col-12 px-0">
+            <div class="home-hero-image position-relative">
+               <img src="{{ base_path }}themes/srdesign/assets/images/home/hero-1.avif" alt="Find Apartments wherever you travel">
+               <div class="hero-copy position-absolute">
+                  <h1>Find Apartments wherever you travel</h1>
+                  <p>Discover your ideal apartment anytime, anywhere!</p>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="search-property position-relative" id="searchComponent2"  style="z-index:1000; display:flex; justify-content:center; align-items:center" >
+         <div class="" id="searchComponent">
+            <div class="search-container row d-flex justify-content-center">
+               <div class="search-city search-city-default-check">
+                  <span class="icon-city">
+                  <i class="fa-solid fa-building-user"></i></span>
+                  {{ form.form_build_id }}
+                  {{ form.form_token }}
+                  {{ form.form_id }}
+                  {{ form.filter.town_city }}
+               </div>
+               <div class="search-date">
+                  <span class="icon-checkin"><i class="fa-solid fa-calendar-days"></i></span>
+                  {{ form.filter.date }}
+                  <span class="icon-checkout"><i class="fa-solid fa-magnifying-glass-location"></i></span>
+               </div>
+               <div class="add-adults">
+                  <a heaf="#" class="occupants-minus" onclick="fn_occupants('adult', '-');return false;">-</a>
+                  <span class="icon-adult"><i class="fa-solid fa-person"></i></span>
+                  {{ form.filter.occupants.adult }}
+                  <a heaf="#" class="occupants-plus" onclick="fn_occupants('adult', '+');return false;">+</a>
+               </div>
+               <div class="add-kids">
+                  <a heaf="#" class="occupants-minus" onclick="fn_occupants('kid', '-');return false;">-</a>
+                  <span class="icon-kids"><i class="fa-solid fa-child"></i></span>
+                  {{ form.filter.occupants.kid }}
+                  <a heaf="#" class="occupants-plus" onclick="fn_occupants('kid', '+');return false;">+</a>
+               </div>
+               <div class="search-submit">
+                  {{ form.filter.actions.submit }}
+                  </span>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</section>
+<section class="city-carousel">
+   <div class="container-fluid">
+      <div class="row d-flex city-row-wrapper px-0">
+         <div class="col-lg-6 ">
+            <div class="tab-content" id="city-content">
+               <div class="tab-pane fade show" id="na-tab-pane" role="tabpanel" aria-labelledby="na-tab" tabindex="0">
+                  <div class="cities-wrapper d-flex">
+                     <div class="city-wrapper show-top" >
+                        <a href="/property/search?town_city=Toronto">
+                           <div class="city-details">
+                              <h5>Toronto</h5>
+                              {# <p><span class="apartment-number">30k +</span> <span class="apartment-text">Apartments</span></p> #}
+                           </div>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/city/Toronto.avif" alt="Seattle" >
+                        </a>
+                     </div>
+                     <div class="city-wrapper show-bottom" >
+                        <a href="/property/search?town_city=New%20York">
+                           <div class="city-details">
+                              <h5>New York</h5>
+                           </div>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/city/new-york.webp" alt="New York">
+                        </a>
+                     </div>
+                     <div class="city-wrapper show-top" >
+                        <a href="/property/search?town_city=Denver">
+                           <div class="city-details">
+                              <h5>Denver</h5>
+                           </div>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/city/Denver.avif" alt="New Jersey">
+                        </a>
+                     </div>
+                     <div class="city-wrapper show-top" >
+                        <a href="/property/search?town_city=Boston">
+                           <div class="city-details">
+                              <h5>Boston</h5>
+                           </div>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/city/boston.webp" alt="Boston" >
+                        </a>
+                     </div>
+                     <div class="city-wrapper show-bottom">
+                        <a href="/property/search?town_city=Los%20Angeles">
+                           <div class="city-details">
+                              <h5>Los Angeles</h5>
+                           </div>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/city/los-angeles.webp" alt="Los Angeles" >
+                        </a>
+                     </div>
+                     <div class="city-wrapper show-top" >
+                        <a href="/property/search?town_city=Chicago">
+                           <div class="city-details">
+                              <h5>Chicago</h5>
+                           </div>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/city/chicago.webp" alt="Chicago">
+                        </a>
+                     </div>
+                  </div>
+               </div>
+               <div class="tab-pane fade active show" id="uk-tab-pane" role="tabpanel" aria-labelledby="uk-tab" tabindex="0">
+                  <div class="cities-wrapper d-flex">
+                     <div class="city-wrapper show-top">
+                        <a href="/property/search?town_city=London">
+                           <div class="city-details">
+                              <h5>London</h5>
+                           </div>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/city/london.webp" alt="London" >
+                        </a>
+                     </div>
+                     <div class="city-wrapper show-bottom">
+                        <a href="/property/search?town_city=Barcelona">
+                           <div class="city-details">
+                              <h5>Barcelona</h5>
+                           </div>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/city/barcelona.webp" alt="Barcelona" >
+                        </a>
+                     </div>
+                     <div class="city-wrapper show-top">
+                        <a href="/property/search?town_city=Paris">
+                           <div class="city-details">
+                              <h5>Paris</h5>
+                           </div>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/city/paris.webp" alt="Paris" >
+                        </a>
+                     </div>
+                     <div class="city-wrapper show-bottom">
+                        <a href="/property/search?town_city=Munich">
+                           <div class="city-details">
+                              <h5>Munich</h5>
+                           </div>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/city/munich.webp" alt="Munich" >
+                        </a>
+                     </div>
+                     <div class="city-wrapper show-top">
+                        <a href="/property/search?town_city=Madrid">
+                           <div class="city-details">
+                              <h5>Madrid</h5>
+                           </div>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/city/madrid.webp" alt="Madrid">
+                        </a>
+                     </div>
+                     <div class="city-wrapper show-bottom">
+                        <a href="/property/search?town_city=Zurich">
+                           <div class="city-details">
+                              <h5>Zurich</h5>
+                           </div>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/city/zurich.webp" alt="Zurich">
+                        </a>
+                     </div>
+                  </div>
+               </div>
+               <div class="tab-pane fade" id="uae-tab-pane" role="tabpanel" aria-labelledby="uae-tab" tabindex="0">
+                  <div class="cities-wrapper d-flex">
+                     <div class="city-wrapper show-top">
+                        <a href="/property/search?town_city=Dubai">
+                           <div class="city-details">
+                              <h5>Dubai</h5>
+                           </div>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/city/dubai.webp" alt="Dubai" >
+                        </a>
+                     </div>
+                     <div class="city-wrapper show-bottom">
+                        <a href="/property/search?town_city=Amman">
+                           <div class="city-details">
+                              <h5>Amman</h5>
+                           </div>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/city/Amman.avif" alt="Abu Dhabi" srcset="">
+                        </a>
+                     </div>
+                     <div class="city-wrapper show-top">
+                        <a href="/property/search?town_city=Riyadh">
+                           <div class="city-details">
+                              <h5>Riyadh</h5>
+                           </div>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/city/riyadh.webp" alt="Riyadh" >
+                        </a>
+                     </div>
+                     <div class="city-wrapper show-top">
+                        <a href="/property/search?town_city=Jeddah">
+                           <div class="city-details">
+                              <h5>Jeddah</h5>
+                           </div>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/city/jeddah.webp" alt="Jeddah" srcset="">
+                        </a>
+                     </div>
+                     <div class="city-wrapper show-bottom">
+                        <a href="/property/search?town_city=Doha">
+                           <div class="city-details">
+                              <h5>Doha</h5>
+                           </div>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/city/doha.webp" alt="Doha" srcset="">
+                        </a>
+                     </div>
+                     <div class="city-wrapper show-top">
+                        <a href="/property/search?town_city=Kuwait">
+                           <div class="city-details">
+                              <h5>Kuwait</h5>
+                           </div>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/city/kuwait.webp" alt="Kuwait" srcset="">
+                        </a>
+                     </div>
+                  </div>
+               </div>
+               <div class="tab-pane fade" id="asia-tab-pane" role="tabpanel" aria-labelledby="asia-tab" tabindex="0">
+                  <div class="cities-wrapper d-flex">
+                     <div class="city-wrapper show-top">
+                        <a href="/property/search?town_city=Shanghai">
+                           <div class="city-details">
+                              <h5>Shanghai</h5>
+                           </div>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/city/Shanghai.avif" alt="Singapore">
+                        </a>
+                     </div>
+                     <div class="city-wrapper show-bottom">
+                        <a href="/property/search?town_city=Bangkok">
+                           <div class="city-details">
+                              <h5>Bangkok</h5>
+                           </div>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/city/bangkok.webp" alt="Bangkok">
+                        </a>
+                     </div>
+                     <div class="city-wrapper show-top">
+                        <a href="/property/search?town_city=Chennai">
+                           <div class="city-details">
+                              <h5>Chennai</h5>
+                           </div>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/city/Chennai.avif" alt="Mumbai" >
+                        </a>
+                     </div>
+                     <div class="city-wrapper show-top">
+                        <a href="/property/search?town_city=Tokyo">
+                           <div class="city-details">
+                              <h5>Tokyo</h5>
+                           </div>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/city/tokyo.webp" alt="Tokyo" >
+                        </a>
+                     </div>
+                     <div class="city-wrapper show-bottom">
+                        <a href="/property/search?town_city=Istanbul">
+                           <div class="city-details">
+                              <h5>Istanbul</h5>
+                           </div>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/city/Istanbul.avif" alt="Beijing" >
+                        </a>
+                     </div>
+                     <div class="city-wrapper show-top">
+                        <a href="/property/search?town_city=Kyoto">
+                           <div class="city-details">
+                              <h5>Kyoto</h5>
+                           </div>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/city/Kyoto.avif" alt="Hong Kong" >
+                        </a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="col-lg-4 city-tabs offset-lg-1 ps-lg-0  d-flex flex-column justify-content-center">
+            <h2 class="mb-4">Discover your perfect global stay</h2>
+            <p>Our global network offers serviced apartments and aparthotels in 150+ cities, ensuring swift
+               access to fitting accommodations at competitive prices.
+            </p>
+            <ul class="continent-list" id="myTab" role="tablist">
+               <li class="nav-item active" role="presentation">
+                  <a class="nav-link active" id="uk-tab" data-bs-toggle="tab" data-bs-target="#uk-tab-pane" type="button" role="tab" aria-controls="uk-tab-pane" aria-selected="false">UK & Europe</a>
+               </li>
+               <li class="nav-item" role="presentation">
+                  <a class="nav-link" id="uae-tab" data-bs-toggle="tab" data-bs-target="#uae-tab-pane" type="button" role="tab" aria-controls="uae-tab" aria-selected="false">Middle East</a>
+               </li>
+               <li class="nav-item" role="presentation">
+                  <a class="nav-link" id="na-tab" data-bs-toggle="tab" data-bs-target="#na-tab-pane" type="button" role="tab" aria-controls="na-tab-pane" aria-selected="true">North America</a>
+               </li>
+               <li class="nav-item" role="presentation">
+                  <a class="nav-link" id="asia-tab" data-bs-toggle="tab" data-bs-target="#asia-tab-pane" type="button" role="tab" aria-controls="asia-tab-pane" aria-selected="false">Asia</a>
+               </li>
+            </ul>
+         </div>
+      </div>
+   </div>
+</section>
+<section class="why-we">
+   <div class="container-fluid">
+      <div class="row">
+         <div class="col-12">
+            <h2 class="text-center mb-5">Why we are here</h2>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-md-6 col-xl-3">
+            <div class="why-we-wrapper icon-one">
+               <h4>Booking Simplified</h4>
+               <p>We've simplified online Serviced Apartment booking for seamless customization to travelers' needs.
+               </p>
+            </div>
+         </div>
+         <div class="col-md-6 col-xl-3">
+            <div class="why-we-wrapper icon-two">
+               <h4>Bespoke Serviced Apartments</h4>
+               <p>Finding the perfect trip apartment is tough. We offer tailored options and a convenient booking tool to help you book easily.
+               </p>
+            </div>
+         </div>
+         <div class="col-md-6 col-xl-3">
+            <div class="why-we-wrapper icon-three">
+               <h4>Safety like Home</h4>
+               <p>Our partners regularly inspect apartments for hygiene, security, and safety to maintain advertised standards.
+               </p>
+            </div>
+         </div>
+         <div class="col-md-6 col-xl-3">
+            <div class="why-we-wrapper icon-four">
+               <h4>Hospitality</h4>
+               <p>We provide familial hospitality, ensuring you're fully connected to your community through partnerships.
+               </p>
+            </div>
+         </div>
+      </div>
+   </div>
+</section>
+<section class="simplify-search">
+   <div class="container-fluid">
+      <div class="row ">
+         <div class="col-12 ">
+            <div class="simplify-wrapper ">
+               <div class="row">
+                  <div class="col-md-6 col-xxl-5 offset-xxl-1 d-flex simplify-title">
+                     <h2 class="mb-4">Simplifies the search and booking process</h2>
+                     <p>Our mission revolves around curating delightful stay experiences, combining
+                        technology, data, and human interactions throughout the journey.
+                     </p>
+                  </div>
+                  <div class="col-md-6">
+                     <img src="{{ base_path }}themes/srdesign/assets/images/home/home-splash.webp" alt="Simplifies the search"  loading="lazy" />
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</section>
+<section class="sr-types">
+   <div class="container-fluid">
+      <div class="row">
+         <div class="col-md-12 ">
+            <div class="sr-types-wrapper">
+            <ul class="sr-type-list-mobile" id="travellers" role="tablist">
+                  <li class="nav-item" role="presentation">
+                     <a class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Business <span>Travellers</span></a>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                     <a class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Leisure <span> Travellers</span></a>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                     <a class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Medical <span>Travellers</span></a>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                     <a class="nav-link" id="contact-tab2" data-bs-toggle="tab" data-bs-target="#contact-tab-pane2" type="button" role="tab" aria-controls="contact-tab-pane2" aria-selected="false">Student <span>Travellers</span></a>
+                  </li>
+               </ul>
+               <ul class="sr-type-list d-flex" id="travellers" role="tablist">
+                  <li class="nav-item" role="presentation">
+                     <a class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Business <span>Travellers</span></a>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                     <a class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Leisure <span> Travellers</span></a>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                     <a class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Medical <span>Travellers</span></a>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                     <a class="nav-link" id="contact-tab2" data-bs-toggle="tab" data-bs-target="#contact-tab-pane2" type="button" role="tab" aria-controls="contact-tab-pane2" aria-selected="false">Student <span>Travellers</span></a>
+                  </li>
+               </ul>
+               <div class="tab-content pt-4" id="travellers-tabs">
+                  <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                     <div class="row">
+                        <div class="col-md-6">
+                           <h2 class="mb-4 d-md-none">Business Travellers</h2>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/slider-business.webp"  class="sr-type-image" alt="Business Travellers" loading="lazy" >
+                        </div>
+                        <div class="col-md-4  offset-md-1 ps-md-0  d-flex flex-column justify-content-center">
+                           <h2 class="mb-4 d-none d-md-block">Business Travellers</h2>
+                           <p>We have Serviced Apartments designed for working executives offering quality living solutions with all the comforts of home for business travelers shuttling across overseas offices, project locations, and client offices where travel is imminent.</p>
+
+<p>Staying in hotel alternatives appeals to both leisure and business travelers. For business travelers, lodging should be more than just a place to sleep; it should be a place to live, work, and feel at ease.</p> 
+
+<p>Our serviced apartments not only provide the comforts akin to those of hotels but also cater to the demands of extended stays, making them a preferred choice among discerning travelers.
+</p>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                     <div class="row">
+                        <div class="col-md-6">
+                           <h2 class="mb-4 d-md-none">Leisure Travellers</h2>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/slider-leisure.webp"  class="sr-type-image" alt="Leisure Travellers" loading="lazy" >
+                        </div>
+                        <div class="col-md-4  offset-md-1 ps-md-0  d-flex flex-column justify-content-center">
+                           <h2 class="mb-4 d-none d-md-block">Leisure Travellers</h2>
+                           <p>Catering to leisure travelers, we understand that genuine experiences within the cities they explore hold paramount importance. To meet their desires, we offer a variety of apartments situated in the heart of urban centers, spanning economy, mid-range, and luxury categories, ensuring a personalized choice based on individual preferences.</p>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+                     <div class="row">
+                        <div class="col-md-6">
+                           <h2 class="mb-4 d-md-none">Medical Travellers</h2>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/slider-medical.webp" class="sr-type-image" alt="Medical Traveller" loading="lazy" >
+                        </div>
+                        <div class="col-md-4  offset-md-1 ps-md-0  d-flex flex-column justify-content-center">
+                           <h2 class="mb-4 d-none d-md-block">Medical Travellers</h2>
+                           <p>Recognizing the challenges of seeking accommodations near hospitals, particularly during medical travels, StayRelive empathizes with your concerns.</p>
+                           <p>Our specialized expertise lies in aiding travelers seeking suitable lodging, particularly for medical treatment. We focus on destinations such as</p>
+                           <ul>
+                              <li><strong>Germany</strong></li>
+                              <li><strong>UK</strong></li>
+                              <li><strong>UAE</strong></li>
+                              <li><strong>India</strong></li>
+                              <li><strong>Malaysia</strong></li>
+                              <li><strong>Thailand</strong></li>
+                              <li><strong>Turkey</strong></li>
+                           </ul>
+                           <p>Our mission is to provide the right accommodation solutions to ensure your comfort and convenience while undergoing medical procedures.</p>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="tab-pane fade" id="contact-tab-pane2" role="tabpanel" aria-labelledby="contact-tab2" tabindex="0">
+                     <div class="row">
+                        <div class="col-md-6">
+                           <h2 class="mb-4 d-md-none">Student Travellers</h2>
+                           <img src="{{ base_path }}themes/srdesign/assets/images/home/slider-student.webp"  class="sr-type-image" alt="Student Travellers" class="sr-type-image" loading="lazy" >
+                        </div>
+                        <div class="col-md-4  offset-md-1 ps-md-0  d-flex flex-column justify-content-center">
+                           <h2 class="mb-4 d-none d-md-block">Student Travellers</h2>
+                           <p>Discover affordable student housing options, including Serviced Apartments and communal living spaces near renowned universities like:- </p>
+
+                           <ul>
+                              <li><strong>University of Nottingham</strong></li>
+                              <li><strong>University of Manchester</strong></li>
+                              <li><strong>USC</strong></li>
+                              <li><strong>Boston University</strong></li>
+                              <li><strong>Columbia University</strong></li>
+                              <li><strong>McGill University</strong></li>
+                              <li><strong>University of Toronto</strong></li>
+                           </ul>
+                           <p><br> and more in the <strong>UK, USA, Canada, Australia, Germany, France</strong>, etc.</p>
+                           <p>Secure culturally tailored accommodations for Middle Eastern students, ensuring comfort and convenience.</p>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   </div>
+</section>
+<section class="sr-book">
+   <div class="container-fluid">
+      <div class="row">
+         <div class="col-lg-5 d-flex flex-column justify-content-center">
+            <h2>Book Short Term, Month-to-month & Long Term</h2>
+            <p>Apartment for <span> New Hires, Project Travelers, Relocations,</span> and <span>Extended Stays</span>.</p>
+            <div class="row">
+               <div class="d-flex booking-wrapper">
+                  <div class="booking-type">
+                     <h6>01
+                        <span>Bedroom</span>
+                     </h6>
+                  </div>
+                  <div class="booking-type">
+                     <h6>02
+                        <span>Bedroom</span>
+                     </h6>
+                  </div>
+                  <div class="booking-type">
+                     <h6>03
+                        <span>Bedroom</span>
+                     </h6>
+                  </div>
+                  <div class="booking-type studio">
+                     <h6>Studio
+                        <span>Apartment</span>
+                     </h6>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="col-lg-6  offset-lg-1" >
+            <img src="{{ base_path }}themes/srdesign/assets/images/home/sr-book.webp" alt="Book Short Term, Month-to-month & Long Term"  class="sr-type-image" loading="lazy">
+         </div>
+      </div>
+   </div>
+</section>
+<section class="sr-featured">
+   <div class="container-fluid">
+      <div class="row">
+         <div class="col-12 featured-wrapper">
+            <div class="row mb-4">
+                  <div class="col-12 text-center">
+                     <h2 class="mb-0">Featured Apartments</h2>
+                  </div>
+            </div>
+               <div class="row">
+                  <div class="col-sm-6 col-xl-3 d-flex mb-4 mb-xl-0">
+                     <div class="card card-img-scale overflow-hidden ">
+                        <a href="/contact/contact_us">
+                           <div class="card-img-scale-wrapper rounded-3">
+                              <img src="{{ base_path }}themes/srdesign/assets/images/home/hotels/01.webp" class="card-img lazy" alt="hotel image" loading="lazy">
+                              <div class="position-absolute bottom-0 start-0 p-3">
+                                 <div class="badge text-bg-dark fs-6 rounded-pill stretched-link"><i class="bi bi-geo-alt me-2"></i>Dubai</div>
+                              </div>
+                           </div>
+                           <div class="card-body px-2">
+                              <h5 class="card-title">
+                                 Silkhaus Burj
+                              </h5>
+                              <div class="d-flex justify-content-between align-items-center">
+                                 <h6 class="mb-0">AED 700*
+                                 </h6>
+                                 <h6 class="mb-0">4.3<i class="fa-solid fa-star  ms-1"></i></h6>
+                              </div>
+                           </div>
+                        </a>
+                     </div>
+                  </div>
+                  <div class="col-sm-6 col-xl-3 d-flex mb-4 mb-xl-0">
+                     <div class="card card-img-scale overflow-hidden ">
+                        <a href="/contact/contact_us">
+                           <div class="card-img-scale-wrapper rounded-3">
+                              <img src="{{ base_path }}themes/srdesign/assets/images/home/hotels/02.webp" class="card-img lazy" alt="Dara Al Rayyan" loading="lazy">
+                              <div class="position-absolute bottom-0 start-0 p-3">
+                                 <div class="badge text-bg-dark fs-6 rounded-pill stretched-link"><i class="bi bi-geo-alt me-2"></i>Riyadh</div>
+                              </div>
+                           </div>
+                           <div class="card-body px-2">
+                              <h5 class="card-title">Mabaat - Al Yasmeen </h5>
+                              <div class="d-flex justify-content-between align-items-center">
+                                 <h6 class=" mb-0">
+                                    SAR 630* 
+                                 </h6>
+                                 <h6 class="mb-0">4.0<i class="fa-solid fa-star  ms-1"></i></h6>
+                              </div>
+                           </div>
+                        </a>
+                     </div>
+                  </div>
+                  <div class="col-sm-6 col-xl-3 d-flex mb-4 mb-xl-0">
+                     <div class="card card-img-scale overflow-hidden ">
+                        <a href="/contact/contact_us">
+                           <div class="card-img-scale-wrapper rounded-3">
+                              <img src="{{ base_path }}themes/srdesign/assets/images/home/hotels/03.webp" class="card-img" alt="hotel image" loading="lazy">
+                              <div class="position-absolute bottom-0 start-0 p-3">
+                                 <div class="badge text-bg-dark fs-6 rounded-pill stretched-link"><i class="bi bi-geo-alt me-2"></i>London</div>
+                              </div>
+                           </div>
+                           <div class="card-body px-2">
+                              <h5 class="card-title">
+                                 Buckingham Palace Residences
+                              </h5>
+                              <div class="d-flex justify-content-between align-items-center">
+                                 <h6 class=" mb-0">GBP 360* 
+                                 </h6>
+                                 <h6 class="mb-0">4.0<i class="fa-solid fa-star  ms-1"></i></h6>
+                              </div>
+                           </div>
+                        </a>
+                     </div>
+                  </div>
+                  <div class="col-sm-6 col-xl-3 d-flex mb-4 mb-xl-0">
+                     <div class="card card-img-scale overflow-hidden ">
+                        <a href="/contact/contact_us">
+                           <div class="card-img-scale-wrapper rounded-3">
+                              <img src="{{ base_path }}themes/srdesign/assets/images/home/hotels/04.webp" class="card-img" alt="hotel image" loading="lazy">
+                              <div class="position-absolute bottom-0 start-0 p-3">
+                                 <div class="badge text-bg-dark fs-6 rounded-pill stretched-link"><i class="bi bi-geo-alt me-2"></i>Paris</div>
+                              </div>
+                           </div>
+                           <div class="card-body px-2">
+                              <h5 class="card-title">
+                                 Champs de Mars 
+                              </h5>
+                              <div class="d-flex justify-content-between align-items-center">
+                                 <h6 class="mb-0">EUR 200* 
+                                 </h6>
+                                 <h6 class="mb-0">4.0<i class="fa-solid fa-star  ms-1"></i></h6>
+                              </div>
+                           </div>
+                        </a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</section>

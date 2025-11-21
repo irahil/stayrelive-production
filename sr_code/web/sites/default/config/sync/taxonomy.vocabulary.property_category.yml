@@ -1,0 +1,8 @@
+uuid: b2415e32-b385-47d4-b799-3591b4d3779d
+langcode: en
+status: true
+dependencies: {  }
+name: property_category
+vid: property_category
+description: 'Property Category'
+weight: 0

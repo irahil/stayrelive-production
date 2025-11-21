@@ -1,0 +1,29 @@
+uuid: d4eb86e4-cd27-4fe5-827b-d5995fc1a3c2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_rental_term
+    - node.type.property
+    - taxonomy.vocabulary.rental_term
+id: node.property.field_rental_term
+field_name: field_rental_term
+entity_type: node
+bundle: property
+label: 'Rental Term'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      rental_term: rental_term
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

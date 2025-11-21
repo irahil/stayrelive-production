@@ -1,0 +1,361 @@
+.apartment-photos {
+    padding-bottom: 20px;
+}
+
+.apartment-gallery {
+    .gallery-end .card {
+        border-bottom-right-radius: 90px;
+    }
+    .card {
+        border-radius: 0;
+        .card-img-overlay {
+            z-index: 100;
+        }
+    }
+}
+
+.icon-gallery {
+    cursor: pointer;
+    background-color: $white;
+    color: $secondary;
+    padding: 10px 15px;
+    border-radius: 90px;
+    margin-right: 10px;
+    text-decoration: none;
+
+    &::before {
+        font-family: $fa-font-family;
+        content: "\f03e";
+        color: $secondary;
+        margin-right: 10px;
+    }
+
+    &:hover {
+        background-color: $gray-400;
+        color: $secondary;
+    }
+}
+
+.icon-share {
+    background-color: $white;
+    padding: 10px 15px;
+    border-radius: 90px;
+    color: $primary;
+    display: none;
+
+    &:hover {
+        background-color: $gray-400;
+    }
+
+    &::before {
+        font-family: $fa-font-family;
+        content: "\f14d";
+        color: $primary;
+    }
+}
+
+.main-content-property {
+    @include media-breakpoint-down(xl) {
+        margin-top: toRem(15);
+    }
+}
+
+.booking-details {
+    background-color: $light;
+    border-radius: 250px 0 0 250px;
+    padding: 150px 50px 150px 65px;
+    .card-header input.form-element {
+        background-color: $white;
+    }
+
+    #edit-submit {
+        display: none;
+    }
+
+    .btn {
+        background-color: $secondary;
+        color: $light;
+        &:hover {
+            background-color: $primary;
+            color: $white;
+        }
+    }
+}
+
+.property-details {
+    padding: toRem(5) 0 toRem(15) 0;
+    @include media-breakpoint-up(md) {
+        columns: 2;
+    }
+
+    li {
+        padding-top: toRem(7);
+        text-transform: capitalize;
+
+        i {
+            color: #0B8D9F;
+            font-size: 1.25rem;
+            margin-right: 10px;
+            width: 20px;
+        }
+    }
+}
+
+
+    .field--name-field-display-address,
+    .field--name-field-description .field__label,
+    .field--name-field-category, .field--name-field-heading {
+        display: none;
+    }
+
+
+.apartment-rooms {
+    padding: 20px 0;
+    @include media-breakpoint-down(lg) {
+        flex-direction: column;
+    }
+    span {
+        margin-right: 30px;
+        font-size: toRem(18);
+        @include media-breakpoint-down(lg) {
+            margin-bottom: toRem(15);
+        }
+    }
+}
+
+#n-gmap {
+    #google_map {
+        border-radius: toRem(20);
+        width: 100%;
+        height: toRem(300);
+    }
+}
+
+.location-map {
+    li a {
+        padding: 0;
+        color: $secondary;
+        text-decoration: none;
+        .field__item{
+            &:before {
+              content: "\f3c5";
+              color: $secondary;
+              font-family: $fa-font-family;
+              font-weight: $font-weight-semibold;
+              margin-right: 10px;
+            }
+        }
+        &:hover {
+            color: $primary;
+        }
+    }
+}
+
+.apartment-info {
+    font-size: toRem(18);
+    color: $secondary;
+
+    a {
+        color: $primary;
+        text-decoration: underline;
+
+        &:hover {
+            text-decoration: none;
+        }
+    }
+
+    .apt-photo{
+        img {
+            width: 100%;
+            border-radius: toRem(20);
+        }
+    }
+}
+
+.booking-info legend {
+    display: none;
+}
+
+
+.tbl-booking a {
+    color: $primary;
+    text-decoration: underline;
+}
+
+#block-srdesign-sharebuttonblock {
+    button {
+        display: none;
+    }
+}
+
+.clear-search {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #aaa;
+  }
+  .clear-search:hover {
+    color: $secondary;
+  }
+  
+  .clear-date {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #aaa;
+  }
+  .clear-date:hover {
+    color: $secondary;
+  }
+
+  .page-node-type-property {
+    .SectionContainer {
+      border-radius: 20px;
+  
+      .fieldset__label {
+        font-family: "Merriweather", serif;
+        font-weight: 400;
+        margin-top: 20px;
+      }
+    }
+  
+    .search-sub-results-container {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        margin-top: 20px;
+        width: 40%;
+    
+        .result-sub-list {
+            border-radius: toRem(30);
+            &:hover {
+                background-color: rgb(214, 238, 242);
+            }
+    
+            a {
+                color: $secondary;
+                display: block;
+                -webkit-transition: all 0.6s ease;
+                transition: all 0.6s ease;
+                border-radius: toRem(30);
+    
+                &:hover {
+                    .result-image-sub {
+                        img {
+                            background-color: $gray-600;
+                            -webkit-transition: all 0.6s ease;
+                            transition: all 0.6s ease;
+                            opacity: 0.6;
+                        }
+    
+                        .more-icon {
+                            bottom: 10px;
+                            right: 10px;
+                            opacity: 1;
+                            color: $primary;
+                        }
+                    }
+                }
+            }
+    
+            .result-image-sub {
+                overflow: hidden;
+                position: relative;
+                border-radius: toRem(30);
+                background-color: $black;
+                margin-bottom: toRem(10);
+
+                img {
+                    width: 100%;
+                    height: 160px;
+                    transition: .3s ease-in-out;
+    
+                    &:hover {
+                        opacity: .8;
+                    }
+                }
+    
+                .more-icon {
+                    position: absolute;
+                    bottom: 0;
+                    z-index: 200;
+                    right: 0;
+                    opacity: 0;
+                    transition: all 0.6s ease;
+    
+                    i {
+                        color: $white;
+                        font-size: 1.2rem;
+                    }
+                }
+            }
+    
+            .result-title {
+                padding: 0 toRem(15);
+                margin-bottom: toRem(5);
+                font-family: "Merriweather", serif;
+
+                a {
+                    color: $secondary;
+
+                    &:hover {
+                        color: $primary;
+                    }
+
+                    &:focus {
+                        box-shadow: none;
+                    }
+                }
+            }
+    
+            .result-room {
+                padding: 0 toRem(15);
+    
+                span {
+                    margin-right: toRem(5);
+                    font-size: toRem(14);
+    
+                    i {
+                        margin-right: toRem(5);
+                    }
+    
+                }
+            }
+    
+            .result-price {
+                padding: 0 0 toRem(15) toRem(15);
+    
+                span {
+                    margin-right: toRem(10);
+                    font-size: toRem(14);
+    
+                    i {
+                        margin-right: toRem(10);
+                    }
+    
+                }
+            }
+            .request-book {
+                padding: 0 toRem(15);
+                margin-bottom: 0.9375rem;
+                .btn {
+                    background-color: #192452;
+                    color: rgb(214, 238, 242);
+                    font-size: 12px;
+                    font-weight: 200;
+                    margin-top: 10px;
+                }
+            }
+        }
+    }
+}

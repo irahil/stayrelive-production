@@ -1,0 +1,33 @@
+uuid: 4ff62b74-114f-4503-97d9-2def1023be5c
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_total_living_rooms
+field_name: field_total_living_rooms
+entity_type: node
+type: list_integer
+settings:
+  allowed_values:
+    -
+      value: 0
+      label: '0'
+    -
+      value: 1
+      label: '1'
+    -
+      value: 2
+      label: '2'
+    -
+      value: 3
+      label: '3'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

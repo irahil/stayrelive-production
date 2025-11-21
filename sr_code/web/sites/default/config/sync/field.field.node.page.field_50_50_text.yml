@@ -1,0 +1,37 @@
+uuid: 4c7542a7-19c3-4904-ab18-07140cb23543
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_50_50_text
+    - node.type.page
+    - paragraphs.paragraphs_type.50_50_text
+  module:
+    - entity_reference_revisions
+id: node.page.field_50_50_text
+field_name: field_50_50_text
+entity_type: node
+bundle: page
+label: '50 50 Text'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      50_50_text: 50_50_text
+    negate: 0
+    target_bundles_drag_drop:
+      50_50_text:
+        weight: 4
+        enabled: true
+      left_image_right_accordion_:
+        weight: 5
+        enabled: false
+      property_description:
+        weight: 6
+        enabled: false
+field_type: entity_reference_revisions

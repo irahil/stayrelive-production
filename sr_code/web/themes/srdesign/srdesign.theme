@@ -1,0 +1,332 @@
+<?php
+use Drupal\common_utilities\Utilities\commonUtil;
+use Drupal\node\Entity\Node;
+use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Url;
+
+function srdesign_theme_suggestions_table_alter(array &$suggestions, array $variables)
+{
+  $class = $variables['attributes']['class'][0];
+  $suggestions[] = "table__" . str_replace("-", "_", $class);
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+
+function srdesign_theme_suggestions_form_alter(&$suggestions, $variables) {
+  $form_id = $variables['element']['#form_id'];
+  if (in_array($form_id, ['user_login_form','user_register_form','user_pass','user_form']))  {
+    $suggestions[] = 'form__' . $form_id;
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+
+function srdesign_theme_suggestions_menu_alter(array &$suggestions, array $variables) {
+  // Remove the block and replace dashes with underscores in the block ID to
+  // use for the hook name.
+  if (isset($variables['attributes']['block'])) {
+    $hook = str_replace(array('block-', '-'), array('', '_'),    $variables['attributes']['block']);
+    $suggestions[] = $variables['theme_hook_original'] . '__' . $hook;
+  }
+}
+
+function srdesign_preprocess(&$variables) {
+  $variables['base_path'] = base_path();
+  $variables['route_name'] = \Drupal::routeMatch()->getRouteName();
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for region templates.
+ */
+function srdesign_preprocess_region(&$variables) {
+  if ($variables['region'] = 'content' && \Drupal::service('path.matcher')->isFrontPage()) {
+    $variables['home_search_form'] = \Drupal::formBuilder()->getForm('Drupal\sr\Form\HomeSearchForm');
+  }
+}
+
+
+function srdesign_preprocess_menu__account(&$variables, $hook) {
+  $current_user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+
+  $variables['user_name'] = "blank";
+  $variables['sr_admin_link'] = '';
+  if ($current_user) {
+    $variables['user_name'] = $current_user->get('name')->value;
+    $variables['user_mail'] = $current_user->get('mail')->value;
+    $variables['user_first_name'] = $current_user->get('field_first_name')->value;
+    $variables['user_last_name'] = $current_user->get('field_last_name')->value;
+
+    $roles = $current_user->getRoles();
+    $admin_roles = ['sr_admin', 'administrator'];
+  }
+ 
+}
+
+/**
+ * Implements hook_preprocess_block().
+ */
+function srdesign_preprocess_block(&$variables) {
+  $variables['content']['#attributes']['block'] =    $variables['attributes']['id'];
+}
+
+
+
+function srdesign_preprocess_node(&$variables) {
+  if ($variables['node']->getType() == "property") {
+
+    $latitude = $variables['elements']['field_location_coords_latitude'][0]["#context"]['value'];
+    $longitude = $variables['elements']['field_location_coords_longitude'][0]["#context"]['value'];
+    $node = $variables['elements']['#node'];
+
+    $arr_location[0]['title'] = $node->getTitle();
+    $arr_location[0]['lat'] = $latitude;
+    $arr_location[0]['lng'] = $longitude;
+    $arr_location[0]['id'] = $node->id();
+    $arr_location[0]['link'] = "#";
+    $arr_google_maps = \Drupal::service('sr.services')->generateGoogleMapsParam($arr_location);
+
+    $variables['arr_google_maps'] = $arr_google_maps['gm_param_value'];
+    $variables['#attached']['library'][] = 'sr/sr_gmap_lib_single';
+    //print_r($variables['arr_google_maps']);exit;
+
+    $node = $variables['node'];
+    $current_title = $node->getTitle();
+
+    $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties([
+      'field_parent_id' => $node->id(),
+      'type' => 'property',
+      'status'=> 1,
+    ]);
+
+    $variables['is_parent'] = 'no';
+    if (is_array($nodes) && !empty($nodes)) {
+      $variables['is_parent'] = 'yes';
+    }
+
+    $parent_link = "";
+    $parent_id = $node->get('field_parent_id')->getString();
+    if (!empty($parent_id)) {
+      $arr_title = explode("--", $current_title);
+      $current_title = end($arr_title);
+
+      $request = \Drupal::request();
+      $query_parameters = $request->query->all();
+      //$parent_alias = \Drupal::service('path_alias.manager')->getAliasByPath('/node/'.$parent_id);
+      $parent_url = Url::fromRoute('entity.node.canonical', ['node' => $parent_id], [
+        'query' => $query_parameters,
+      ]);
+
+      // Generate the URL as a string.
+      $parent_link = $parent_url->toString();
+      $parent_link = commonUtil::my_generate_hyperlink_internal($arr_title[0], $parent_link);
+    }
+    $variables['parent_link'] = $parent_link;
+    $variables['node_title'] = $current_title;
+  }
+}
+
+function srdesign_preprocess_field(&$variables, $hook) {
+  if ($variables['element']['#field_name'] == 'field_media' && $variables['element'][0]["#context"]["value"] != '') {
+    //echo "FIELD : " . $variables['element']['#field_name'];
+    //print_r( array_keys($variables['items']));
+    //print_r($variables['items'][0]['content']['#context']['value']);
+    //print_r( unserialize($variables['element'][0]["#context"]["value"]));
+
+    $arr_images_pre = unserialize($variables['element'][0]["#context"]["value"]);
+
+    \Drupal::logger('THEME')->notice("Log html  arr_images_pre " . print_r($arr_images_pre, true));
+    // Remove duplicates
+    $arr_unique = array();
+    $arr_images = array();
+    foreach($arr_images_pre as $key_image => $val_image) {
+      if (in_array($val_image['url'], $arr_unique)) {
+        continue;
+      }
+      $arr_images[] = $val_image;
+      $arr_unique[] = $val_image['url'];
+    }
+    \Drupal::logger('THEME')->notice("Log html POST arr_images " . print_r($arr_images, true));
+    \Drupal::logger('THEME')->notice("Log html arr_unique : " . print_r($arr_unique, true));
+
+
+    $arr_images[0]['url'] = (!empty($arr_images[0]['url'])) ? $arr_images[0]['url'] : 'https://images.unsplash.com/photo-1517840901100-8179e982acb7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG90ZWx8ZW58MHx8MHx8fDA%3D&w=1000&q=80';
+    $arr_images[1]['url'] = (!empty($arr_images[1]['url'])) ? $arr_images[1]['url'] : 'https://images.unsplash.com/photo-1517840901100-8179e982acb7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG90ZWx8ZW58MHx8MHx8fDA%3D&w=1000&q=80';
+    $arr_images[2]['url'] = (!empty($arr_images[2]['url'])) ? $arr_images[2]['url'] : 'https://images.unsplash.com/photo-1517840901100-8179e982acb7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG90ZWx8ZW58MHx8MHx8fDA%3D&w=1000&q=80';
+
+    $image_content_small = '';
+    $image_content = '<section class="card-grid pt-0 apartment-gallery">
+    <div class="container-fluid p-0">
+      <div class="row g-2">';
+    foreach($arr_images as $key_image => $val_image) {
+
+      switch ($key_image) {
+        case "0":
+          $image_content .= '<div class="col-md-6 ps-0">
+          <a data-glightbox data-gallery="gallery" href="'.$val_image['url'].'">
+            <div class="card card-grid-lg card-element-hover card-overlay-hover overflow-hidden"
+              style=\'background-image:url("'.$val_image['url'].'"); background-position: center left; background-size: cover;\'>
+              <!-- Card hover element -->
+              <div class="hover-element position-absolute w-100 h-100">
+                <i
+                  class="bi bi-fullscreen fs-6 text-white position-absolute top-50 start-50 translate-middle bg-dark rounded-1 p-2 lh-1"></i>
+              </div>
+            </div>
+          </a>
+        </div>';
+          break;
+        case "1":
+          $image_content .= '<div class="col-md-6">
+          <div class="row g-2"><div class="col-12 d-none d-md-block">
+          <a data-glightbox data-gallery="gallery" href="'.$val_image['url'].'">
+            <div class="card card-grid-sm card-element-hover card-overlay-hover overflow-hidden"
+              style=\'background-image:url("'.$val_image['url'].'"); background-position: center left; background-size: cover;\'>
+              <div class="hover-element position-absolute w-100 h-100">
+                <i
+                  class="bi bi-fullscreen fs-6 text-white position-absolute top-50 start-50 translate-middle bg-dark rounded-1 p-2 lh-1"></i>
+              </div>
+            </div>
+          </a>
+        </div>';
+          break;
+        case "2":
+          $image_content .= '<div class="col-md-6 d-none d-md-block">
+          <a data-glightbox data-gallery="gallery" href="'.$val_image['url'].'">
+            <div class="card card-grid-sm card-element-hover card-overlay-hover overflow-hidden"
+              style=\'background-image:url("'.$val_image['url'].'"); background-position: center left; background-size: cover;\'>
+              <div class="hover-element position-absolute w-100 h-100">
+                <i
+                  class="bi bi-fullscreen fs-6 text-white position-absolute top-50 start-50 translate-middle bg-dark rounded-1 p-2 lh-1"></i>
+              </div>
+            </div>
+          </a>
+        </div>';
+          break;
+        default:
+          if ($key_image < (count($arr_images)-2) ) {
+            $image_content_small .= '<a data-glightbox="" data-gallery="gallery" href="'.$val_image['url'].'"></a>';
+          }
+      }
+    }
+
+    if ($image_content_small != '') {
+      $image_content .= '<div class="col-md-6 gallery-end">
+      <div class="card card-grid-sm overflow-hidden"
+        style="background-image:url(\''.$arr_images[0]['url'].'\'); background-position: center left; background-size: cover;">
+        <div class="bg-overlay bg-dark opacity-7"></div>
+
+        <a data-glightbox="" data-gallery="gallery" href="'.$arr_images[(array_key_last($arr_images)-1)]['url'].'"
+          class="stretched-link z-index-9"></a>'.$image_content_small.'<div class="card-img-overlay d-flex h-100 w-100">
+          <h6 class="card-title m-auto fw-light">
+          <a data-glightbox="" data-gallery="gallery" href="'.$arr_images[array_key_last($arr_images)]['url'].'"
+          class="z-index-9 icon-gallery">View all</a>
+          <a href="#" class="icon-share"></a>
+            <button style="z-index: 9;" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+              Share
+            </button>
+          </h6>
+          </div>
+
+        </div>
+      </div>
+      ';
+    }
+    $image_content .= '</div>
+    </div>
+          </div>
+        </div>
+      </section>';
+/*
+    $variables['image_html'] = [
+      '#markup' => $image_content,
+    ];
+*/
+
+    $variables['image_html'] = $image_content;
+  }
+}
+
+
+/**
+ * Implements hook_preprocess_table for favourites().
+ */
+
+function srdesign_preprocess_table(&$variables) {
+  $flag = \Drupal\flag\Entity\Flag::load('add_to_favourite');
+  if (isset($flag) && $flag) {
+    foreach ($variables['rows'] as &$row) {
+      if (isset($row['cells'][6]['content']['#markup'])) {
+        $node_id = $row['cells'][6]['content']['#markup'];
+        $node = \Drupal\node\Entity\Node::load($node_id);
+
+        if ($node) {
+          if (\Drupal::currentUser()->isAnonymous()) {
+            $current_url = \Drupal::request()->getRequestUri();
+            // Add a data-node-id attribute to the link with the node's ID.
+            $row['flag_link'] = '<a href="#" class="add-to-favourites" data-node-id="' . $node_id . '">' . t('Add to Favourites') . '</a>';
+            $session = \Drupal::service('session');
+            $session->set('destination', $current_url);
+
+          } else {
+            // Show flag link if user is logged in.
+            $flag_link_builder = \Drupal::service('flag.link_builder');
+            $flag_link = $flag_link_builder->build('node', $node->id(), $flag->id());
+            $row['flag_link'] = \Drupal::service('renderer')->render($flag_link);
+          }
+        } else {
+          $row['flag_link'] = '';
+        }
+      } else {
+        $row['flag_link'] = '';
+      }
+    }
+  }
+}
+
+
+function srdesign_preprocess_page(&$variables) {
+  $variables['#attached']['library'][] = 'sr_share/sr_share';
+}
+
+
+/**
+ * Hook preprocess function for the image of 'views_view_fields' template.
+ */
+
+ function srdesign_preprocess_views_view_fields(&$variables) {
+  if ($variables['view']->id() == 'favourite' && $variables['view']->current_display == 'page_1') {
+    if (isset($variables['fields']['field_media']->content)) {
+        $markup_string = $variables['fields']['field_media']->content->__toString();
+        $cleaned_markup_string = preg_replace('/<!--.*?-->/s', '', $markup_string);
+        $decoded_markup_string = html_entity_decode($cleaned_markup_string);
+        $cleaned_serialized_data = trim($decoded_markup_string);
+
+        $unserialized_data = @unserialize($cleaned_serialized_data);
+
+        if ($unserialized_data !== false || $cleaned_serialized_data === 'b:0;') {
+            // Pass only the first image to the template.
+            $variables['fields']['field_media']->content = isset($unserialized_data[0]) ? $unserialized_data[0] : null;
+        }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for forms.
+ */
+function srdesign_preprocess_form(&$variables) {
+  // Check if the form is the user login form.
+  if ($variables['element']['#form_id'] === 'user_login_form') {
+    \Drupal::logger('srdesign')->notice('Country code: ');
+
+    // Get the country code from the session.
+    $country_code = \Drupal::service('session')->get('country_code', 'default');
+    \Drupal::logger('srdesign')->notice('Country code: ' . $country_code);
+
+    // Pass the country code to the Twig template.
+    $variables['country_code'] = $country_code;
+  }
+}

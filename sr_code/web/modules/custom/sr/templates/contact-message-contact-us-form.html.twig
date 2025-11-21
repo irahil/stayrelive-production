@@ -1,0 +1,33 @@
+<div class="page-header page-title">
+	<div class="container">
+		<div class="row">
+			<div class="col-12">
+				<h3>Contact Us</h3>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+    <div class="contact-form-wrapper">
+        <div class="contact-form-image">
+        </div>
+        <div class="contact-form-content">
+        <h2>Talk to our expert</h2>
+        <p>Fill out the form and a member of our support team will  get back to you witin 24 hours.</p>
+            <div class="row">
+                <div class="col-lg-6">{{ form.field_first_name }}</div>
+                <div class="col-lg-6">{{ form.field_last_name }}</div>
+            </div>
+            {{ form.field_email }}
+            {{ form.field_booking_id }}
+            {{ form.field_subject }}
+            {{ form.field_how_to_contact }}
+            {{ form.message }}
+            {{ form.captcha }}
+            {{ form.actions }}
+            {# Renders the rest of the form #}
+            {{ form|without('name', 'mail', 'subject', 'message', 'actions', 'captcha', 'field_first_name', 'field_last_name', 'field_email', 'field_booking_id', 'field_how_to_contact', 'field_subject') }}
+        </div>
+    </div>
+</div>

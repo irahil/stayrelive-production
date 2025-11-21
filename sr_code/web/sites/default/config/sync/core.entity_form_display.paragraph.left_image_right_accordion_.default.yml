@@ -1,0 +1,36 @@
+uuid: 270ca909-a87f-40fe-a073-fc575a107df1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.left_image_right_accordion_.field_left_side_image
+    - field.field.paragraph.left_image_right_accordion_.field_right_side_text
+    - image.style.thumbnail
+    - paragraphs.paragraphs_type.left_image_right_accordion_
+  module:
+    - image
+    - text
+id: paragraph.left_image_right_accordion_.default
+targetEntityType: paragraph
+bundle: left_image_right_accordion_
+mode: default
+content:
+  field_left_side_image:
+    type: image_image
+    weight: 0
+    region: content
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+  field_right_side_text:
+    type: text_textarea
+    weight: 1
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

@@ -1,0 +1,78 @@
+.booking-search {
+    .table-responsive {
+        padding: 0 !important;
+        .fieldset__wrapper {
+            margin: 0 !important;
+        }
+        .form-item-status {
+            float: left;
+        }
+        .form-actions {
+            display: inline-table;
+            margin-left: 16px;
+        }
+        fieldset {
+            overflow: hidden;
+            overflow-x: auto;
+            box-shadow: none;
+            border: none;
+        }
+        table {
+            thead {
+                tr {
+                    border-radius: 0.75rem;
+                    th {
+                        text-wrap: nowrap;
+                        background-color: $light;
+                    }
+                }
+            }
+            width: 100%; 
+            tr:nth-child(2n) {
+                border-bottom: 1px solid $gray-700;
+            }
+            td:first-child {
+                width: 18.75rem;
+            }
+            td:not(:first-child):not(:last-child) {
+                text-wrap: nowrap;
+                a.pending {
+                    width: 11.25rem;
+                    display: block;
+                    text-align: center;
+                    padding: 0.5rem 0.75rem;
+                    border-radius: 0.75rem;
+                    text-decoration: none;
+                    color: $black;
+                    text-wrap: nowrap;
+                    background-color: $orange;
+                    transition: none;
+                }
+                a.confirmed {
+                    width: 11.25rem;
+                    display: block;
+                    text-align: center;
+                    padding: 0.5rem 0.75rem;
+                    border-radius: 0.75rem;
+                    text-decoration: none;
+                    color: $white;
+                    text-wrap: nowrap;
+                    background-color: $dark-green;
+                    transition: none;
+                }
+                a.cancelled {
+                    width: 11.25rem;
+                    display: block;
+                    text-align: center;
+                    padding: 0.5rem 0.75rem;
+                    border-radius: 0.75rem;
+                    text-decoration: none;
+                    color: $white;
+                    text-wrap: nowrap;
+                    background-color: $red;
+                    transition: none;
+                }
+            }
+        }
+    }
+}

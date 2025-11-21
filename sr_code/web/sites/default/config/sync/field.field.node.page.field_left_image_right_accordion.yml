@@ -1,0 +1,37 @@
+uuid: 6f2aa776-4dcb-407f-b2ad-b0238503b285
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_left_image_right_accordion
+    - node.type.page
+    - paragraphs.paragraphs_type.left_image_right_accordion_
+  module:
+    - entity_reference_revisions
+id: node.page.field_left_image_right_accordion
+field_name: field_left_image_right_accordion
+entity_type: node
+bundle: page
+label: 'Left Image Right Accordion '
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      left_image_right_accordion_: left_image_right_accordion_
+    negate: 0
+    target_bundles_drag_drop:
+      50_50_text:
+        weight: 4
+        enabled: false
+      left_image_right_accordion_:
+        weight: 5
+        enabled: true
+      property_description:
+        weight: 6
+        enabled: false
+field_type: entity_reference_revisions

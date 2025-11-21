@@ -1,0 +1,28 @@
+uuid: b2c2a8a4-4786-4081-be74-3afff18bd6ee
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - sr
+  theme:
+    - srdesign
+id: srdesign_srpropertysuffixblockbasic
+theme: srdesign
+region: content
+weight: -2
+provider: null
+plugin: sr_property_suffix_block
+settings:
+  id: sr_property_suffix_block
+  label: 'SR Property Suffix block: basic'
+  label_display: '0'
+  provider: sr
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      property: property

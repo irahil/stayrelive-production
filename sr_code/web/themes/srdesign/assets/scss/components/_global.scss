@@ -1,0 +1,460 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather&family=Playfair+Display:wght@400..900&display=swap');
+
+
+// mixin for px to rem
+@function toRem($value) {
+    $remValue: calc($value / 16)+rem;
+    @return $remValue;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    color: $secondary;
+    font-family: $font-family-base;
+    font-weight: $font-weight-light;
+    padding-top: toRem(100);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Merriweather", serif;
+    color: $secondary;
+    font-weight: $font-weight-light;
+}
+
+.page-wrapper *:focus,
+.ui-dialog *:focus {
+    outline: 2px solid $secondary;
+    box-shadow: none !important;
+}
+
+/* Step 1: Common Properties
+  These styles are required to make icons render reliably */
+.icon::before {
+    display: inline-block;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+}
+
+.form-item-town-city ::-webkit-scrollbar {
+    width: toRem(5);
+}
+
+/* Track */
+.form-item-town-city ::-webkit-scrollbar-track {
+    background: $primary;
+}
+
+/* Handle */
+.form-item-town-city ::-webkit-scrollbar-thumb {
+    background: $light;
+    border-radius: toRem(6);
+}
+
+a {
+    color: $blue;
+    text-decoration: none;
+}
+
+ul,
+ol {
+    padding: 0;
+    margin: 0
+}
+
+ul.list-style {
+    li {
+        &::before {
+            font-family: $fa-font-family;
+            content: "\f00c";
+            color: $secondary;
+            margin-right: 10px;
+            font-weight: $font-weight-semibold;
+        }
+    }
+}
+
+a {
+    &:hover {
+        transition: $transition-base;
+    }
+}
+
+li {
+    list-style: none !important;
+}
+
+textarea:focus,
+input:focus {
+    outline: none;
+}
+
+.spinner-grow {
+    color: $light;
+}
+
+section {
+    padding: 0 0 toRem(50) 0;
+    @include media-breakpoint-up(lg) {
+        padding: 0 0 toRem(100) 0;
+    }
+}
+
+main,
+.page-wrapper {
+    background-color: $white;
+    position: relative;
+
+    p,
+    li {
+        font-size: toRem(18);
+        @include media-breakpoint-up(xl) {
+            font-size: toRem(16);
+            
+        }
+
+        @include media-breakpoint-up(xxl) {
+            font-size: toRem(18);
+        }
+    }
+}
+
+.modal {
+    z-index: 8888;
+
+    .modal-dialog {
+        -webkit-transform: none;
+        transform: none;
+        border: 2px solid $secondary;
+        border-radius: 25px;
+        padding: 25px;
+        background-color: $white;
+
+        &.modal-dialog-centered{
+            min-height: auto;
+        }
+
+        .modal-content {
+            align-self: flex-start;
+        }
+
+        .modal-header {
+            padding-top: 0;
+
+            .btn-close {
+                font-size: toRem(20);
+                @include media-breakpoint-up(xl) {
+                    font-size: toRem(30);
+                }
+            }
+        }
+    }
+}
+
+.pager__items {
+    li.pager__item--number {
+        .pager__link {
+            &.pager__link--action {
+                border-radius: toRem(16);
+            }
+
+            &.is-active {
+                background-color: $primary;
+                color: $light;
+            }
+
+            &:hover {
+                background-color: $light;
+                color: $primary;
+            }
+        }
+    }
+
+    li.pager__item--ellipsis {
+        display: none;
+    }
+
+    .pager__item--first, .pager__item-title--backwards, .pager__item--previous, .pager__item--next, .pager__item--last {
+        .pager__link {
+            background-color: transparent;
+            color: $primary;
+        }
+    }
+}
+
+form {
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        margin: 0;
+        opacity: 1;
+    }
+
+    input[type=date]::-webkit-inner-spin-button,
+    input[type=date]::-webkit-calendar-picker-indicator {
+        display: block;
+    }
+
+    input.form-element, select.form-element {
+        background-color: $light;
+        color: $secondary;
+        border-radius: toRem(90);
+        font-size: toRem(18); 
+        max-width: toRem(400);
+
+        &::focus {
+            border-radius: toRem(90);
+        }
+    }
+
+    .form-textarea-wrapper textarea {
+        padding: toRem(20);
+        background-color: $light;
+        color: $secondary;
+        border-radius: toRem(20);
+        font-size: toRem(18);
+        max-width: toRem(400);
+    }
+
+    input[type="checkbox"] {
+        border-radius: 5px;
+        &::checked {
+            border-color: $primary;
+            background-color: $primary;
+        }
+    }
+
+    input[type="submit"] {
+        background-color: $primary;
+        border-radius: toRem(90);
+        color: $light;
+        display: block;
+        padding: 16px 24px 16px 24px;
+        min-width: 120px;
+        text-transform: uppercase;
+        transition: $transition-base;
+
+        &:hover {
+            background-color: $light;
+            color: $primary;
+        }
+    }
+
+    .description {
+        font-size: toRem(12);
+        padding: toRem(5) 0 0 toRem(10);
+    }
+
+    .form-item__label[for] {
+        padding-left: toRem(12);
+        font-size: toRem(16);
+        position: relative;
+        top: 2px;
+    }
+
+    .form-item {
+        margin-top: toRem(12);
+
+        .form-boolean--type-checkbox:checked {
+            color: $primary;
+            background-color: $primary;
+            border-color: $primary;
+        }
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+.list-group-item-action:hover,
+.list-group-item-action:focus {
+    background-color: transparent;
+}
+
+.accordion .accordion-item {
+    border-width: 0;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: transparent;
+}
+
+.accordion-item:last-of-type .accordion-button.collapsed {
+    border-radius: 0;
+}
+
+.modal-title {
+    font-weight: $font-weight-bold;
+}
+
+.flatpickr-calendar {
+    background-color: $white !important;
+    border: 3px solid $secondary !important;
+    padding: toRem(20);
+    .flatpickr-next-month, .flatpickr-prev-month {
+        padding: 0 !important;
+
+        &:hover {
+            svg {
+                fill: $primary;
+            }
+        }
+    }
+
+    .flatpickr-weekdays .flatpickr-weekdaycontainer,.flatpickr-days .dayContainer {
+        padding-right: 10px;
+        border-right: 2px dashed $primary;
+    }
+
+    .dayContainer {
+        padding-bottom: 5px;
+    }
+
+    .flatpickr-weekday {
+        color: $secondary;
+    }
+
+    .flatpickr-day {
+        &:hover {
+            background-color: $primary;
+            color: $white;
+        }
+        &.today {
+            color: $white;
+            border-color: $primary;
+            background-color: $primary;
+        }
+        &.selected {
+            background-color: $primary !important;
+            color: $white;
+        }
+        &.endRange {
+            background-color: $primary;
+            border-color: $primary;
+            &:hover {
+                background: $primary;
+                border-color: #1C234F;
+                color: $white;
+            }
+        }
+
+        &.inRange {
+            background-color: #d1d1d1  !important;
+            border-width: 0 !important;
+            color: $secondary;
+            box-shadow: -5px 0 0 #d1d1d1 , 5px 0 0 #d1d1d1 !important
+        }
+    }
+}
+
+// Google Map Styling
+.gm-style {
+    a {
+        color: $primary;
+
+        &:hover {
+            color: $secondary;
+        }
+    }
+
+    .gm-style-iw-c {
+        background-color: $light;
+        padding: toRem(12) !important;
+        font-family: $font-family-base;
+
+        &:after {
+            background-color: $light;
+        }
+    }
+    .gm-style-iw-tc {
+        &:after {
+            background-color: $light;
+        }
+    }
+}
+
+.dropdown-menu {
+    .fieldset__wrapper {
+        margin-bottom: toRem(9)
+    }
+    legend {
+        display: none;
+    }
+
+    .form-item {
+        border-width: 0;
+    }
+
+    .fieldset {
+        box-shadow: none;
+    }
+}
+
+.path-user {
+    main {
+        background: $light;
+    }
+    .page-wrapper {
+        padding: 0;
+    }
+    #block-currencies-menu {
+        display: none;
+    }
+}
+
+.text-formatted .page-header, .contact-form .page-header, .page-header.page-content {
+    background-color: $primary;
+    display: block;
+    padding: toRem(50) 0;
+    margin-bottom: 50px;
+
+    h3 {
+        color: $white;
+    }
+
+    img {
+        display: none;
+    }
+}
+
+.content-page {
+    a {
+        text-decoration: underline;
+        color: $secondary;
+
+        &:hover {
+            text-decoration: none;
+        }
+    }
+}
+
+.modal {
+    .fieldset__label {
+        padding-left: 0;
+    }
+}
+
+.bdr-radius {
+    border-radius: toRem(10);
+    @include media-breakpoint-up(md) {
+        border-radius: toRem(15);
+    }
+    @include media-breakpoint-up(lg) {
+        border-radius: toRem(25);
+    }
+}
+
+.preloader {
+    display: none;
+}

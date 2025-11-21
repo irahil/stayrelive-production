@@ -1,0 +1,36 @@
+uuid: df0bf2ad-51c6-495b-a48e-4445ac6d334f
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_bills_included
+field_name: field_bills_included
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: Electricity
+      label: Electricity
+    -
+      value: Gas
+      label: Gas
+    -
+      value: Water
+      label: Water
+    -
+      value: 'Satellite Cable TV'
+      label: 'Satellite Cable TV'
+    -
+      value: Internet
+      label: Internet
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

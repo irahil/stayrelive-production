@@ -1,0 +1,38 @@
+uuid: 3f6ef00e-daa3-4ac2-885a-39aac66021d5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.country.field_country_name
+    - taxonomy.vocabulary.country
+id: taxonomy_term.country.default
+targetEntityType: taxonomy_term
+bundle: country
+mode: default
+content:
+  field_country_name:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  name:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 2
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+hidden:
+  description: true
+  path: true
