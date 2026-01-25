@@ -1,0 +1,53 @@
+{#
+  Custom template for Property Listing page
+#}
+
+<div class="property-listing-wrapper">
+
+  <div class="property-file-list-header">
+    <div class="property-list-actions">
+      <div class="back-link-wrapper">{{ form.back_link }}</div>
+    </div>
+    <div class="property-actions">
+      <div class="action-link">{{ form.upload_property_link }}</div>
+    </div>
+  </div>
+
+  {% if form.search_result.result is defined %}
+    <table class="tbl-vendor">
+      <thead>
+        <tr>
+          <th>{{ 'File'|t }}</th>
+          <th>{{ 'Uploaded By'|t }}</th>
+          <th>{{ 'Uploaded On'|t }}</th>
+          <th>{{ 'Status'|t }}</th>
+          <th>{{ 'Error'|t }}</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for key, row in form.search_result.result %}
+        {% if key starts with('#') == false %}
+          <tr>
+            <td>{{ row.file }}</td>
+            <td>{{ row.uploaded_by }}</td>
+            <td>{{ row.uploaded_on }}</td>
+            <td>{{ row.file_status }}</td>
+            <td>{{ row.error }}</td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+      </tbody>
+    </table>
+
+    {% if form.search_result.pager is defined %}
+      <div class="pager-wrapper">
+        {{ form.search_result.pager }}
+      </div>
+    {% endif %}
+  {% elseif form.search_result.no_result is defined %}
+    <div class="no-results">
+      <strong>{{ form.search_result.no_result['#title'] }}</strong>: {{ form.search_result.no_result['#markup'] }}
+    </div>
+  {% endif %}
+
+</div>

@@ -1,0 +1,1098 @@
+<?php
+
+namespace Drupal\inventory_management\Form;
+
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\common_utilities\Utilities\commonUtil;
+
+/**
+ * Property Details Form with optimized validation.
+ */
+class PropertyDetailsForm extends FormBase {
+
+  // Constants for better maintainability
+  private const MAX_FILE_SIZE = 25600000; // 25MB
+  private const ALLOWED_EXTENSIONS = 'png jpg jpeg';
+  private const PROPERTY_NAME_MIN_LENGTH = 3;
+  private const PROPERTY_NAME_MAX_LENGTH = 100;
+  private const PINCODE_LENGTH = 6;
+
+  public function getFormId() {
+    return 'property_details_form';
+  }
+
+  public function buildForm(array $form, FormStateInterface $form_state) {
+
+    commonUtil::validateVendor();
+
+    $form['back_link'] = [
+      '#type' => 'link',
+      '#title' => $this->t('Back'),
+      '#url' => \Drupal\Core\Url::fromRoute('inventory_management.property_list'),
+    ];
+
+    // Property Basic Info
+    $form['property_basic_info'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Property Basic Info'),
+    ];
+
+    if (commonUtil::isSiteAdmin()) {
+      $form['property_basic_info']['published'] = [
+        '#type' => 'checkboxes',
+        '#title' => $this->t('Published Status'),
+        '#options' => ['1' => 'Published'],
+        '#default_value' => [],
+      ];
+      $form['property_basic_info']['markup_type_wrapper'] = [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['markup-type-wrapper']],
+      ];
+      $form['property_basic_info']['markup_type_wrapper']['markup_price'] = [
+        '#type' => 'textfield',
+        '#title' => $this->t('Markup Price (%)'),
+        '#description' => $this->t('Enter a value between 0 and 100. Only numbers are allowed (e.g., enter "25" for 25%).'),
+        '#default_value' => 0,
+        '#required' => TRUE,
+        '#attributes' => [
+          'class' => ['form-half'],
+          'placeholder' => $this->t('e.g., 25 for 25%'),
+          'pattern' => '^[0-9]+\.?[0-9]*$',
+        ],
+      ];
+    }
+
+    $arr_property_type = commonUtil::get_term_list('property_type');
+
+    $form['property_basic_info']['markup_type_wrapper']['property_type'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Property type'),
+      '#options' => $arr_property_type,
+      '#required' => TRUE,
+      '#attributes' => ['class' => ['form-half']],
+    ];
+
+    $arr_room_type = commonUtil::get_term_list('room_type');
+
+    $form['property_basic_info']['room_types'] = [
+      '#type' => 'checkboxes',
+      '#title' => $this->t('Room Types'),
+      '#options' => $arr_room_type,
+      '#required' => TRUE,
+      "#attributes" => ['class' => ['hosting-type-wrapper']],
+    ];
+
+    // Wraping property name inside wrapper
+    $form['property_basic_info']['property_name_age_wrapper'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['property-name-age-wrapper']],
+    ];
+
+    $form['property_basic_info']['property_name_age_wrapper']['property_name'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Property name'),
+      '#required' => TRUE,
+      '#attributes' => [
+        'class' => ['form-half'],
+        'placeholder' => $this->t('Enter property name'),
+      ],
+    ];
+
+    $form['property_basic_info']['property_name_age_wrapper']['property_age'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Property age'),
+      '#attributes' => [
+        'class' => ['form-half'],
+        'placeholder' => $this->t('Enter age of property'),
+      ],
+    ];
+
+    $form['property_basic_info']['property_name_age_wrapper']['display_name'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Display name'),
+      '#required' => TRUE,
+      '#attributes' => [
+        'class' => ['form-half'],
+        'placeholder' => $this->t('Enter generic display name'),
+      ],
+      '#access' => commonUtil::isSiteAdmin(),
+    ];
+
+    $form['property_basic_info']['property_name_age_wrapper']['area_name'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Area name'),
+      '#required' => TRUE,
+      '#attributes' => [
+        'class' => ['form-half'],
+        'placeholder' => $this->t('Enter Area name'),
+      ],
+    ];
+
+    $form['property_basic_info']['property_description'] = [
+      '#type' => 'text_format',
+      '#title' => $this->t('Property Description'),
+      '#required' => TRUE,
+      '#format' => 'plain_text', // Or 'full_html', depending on allowed formats
+      '#rows' => 5,
+      '#default_value' => '',
+      '#allowed_formats' => ['plain_text'], // Limit dropdown to one format
+    ];
+
+    $form['property_basic_info']['lat_lng_row'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['lat-lng-wrapper']],
+    ];
+
+    $form['property_basic_info']['lat_lng_row']['latitude'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Latitude'),
+      '#attributes' => [
+        'class' => ['lat-field'],
+        'placeholder' => $this->t('Enter latitude'),
+      ],
+    ];
+
+    $form['property_basic_info']['lat_lng_row']['longitude'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Longitude'),
+      '#attributes' => [
+        'class' => ['lng-field'],
+        'placeholder' => $this->t('Enter longitude'),
+      ],
+    ];
+
+    $form['property_basic_info']['address'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Address'),
+      '#required' => TRUE,
+    ];
+
+    $arr_country = commonUtil::get_term_list('country');
+    $arr_state = commonUtil::get_term_list('state');
+    $arr_city = commonUtil::get_term_list('city');
+
+    // Wrapper for first row: Country & State
+    $form['property_basic_info']['location_row_1'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['location-wrapper']],
+    ];
+
+    $form['property_basic_info']['location_row_1']['country'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Country'),
+      '#options' => $arr_country,
+      '#required' => TRUE,
+      '#attributes' => [
+        'class' => ['form-half'],
+      ],
+    ];
+
+    $form['property_basic_info']['location_row_1']['state'] = [
+      '#type' => 'select',
+      '#title' => $this->t('State'),
+      '#options' => $arr_state,
+      '#required' => TRUE,
+      '#attributes' => [
+        'class' => ['form-half'],
+      ],
+    ];
+
+    // Wrapper for second row: City & Pincode
+    $form['property_basic_info']['location_row_2'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['location-wrapper']],
+    ];
+
+    $form['property_basic_info']['location_row_2']['city'] = [
+      '#type' => 'select',
+      '#title' => $this->t('City'),
+      '#options' => $arr_city,
+      '#required' => TRUE,
+      '#attributes' => [
+        'class' => ['form-half'],
+      ],
+    ];
+    $form['property_basic_info']['location_row_2']['pincode'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Pincode'),
+      '#required' => TRUE,
+      '#attributes' => [
+        'class' => ['form-half'],
+        'placeholder' => $this->t('Enter pincode'),
+      ],
+    ];
+
+    // Property Details
+    $form['property_details'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Property Details'),
+    ];
+
+    $form['property_details']['primary_media'] = [
+      '#type' => 'managed_file',
+      '#title' => $this->t('Property Primary Photos'),
+      '#description' => $this->t('Upload the primary image.'),
+      '#upload_location' => 'public://property_primary_media/',
+      '#multiple' => FALSE,
+      '#upload_validators' => [
+        'file_validate_extensions' => ['png jpg jpeg webp'],
+        'file_validate_size' => [25600000], // 25MB max per file
+      ],
+    ];
+
+    $form['property_details']['media'] = [
+      '#type' => 'managed_file',
+      '#title' => $this->t('Property Photos'),
+      '#description' => $this->t('Upload one or more images.'),
+      '#upload_location' => 'public://property_media/',
+      '#multiple' => TRUE,
+      '#upload_validators' => [
+        'file_validate_extensions' => ['png jpg jpeg webp'],
+        'file_validate_size' => [25600000], // 25MB max per file
+      ],
+    ];
+
+    $form['property_details']['on_site_staffing'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('On-Site Staffing'),
+      '#options' => [
+        'Reception Available' => $this->t('Reception Available'),
+        'Caretaker Available' => $this->t('Caretaker Available'),
+      ],
+      '#default_value' => 'Reception Available',
+      "#attributes" => ['class' => ['hosting-type-wrapper']],
+    ];
+
+    $arr_property_amenities = commonUtil::get_term_list('property_amenities');
+
+    $form['property_details']['property_amenities'] = [
+      '#type' => 'checkboxes',
+      '#title' => $this->t('Property Amenities'),
+      '#options' => $arr_property_amenities,
+      '#required' => TRUE,
+      "#attributes" => ['class' => ['hosting-type-wrapper']],
+    ];
+
+    $form['property_details']['food_beverages'] = [
+      '#type' => 'checkboxes',
+      '#title' => $this->t('Food & Beverages'),
+      '#options' => [
+        'restaurant' => $this->t('Restaurant Available'),
+        'room_service' => $this->t('Room Service'),
+        'breakfast' => $this->t('Breakfast Provided'),
+      ],
+      '#default_value' => [],
+      '#required' => FALSE,
+      "#attributes" => ['class' => ['hosting-type-wrapper']],
+    ];
+    $form['property_details']['breakfast_provides'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Breakfast Provides'),
+      '#options' => [
+        'Complementary' => $this->t('Complementary'),
+        'Chargeable' => $this->t('Chargeable'),
+        'None' => $this->t('None'),
+      ],
+      '#default_value' => '',
+      '#required' => FALSE,
+      "#attributes" => ['class' => ['hosting-type-wrapper']],
+    ];
+    $form['property_details']['breakfast_price'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Breakfast Price'),
+      '#description' => $this->t('Enter the price for breakfast if it is chargeable.'),
+      '#min' => 0,
+      '#step' => 1,
+      '#default_value' => 0,
+      '#attributes' => [
+        'class' => ['form-half'],
+        'placeholder' => $this->t('Enter breakfast price'),
+      ],
+    ];
+
+    // Host Details
+    $form['host_details'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Host Details'),
+    ];
+    $form['host_details']['hosting_type'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Hosting type'),
+      '#options' => [
+        'Individual' => $this->t('Individual'),
+        'Business' => $this->t('Business'),
+      ],
+      '#default_value' => 'Individual',
+      "#attributes" => ['class' => ['hosting-type-wrapper']],
+    ];
+    $form['host_details']['owner_contact_wrapper'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['owner-contact-wrapper']],
+    ];
+    $form['host_details']['owner_contact_wrapper']['owner_contact_name'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Property Contact Person'),
+      '#attributes' => [
+        'class' => ['form-half'],
+        'placeholder' => $this->t('Enter contact name'),
+      ],
+    ];
+    $form['host_details']['owner_contact_wrapper']['owner_contact_email'] = [
+      '#type' => 'email',
+      '#title' => $this->t('Property Contact Email'),
+      '#attributes' => [
+        'class' => ['form-half'],
+        'placeholder' => $this->t('Enter contact email'),
+      ],
+    ];
+    $form['host_details']['owner_contact_mobile'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Property Contact Number (Mobile/Landline)'),
+      '#attributes' => [
+        'class' => ['form-single-half'],
+        'placeholder' => $this->t('Enter Mobile No.'),
+      ],
+    ];
+
+    $form['host_details']['designation'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Designation'),
+      '#attributes' => [
+        'class' => ['form-single-half'],
+        'placeholder' => $this->t('Enter designation'),
+      ],
+    ];
+
+    // Policy
+    $form['policy_info'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Policies'),
+    ];
+
+    $form['policy_info']['cancellation_info'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Cancellation Policy'),
+    ];
+
+    $form['policy_info']['cancellation_info']['cancellation_type'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Cancellation Policy type'),
+      '#options' => array('refundable' => $this->t('Refundable'), 'non_refundable' => $this->t('Non Refundable')),
+      '#required' => TRUE,
+    ];
+
+    $form['policy_info']['cancellation_info']['refundable_days'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Refundable Days'),
+      '#description' => $this->t('Enter the number of days until which cancellation is allowed.'),
+      '#min' => 1,
+      '#step' => 1,
+      '#default_value' => 1,
+      '#states' => [
+        'visible' => [
+          ':input[name="cancellation_type"]' => ['value' => 'refundable'],
+        ],
+        'required' => [
+          ':input[name="cancellation_type"]' => ['value' => 'refundable'],
+        ],
+      ],
+    ];
+
+    $form['policy_info']['early_checkout'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Early Checkout Policy'),
+    ];
+
+    $form['policy_info']['early_checkout']['early_checkout'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Early Checkout Allowed'),
+      '#options' => array(
+        'yes' => $this->t('Yes'),
+        'no' => $this->t('No'),
+      ),
+      '#required' => TRUE,
+    ];
+
+    $form['policy_info']['early_checkout']['early_checkout_days'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Early Checkout is allowed, Intimation of'),
+      '#description' => $this->t('Enter the number of days before which early checkout intimation is required.'),
+      '#min' => 1,
+      '#step' => 1,
+      '#default_value' => 1,
+      '#states' => [
+        'visible' => [
+          ':input[name="early_checkout"]' => ['value' => 'yes'],
+        ],
+        'required' => [
+          ':input[name="early_checkout"]' => ['value' => 'yes'],
+        ],
+      ],
+    ];
+
+    // Security Deposit with Currency
+    $form['policy_info']['security_deposit_wrapper'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['security-deposit-wrapper']],
+    ];
+
+    $form['policy_info']['security_deposit_wrapper']['security_deposit'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Security Deposit Amount'),
+      '#min' => 0,
+      '#step' => 1,
+      '#default_value' => 0,
+      '#attributes' => [
+        'class' => ['form-half'],
+        'placeholder' => $this->t('Enter deposit amount'),
+      ],
+      '#description' => $this->t("Enter '0' if no Security Deposit is required; otherwise, specify the Security Deposit amount."),
+    ];
+
+    $form['policy_info']['security_deposit_wrapper']['security_deposit_currency'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Currency'),
+      '#options' => [
+        'INR' => $this->t('INR (Indian Rupee)'),
+        'AED' => $this->t('AED (UAE Dirham)'),
+        'SAR' => $this->t('SAR (Saudi Riyal)'),
+      ],
+      '#default_value' => 'INR',
+      '#attributes' => [
+        'class' => ['form-half'],
+      ],
+    ];
+
+    // Finance Details
+    $form['finance_details'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Finance Details'),
+    ];
+    $form['finance_details']['billing_name'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Billing name'),
+      '#attributes' => [
+        'class' => ['billing-name'],
+        'placeholder' => $this->t('Enter billing name'),
+      ],
+    ];
+
+    // Bank Details
+    $form['finance_details']['bank_details'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Bank details'),
+      '#attributes' => ['class' => ['bank-details-wrapper']]
+    ];
+    $form['finance_details']['bank_details']['bank_account_wrapper'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['bank-account-wrapper']],
+    ];
+    $form['finance_details']['bank_details']['bank_account_wrapper']['account_holder_name'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Account Holder Name'),
+      '#attributes' => [
+        'class' => ['form-half'],
+        'placeholder' => $this->t('Enter account holder name'),
+      ],
+    ];
+    $form['finance_details']['bank_details']['bank_account_wrapper']['account_number'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Account Number'),
+      '#attributes' => [
+        'class' => ['form-half'],
+        'placeholder' => $this->t('Enter account number'),
+      ],
+    ];
+    $form['finance_details']['bank_details']['bank_ifsc_wrapper'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['bank-ifsc-wrapper']],
+    ];
+    $form['finance_details']['bank_details']['bank_ifsc_wrapper']['bank_name'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Bank Name'),
+      '#attributes' => [
+        'class' => ['form-half'],
+        'placeholder' => $this->t('Enter bank name'),
+      ],
+    ];
+    $form['finance_details']['bank_details']['bank_ifsc_wrapper']['ifsc_code'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('IFSC Code'),
+      '#attributes' => [
+        'class' => ['form-half'],
+        'placeholder' => $this->t('Enter IFSC code'),
+      ],
+    ];
+    $form['finance_details']['bank_details']['bank_gst_wrapper'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['bank-gst-wrapper']],
+    ];
+    $form['finance_details']['bank_details']['bank_gst_wrapper']['gst_number'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('GST Number (if applicable)'),
+      '#attributes' => [
+        'class' => ['form-full'],
+        'placeholder' => $this->t('Enter GST number'),
+      ],
+    ];
+
+    // Submit button
+    $form['submit'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Save'),
+    ];
+    $form['#theme'] = 'property_details_form';
+
+    return $form;
+  }
+
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    $values = $form_state->getValues();
+    
+    // Validate all fields using optimized methods
+    $this->validateRequiredField($values, 'property_name', 3, 100, '/^[a-zA-Z\s]+$/', 'Property name', $form_state);
+    $this->validateRequiredField($values, 'area_name', 3, 100, '/^[a-zA-Z\s]+$/', 'Area name', $form_state);
+    
+    // Validate Markup Price if user is admin
+    if (commonUtil::isSiteAdmin()) {
+      $this->validateMarkupPrice($values, 'markup_price', $form_state);
+      
+      // Validate property publishing - must have published rooms
+      $this->validatePropertyPublishing($values, 'published', $form_state);
+    }
+    
+    $this->validateOptionalNameField($values, 'owner_contact_name', 'Contact person name', $form_state);
+    $this->validateOptionalEmailField($values, 'owner_contact_email', $form_state);
+    $this->validateOptionalPhoneField($values, 'owner_contact_mobile', $form_state);
+    $this->validateOptionalPincodeField($values, 'pincode', $form_state);
+    $this->validateOptionalNumericField($values, 'property_age', 0, 50, 'Property age', $form_state);
+    $this->validateCoordinates($values, $form_state);
+    $this->validateBillingAndBankDetails($values, $form_state);
+    $this->validatePolicyFields($values, $form_state);
+  }
+
+  /**
+   * Validate required field with length and pattern constraints.
+   */
+  private function validateRequiredField(array $values, string $field_name, int $min_length, int $max_length, string $pattern, string $field_label, FormStateInterface $form_state): void {
+    $value = trim($values[$field_name] ?? '');
+    
+    if (empty($value)) {
+      $form_state->setErrorByName($field_name, $this->t('@field is required.', ['@field' => $field_label]));
+      return;
+    }
+    
+    if (strlen($value) < $min_length) {
+      $form_state->setErrorByName($field_name, $this->t('@field must be at least @min characters long.', ['@field' => $field_label, '@min' => $min_length]));
+      return;
+    }
+    
+    if (strlen($value) > $max_length) {
+      $form_state->setErrorByName($field_name, $this->t('@field cannot exceed @max characters.', ['@field' => $field_label, '@max' => $max_length]));
+      return;
+    }
+    
+    if (!preg_match($pattern, $value)) {
+      $form_state->setErrorByName($field_name, $this->t('@field contains invalid characters.', ['@field' => $field_label]));
+    }
+  }
+
+  /**
+   * Validate optional name field.
+   */
+  private function validateOptionalNameField(array $values, string $field_name, string $field_label, FormStateInterface $form_state): void {
+    $value = trim($values[$field_name] ?? '');
+    
+    if (empty($value)) {
+      return; // Optional field, no validation needed
+    }
+    
+    if (strlen($value) < 2) {
+      $form_state->setErrorByName($field_name, $this->t('@field must be at least 2 characters long.', ['@field' => $field_label]));
+      return;
+    }
+    
+    if (strlen($value) > 100) {
+      $form_state->setErrorByName($field_name, $this->t('@field cannot exceed 100 characters.', ['@field' => $field_label]));
+      return;
+    }
+    
+    if (!preg_match('/^[a-zA-Z\s\-\'\.]+$/', $value)) {
+      $form_state->setErrorByName($field_name, $this->t('@field can only contain letters, spaces, hyphens, apostrophes, and periods.', ['@field' => $field_label]));
+    }
+  }
+
+  /**
+   * Validate optional email field.
+   */
+  private function validateOptionalEmailField(array $values, string $field_name, FormStateInterface $form_state): void {
+    $value = trim($values[$field_name] ?? '');
+    
+    if (empty($value)) {
+      return; // Optional field, no validation needed
+    }
+    
+    if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+      $form_state->setErrorByName($field_name, $this->t('Please enter a valid email address.'));
+      return;
+    }
+    
+    if (strlen($value) > 254) {
+      $form_state->setErrorByName($field_name, $this->t('Email address is too long.'));
+    }
+  }
+
+  /**
+   * Validate optional phone field.
+   */
+  private function validateOptionalPhoneField(array $values, string $field_name, FormStateInterface $form_state): void {
+    $value = trim($values[$field_name] ?? '');
+    
+    if (empty($value)) {
+      return; // Optional field, no validation needed
+    }
+    
+    $clean_number = preg_replace('/[\s\-\(\)\+]/', '', $value);
+    
+    if (!preg_match('/^\d+$/', $clean_number)) {
+      $form_state->setErrorByName($field_name, $this->t('Contact number can only contain digits, spaces, hyphens, parentheses, and plus signs.'));
+      return;
+    }
+    
+    if (strlen($clean_number) < 7) {
+      $form_state->setErrorByName($field_name, $this->t('Contact number must be at least 7 digits long.'));
+      return;
+    }
+    
+    if (strlen($clean_number) > 15) {
+      $form_state->setErrorByName($field_name, $this->t('Contact number cannot exceed 15 digits.'));
+    }
+  }
+
+  /**
+   * Validate optional pincode field.
+   */
+  private function validateOptionalPincodeField(array $values, string $field_name, FormStateInterface $form_state): void {
+    $value = trim($values[$field_name] ?? '');
+    
+    if (empty($value)) {
+      return; // Optional field, no validation needed
+    }
+    
+    if (!preg_match('/^\d{6}$/', $value)) {
+      $form_state->setErrorByName($field_name, $this->t('Pincode must be exactly 6 digits.'));
+    }
+  }
+
+  /**
+   * Validate Markup Price field.
+   * Ensures it's numeric and within 0-100 range.
+   */
+  private function validateMarkupPrice(array $values, string $field_name, FormStateInterface $form_state): void {
+    $value = trim($values[$field_name] ?? '');
+    
+    // Markup price is required for admins
+    if (empty($value) && $value !== '0') {
+      $form_state->setErrorByName($field_name, $this->t('Markup Price is required. Please enter a value between 0 and 100.'));
+      return;
+    }
+    
+    // Remove percentage sign if user entered it
+    $value = str_replace('%', '', $value);
+    $value = trim($value);
+    
+    // Check if it's numeric
+    if (!is_numeric($value)) {
+      $form_state->setErrorByName($field_name, $this->t('Markup Price must be a valid number. Please enter only the number (e.g., 10 for 10%), not "10%".'));
+      return;
+    }
+    
+    $numeric_value = (float) $value;
+    
+    // Check range (0 to 100)
+    if ($numeric_value < 0) {
+      $form_state->setErrorByName($field_name, $this->t('Markup Price cannot be negative. Please enter a value between 0 and 100.'));
+      return;
+    }
+    
+    if ($numeric_value > 100) {
+      $form_state->setErrorByName($field_name, $this->t('Markup Price cannot exceed 100%. Please enter a value between 0 and 100.'));
+      return;
+    }
+  }
+
+  /**
+   * Clean and format markup price value.
+   * Removes % sign and formats to remove unnecessary decimals.
+   */
+  private function cleanMarkupPriceValue($value) {
+    // Handle null, empty string, or empty arrays
+    if ($value === null || $value === '' || (is_array($value) && empty($value))) {
+      return '0';
+    }
+    
+    // Convert to string and remove percentage sign if present
+    $value = str_replace('%', '', (string) $value);
+    $value = trim($value);
+    
+    // Return 0 if empty after cleaning
+    if ($value === '') {
+      return '0';
+    }
+    
+    // Validate numeric before conversion
+    if (!is_numeric($value)) {
+      return '0';
+    }
+    
+    // Convert to float and round to 2 decimal places
+    $numeric_value = round((float) $value, 2);
+    
+    // If it's a whole number, return as integer string to avoid ".00"
+    if ($numeric_value == (int) $numeric_value) {
+      return (string) ((int) $numeric_value);
+    }
+    
+    // Otherwise return with 2 decimal places, removing trailing zeros in one pass
+    $formatted = number_format($numeric_value, 2, '.', '');
+    return rtrim(rtrim($formatted, '0'), '.');
+  }
+
+  /**
+   * Validate property publishing - ensures property has published rooms.
+   * Note: For new properties, this validation is skipped (property doesn't exist yet).
+   * The property will be auto-unpublished in submitForm if no rooms exist.
+   */
+  private function validatePropertyPublishing(array $values, string $field_name, FormStateInterface $form_state): void {
+    // Check if admin is trying to publish the property
+    $published = (isset($values[$field_name]) && isset($values[$field_name][1]) && $values[$field_name][1] == "1") ? TRUE : FALSE;
+    
+    if (!$published) {
+      return; // Not trying to publish, no validation needed
+    }
+    
+    // For new properties (PropertyDetailsForm), we can't check rooms yet (property doesn't exist)
+    // Validation is skipped here - property will be auto-unpublished in submitForm if no rooms exist
+    // This validation is mainly for PropertyDetailsEditForm where property already exists
+  }
+
+  /**
+   * Check if property has published rooms.
+   */
+  private function propertyHasPublishedRooms($property_id) {
+    if (empty($property_id)) {
+      return FALSE;
+    }
+    
+    $room_nids = \Drupal::entityQuery('node')
+      ->condition('type', 'room')
+      ->condition('field_parent_id', $property_id)
+      ->condition('status', 1) // Only published rooms
+      ->accessCheck(FALSE)
+      ->execute();
+    
+    return !empty($room_nids);
+  }
+
+  /**
+   * Validate optional numeric field.
+   */
+  private function validateOptionalNumericField(array $values, string $field_name, int $min_value, int $max_value, string $field_label, FormStateInterface $form_state): void {
+    $value = trim($values[$field_name] ?? '');
+    
+    if (empty($value)) {
+      return; // Optional field, no validation needed
+    }
+    
+    if (!is_numeric($value)) {
+      $form_state->setErrorByName($field_name, $this->t('@field must be a valid number.', ['@field' => $field_label]));
+      return;
+    }
+    
+    if ($value < $min_value) {
+      $form_state->setErrorByName($field_name, $this->t('@field cannot be less than @min.', ['@field' => $field_label, '@min' => $min_value]));
+      return;
+    }
+    
+    if ($value > $max_value) {
+      $form_state->setErrorByName($field_name, $this->t('@field cannot be more than @max.', ['@field' => $field_label, '@max' => $max_value]));
+      return;
+    }
+    
+    if (!preg_match('/^\d+$/', $value)) {
+      $form_state->setErrorByName($field_name, $this->t('@field must be a whole number (no decimals).', ['@field' => $field_label]));
+    }
+  }
+
+  /**
+   * Validate coordinates.
+   */
+  private function validateCoordinates(array $values, FormStateInterface $form_state): void {
+    $latitude = trim($values['latitude'] ?? '');
+    $longitude = trim($values['longitude'] ?? '');
+    
+    // Validate Latitude
+    if (!empty($latitude)) {
+      if (!is_numeric($latitude)) {
+        $form_state->setErrorByName('latitude', $this->t('Latitude must be a valid number.'));
+      }
+      elseif ($latitude < -90 || $latitude > 90) {
+        $form_state->setErrorByName('latitude', $this->t('Latitude must be between -90 and 90 degrees.'));
+      }
+    }
+    
+    // Validate Longitude
+    if (!empty($longitude)) {
+      if (!is_numeric($longitude)) {
+        $form_state->setErrorByName('longitude', $this->t('Longitude must be a valid number.'));
+      }
+      elseif ($longitude < -180 || $longitude > 180) {
+        $form_state->setErrorByName('longitude', $this->t('Longitude must be between -180 and 180 degrees.'));
+      }
+    }
+    
+    // Check if both coordinates are provided together
+    if ((!empty($latitude) && empty($longitude)) || (empty($latitude) && !empty($longitude))) {
+      $form_state->setErrorByName('latitude', $this->t('Both latitude and longitude must be provided together.'));
+      $form_state->setErrorByName('longitude', $this->t('Both latitude and longitude must be provided together.'));
+    }
+  }
+
+  /**
+   * Validate policy fields.
+   */
+  private function validatePolicyFields(array $values, FormStateInterface $form_state): void {
+    if ($values['cancellation_type'] == "refundable" && $values['refundable_days'] <= 0) {
+      $form_state->setErrorByName('refundable_days', $this->t('Refundable days must be greater than 0 if cancellation type is refundable.'));
+    }
+    
+    if ($values['early_checkout'] == "yes" && $values['early_checkout_days'] <= 0) {
+      $form_state->setErrorByName('early_checkout_days', $this->t('Early checkout days must be greater than 0 if early checkout is allowed.'));
+    }
+  }
+
+  /**
+   * Validate billing and bank details fields.
+   * 
+   * @param array $values
+   *   Form values.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state object.
+   */
+  private function validateBillingAndBankDetails(array $values, FormStateInterface $form_state) {
+    // Validate Billing Name
+    $billing_name = trim($values['billing_name'] ?? '');
+    if (!empty($billing_name)) {
+      if (strlen($billing_name) < 2) {
+        $form_state->setErrorByName('billing_name', $this->t('Billing name must be at least 2 characters long.'));
+      }
+      elseif (strlen($billing_name) > 100) {
+        $form_state->setErrorByName('billing_name', $this->t('Billing name cannot exceed 100 characters.'));
+      }
+      elseif (!preg_match('/^[a-zA-Z\s\-\'\.]+$/', $billing_name)) {
+        $form_state->setErrorByName('billing_name', $this->t('Billing name can only contain letters, spaces, hyphens, apostrophes, and periods.'));
+      }
+    }
+
+    // Validate Account Holder Name
+    $account_holder = trim($values['account_holder_name'] ?? '');
+    if (!empty($account_holder)) {
+      if (strlen($account_holder) < 2) {
+        $form_state->setErrorByName('account_holder_name', $this->t('Account holder name must be at least 2 characters long.'));
+      }
+      elseif (strlen($account_holder) > 100) {
+        $form_state->setErrorByName('account_holder_name', $this->t('Account holder name cannot exceed 100 characters.'));
+      }
+      elseif (!preg_match('/^[a-zA-Z\s\-\'\.]+$/', $account_holder)) {
+        $form_state->setErrorByName('account_holder_name', $this->t('Account holder name can only contain letters, spaces, hyphens, apostrophes, and periods.'));
+      }
+    }
+
+    // Validate Account Number
+    $account_number = trim($values['account_number'] ?? '');
+    if (!empty($account_number)) {
+      if (!preg_match('/^\d+$/', $account_number)) {
+        $form_state->setErrorByName('account_number', $this->t('Account number can only contain digits.'));
+      }
+      elseif (strlen($account_number) < 8) {
+        $form_state->setErrorByName('account_number', $this->t('Account number must be at least 8 digits long.'));
+      }
+      elseif (strlen($account_number) > 20) {
+        $form_state->setErrorByName('account_number', $this->t('Account number cannot exceed 20 digits.'));
+      }
+    }
+
+    // Validate Bank Name
+    $bank_name = trim($values['bank_name'] ?? '');
+    if (!empty($bank_name)) {
+      if (strlen($bank_name) < 2) {
+        $form_state->setErrorByName('bank_name', $this->t('Bank name must be at least 2 characters long.'));
+      }
+      elseif (strlen($bank_name) > 100) {
+        $form_state->setErrorByName('bank_name', $this->t('Bank name cannot exceed 100 characters.'));
+      }
+      elseif (!preg_match('/^[a-zA-Z\s\-\'\.&]+$/', $bank_name)) {
+        $form_state->setErrorByName('bank_name', $this->t('Bank name can only contain letters, spaces, hyphens, apostrophes, periods, and ampersands.'));
+      }
+    }
+
+    // Validate IFSC Code
+    $ifsc_code = trim($values['ifsc_code'] ?? '');
+    if (!empty($ifsc_code)) {
+      if (!preg_match('/^[A-Z]{4}0[A-Z0-9]{6}$/', $ifsc_code)) {
+        $form_state->setErrorByName('ifsc_code', $this->t('IFSC code must be 11 characters: 4 letters + 0 + 6 alphanumeric characters.'));
+      }
+    }
+
+    // Validate GST Number
+    $gst_number = trim($values['gst_number'] ?? '');
+    if (!empty($gst_number)) {
+      if (!preg_match('/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/', $gst_number)) {
+        $form_state->setErrorByName('gst_number', $this->t('GST number must be in valid format: 2 digits + 5 letters + 4 digits + 1 letter + 1 alphanumeric + Z + 1 alphanumeric.'));
+      }
+    }
+  }
+
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $values = $form_state->getValues();
+    //foreach (array_keys($values) as $key) {echo "<br>".$key . " --- ".$values[$key];}exit;
+
+    // Save Photos
+    $primary_photo_fids = $form_state->getValue(['primary_media']);
+    //print_r($primary_photo_fids['fids']);exit;
+
+    // Mark files as permanent
+    if (isset($primary_photo_fids) && !empty($primary_photo_fids)) {
+      foreach ($primary_photo_fids as $fid) {
+        $file = \Drupal\file\Entity\File::load($fid);
+        if ($file) {
+          $file->setPermanent();
+          $file->save();
+        }
+      }
+    }
+
+    // Save Photos
+    $photo_fids = $form_state->getValue(['media']);
+    //print_r($photo_fids['fids']);exit;
+
+    // Mark files as permanent
+    if (isset($photo_fids) && !empty($photo_fids)) {
+      foreach ($photo_fids as $fid) {
+        $file = \Drupal\file\Entity\File::load($fid);
+        if ($file) {
+          $file->setPermanent();
+          $file->save();
+        }
+      }
+    }
+
+    $current_user = \Drupal::currentUser();
+    $uid = $current_user->id();
+    $user = \Drupal\user\Entity\User::load($uid);
+    $field_vendor_id = $user->get('field_vendor_id')->value;
+
+    $raw_values = $values['food_beverages'] ?? [];
+    $selected = array_filter($raw_values);
+    $final_values = [];
+    foreach ($selected as $val) {
+      $final_values[] = ['value' => $val];
+    }
+
+    $arr_property = [
+      'type' => 'property',
+      'field_property_id' => commonUtil::generate_property_id($values['property_name'], $values['area_name']),
+      'title' => !empty($values['display_name']) ? $values['display_name'] : $values['property_name'],
+      'field_area_name' => $values['area_name'],
+      'field_property_name' => $values['property_name'],
+      'field_display_name' => $values['display_name'] ?? '',
+      'field_vendor_id' => $field_vendor_id ?? NULL,
+
+      // Basic Info - Clean and format markup price value
+      'field_markup_price' => $this->cleanMarkupPriceValue($values['markup_price'] ?? 0),
+      'field_property_type' => $values['property_type'] ?? NULL,
+      'field_room_types' => array_filter($values['room_types'] ?? []),
+      // 'field_room_types' => [$values['room_types']],
+      'field_property_age' => $values['property_age'] ?? NULL,
+      'field_description' => $values['property_description'] ?? '',
+      'field_latitude' => $values['latitude'] ?? '',
+      'field_longitude' => $values['longitude'] ?? '',
+      'field_display_address' => $values['address'] ?? '',
+      'field_country' => $values['country'] ?? '',
+      'field_state' => $values['state'] ?? '',
+      'field_city' => $values['city'] ?? '',
+      'field_pincode' => $values['pincode'] ?? '',
+
+      // Property Details
+      'field_on_site_staffing' => $values['on_site_staffing'] ?? NULL,
+      'field_food_beverages' => $final_values,
+      'field_breakfast_provides' => $values['breakfast_provides'] ?? NULL,
+      'field_breakfast_price' => $values['breakfast_price'] ? (int) $values['breakfast_price'] : 0,
+      'field_amenities' => array_filter($values['property_amenities'] ?? []),
+
+      // Host Details
+      'field_hosting_type' => $values['hosting_type'] ?? NULL,
+      'field_contact_person' => $values['owner_contact_name'] ?? '',
+      'field_contact_email_id' => $values['owner_contact_email'] ?? '',
+      'field_contact_number' => $values['owner_contact_mobile'] ?? '',
+      'field_contact_designation' => $values['designation'] ?? '',
+
+      // Policy Info
+      'field_cancellation_policy_type' => $values['cancellation_type'] ?? NULL,
+      'field_refundable_days' => $values['refundable_days'] ? (int) $values['refundable_days'] : 0,
+      'field_early_checkout' => $values['early_checkout'] ?? NULL,
+      'field_early_checkout_days' => $values['early_checkout_days'] ? (int) $values['early_checkout_days'] : 0,
+      'field_security_deposit' => $values['security_deposit'] ? (int) $values['security_deposit'] : 0,
+      'field_security_deposit_currency' => $values['security_deposit_currency'] ?? 'INR',
+
+      // Finance & Bank Details
+      'field_billing_name' => $values['billing_name'] ?? '',
+      'field_account_holder_name' => $values['account_holder_name'] ?? '',
+      'field_account_number' => $values['account_number'] ?? '',
+      'field_bank_name' => $values['bank_name'] ?? '',
+      'field_ifsc_code' => $values['ifsc_code'] ?? '',
+      'field_gst_number' => $values['gst_number'] ?? '',
+    ];
+
+    // Create a new node of type 'property'.
+    $node = \Drupal\node\Entity\Node::create($arr_property);
+    if (isset($primary_photo_fids) && !empty($primary_photo_fids)) {
+      // Set the media field with the uploaded photos.
+      $node->set('field_primary_media', array_map(function ($fid) {
+            return ['target_id' => $fid];
+          }, $primary_photo_fids));
+    }
+
+    if (isset($photo_fids) && !empty($photo_fids)) {
+      // Set the media field with the uploaded photos.
+      $node->set('field_media', array_map(function ($fid) {
+            return ['target_id' => $fid];
+          }, $photo_fids));
+    }
+    // Check if admin wants to publish
+    $published = (isset($values['published']) && isset($values['published'][1]) && $values['published'][1] == "1") ? TRUE : FALSE;
+    
+    // Auto-unpublish if no published rooms exist (even if admin checked published)
+    $has_published_rooms = $this->propertyHasPublishedRooms($node->id());
+    if ($published && !$has_published_rooms) {
+      // Admin tried to publish, but no published rooms exist - force unpublish
+      $node->setUnpublished();
+      \Drupal::messenger()->addWarning($this->t('Property was not published because no published rooms exist. Please add and publish at least one room first.'));
+    } elseif ($published && $has_published_rooms) {
+      // Has published rooms, allow publishing
+      $node->setPublished(TRUE);
+    } else {
+      // Not trying to publish or no published rooms
+      $node->setUnpublished();
+    }
+
+    $node->save();
+    // Load Pathauto service.
+    \Drupal::service('pathauto.generator')->updateEntityAlias($node, 'update');
+
+    \Drupal::messenger()->addMessage($this->t('Property saved with property ID: @id', ['@id' => $node->id()]));
+    $form_state->setRedirect('inventory_management.property_edit', ['id' => $node->id(),]);
+  }
+
+}

@@ -1,0 +1,57 @@
+{#
+/**
+ * @file
+ * Theme override for a views exposed form.
+ *
+ * Available variables:
+ * - form: A render element representing the form.
+ *
+ * @see template_preprocess_views_exposed_form()
+ */
+#}
+{% if q is not empty %}
+  {#
+    This ensures that, if clean URLs are off, the 'q' is added first,
+    as a hidden form element, so that it shows up first in the POST URL.
+  #}
+{{ q }}
+{% endif %}
+{# {{ form }} #}
+<form{{ attributes.addClass('property-filter-form') }}>
+  {# {{ title_prefix }} #}
+  {# {{ title_suffix }} #}
+    {# ✅ VERY IMPORTANT: render hidden city field #}
+  {{ form.field_city_target_id }}
+
+  <div class="filter-wrapper">
+
+    {# Price range #}
+    {# <div class="filter-block">
+      <h3 class="filter-title">Price Range</h3>
+      <div class="price-range">
+        {{ form.field_price_value_min }}
+        {{ form.field_price_value_max }}
+      </div>
+    </div> #}
+
+    {# Property Type #}
+    <div class="filter-block">
+      {# <h3 class="filter-title">Property Type</h3> #}
+
+      <div class="property-type-radios">
+        {{ form.field_property_type_target_id }}
+      </div>
+    </div>
+
+    <div class="filter-actions">
+      {{ form.actions.submit }}
+    </div>
+
+  </div>
+
+ {{ form|without(
+  'field_property_type_target_id',
+  'field_city_target_id',
+  'actions'
+) }}
+</form>

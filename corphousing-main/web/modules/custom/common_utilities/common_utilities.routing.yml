@@ -1,0 +1,6 @@
+common_utilities.rebuild_cache:
+  path: '/common_utilities/rebuild-cache'
+  defaults:
+    _controller: '\Drupal\common_utilities\Controller\UtilitiesController::rebuildCache'
+  requirements:
+    _permission: 'administrator'

@@ -1,0 +1,35 @@
+{#
+/**
+ * @file
+ * Main page template.
+ */
+#}
+{% if current_path != '/home' %}
+  {% include directory ~ '/templates/layout/header-internal.html.twig' %}
+{% else %}
+ {% include directory ~ '/templates/layout/header.html.twig' %}
+{% endif %}
+{{ attach_library('srdesign/srdesign') }}
+
+{{ page.message }}
+
+<main role="main">
+  {% if page.sidebar %}
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-12">
+        {{ page.content }}
+      </div>
+      <aside class="col-lg-4 col-12" role="complementary">
+        {{ page.sidebar }}
+      </aside>
+    </div>
+  </div>
+  {% else %}
+    <div class="col-12">
+      {{ page.content }}
+    </div>
+  {% endif %}
+</main>
+
+{% include directory ~ '/templates/layout/footer.html.twig' %}

@@ -1,0 +1,489 @@
+<?php
+
+use Drupal\Core\Url;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Render\Markup;
+use Drupal\webform\Entity\WebformSubmission;
+use Drupal\Core\Session\AccountInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+/**
+ * Implements hook_theme().
+ */
+function ch_property_theme($existing, $type, $theme, $path)
+{
+  $module_path = \Drupal::service('extension.list.module')->getPath('ch_property');
+  return [
+    'home_search_block' => [
+      'variables' => [
+        'form' => NULL,
+      ],
+    ],
+
+    'property_search_modal' => [
+      'variables' => [
+        'form' => NULL,
+      ],
+      'template' => 'property-search-modal',
+      'path' => $module_path . '/templates',
+    ],
+
+    'ch_property_welcome_mail' => [
+      'variables' => [
+        'user' => NULL,
+        'verification_link' => NULL,
+      ],
+      'path' => $module_path . '/templates/emails',
+      'template' => 'ch-property-welcome-mail',
+    ],
+
+    'ch_property_forgot_password_mail' => [
+      'variables' => [
+        'user' => NULL,
+        'reset_link' => NULL,
+      ],
+      'path' => $module_path . '/templates/emails',
+      'template' => 'ch-property-forgot-password-mail',
+    ],
+    'ch_property_account_activated_mail' => [
+      'variables' => [
+        'user' => NULL,
+      ],
+      'path' => $module_path . '/templates/emails',
+      'template' => 'ch-property-account-activated-mail',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function ch_property_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id)
+{
+  $form['#submit'][] = 'ch_property_custom_login_redirect';
+}
+
+/**
+ * Custom login redirect logic.
+ */
+function ch_property_custom_login_redirect($form, FormStateInterface $form_state)
+{
+  $request = \Drupal::requestStack()->getCurrentRequest();
+  $current_user = \Drupal::currentUser();
+  $roles = $current_user->getRoles();
+
+  // Only apply custom redirect if no ?destination is set
+  if (!$request->query->has('destination')) {
+    // If user has role 'vendor', redirect to inventory management list.
+    if (in_array('vendor', $roles)) {
+      $form_state->setRedirectUrl(Url::fromUri('internal:/inventory-management/property/list'));
+    }
+    // If user has role 'administrator', redirect to front page (can customize if needed).
+    elseif (in_array('administrator', $roles)) {
+      $form_state->setRedirectUrl(Url::fromRoute('<front>'));
+    } else {
+      // Default fallback behavior.
+      $form_state->setRedirectUrl(Url::fromRoute('<front>'));
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function ch_property_form_user_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  // Detect password reset flow (one-time login)
+  if (\Drupal::request()->query->has('pass-reset-token')) {
+
+    // Attach redirect handler to submit button (runs last)
+    if (isset($form['actions']['submit'])) {
+      $form['actions']['submit']['#submit'][] = 'ch_property_redirect_after_password_reset';
+    }
+  }
+}
+
+/**
+ * Submit handler: redirect user after password reset.
+ */
+function ch_property_redirect_after_password_reset($form, FormStateInterface $form_state) {
+  $form_state->setRedirectUrl(Url::fromRoute('<front>'));
+}
+
+/**
+ * Implements hook_user_login().
+ */
+function ch_property_user_login(\Drupal\Core\Session\AccountInterface $account)
+{
+  $request = \Drupal::request();
+
+  /*
+   * -------------------------------------------------------
+   * 1) Handle your existing 'flag_on_login' functionality
+   * -------------------------------------------------------
+   */
+  $nid = $request->query->get('flag_on_login');
+
+  if ($nid && is_numeric($nid)) {
+    $node = \Drupal\node\Entity\Node::load($nid);
+    if ($node) {
+      /** @var \Drupal\flag\FlagServiceInterface $flag_service */
+      $flag_service = \Drupal::service('flag');
+      $flag = $flag_service->getFlagById('favourite'); // replace with your flag machine name
+
+      if ($flag && !$flag_service->getFlagging($flag, $node, $account)) {
+        $flag_service->flag($flag, $node, $account);
+        \Drupal::messenger()->addMessage(t('We saved that property to your favourites.'));
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_views_view_field().
+ */
+function ch_property_preprocess_views_view_field(&$variables)
+{
+  $view = $variables['view'];
+  $field = $variables['field'];
+
+  if ($view->id() === 'property_search' && ($field->options['id'] ?? '') === 'nothing') {
+    $account = \Drupal::currentUser();
+
+    // Get node id for flag classes.
+    $nid = isset($variables['row']->_entity) ? $variables['row']->_entity->id() : 0;
+
+    // Get the output
+    $output = (string) ($variables['output'] ?? '');
+
+    if ($account->isAuthenticated()) {
+      // AUTHENTICATED USER - Remove duplicate flags, keep only one
+
+      preg_match('/<div[^>]*class="[^"]*flag flag-favourite[^"]*"[^>]*>.*?<\/div>/is', $output, $matches);
+      $first_flag = $matches[0] ?? '';
+
+      // Remove ALL flag divs
+      $output = preg_replace(
+        '/<div[^>]*class="[^"]*flag flag-favourite[^"]*"[^>]*>.*?<\/div>/is',
+        '',
+        $output
+      );
+
+      // Insert the first flag back inside the card div
+      if ($first_flag) {
+        $output = preg_replace(
+          '/(<div[^>]*class="[^"]*card[^"]*"[^>]*>)/i',
+          '$1' . $first_flag,
+          $output,
+          1
+        );
+
+        // Fallback: if no card div found, prepend it
+        if (strpos($output, $first_flag) === false) {
+          $output = $first_flag . $output;
+        }
+      }
+
+      $variables['output'] = Markup::create($output);
+      return;
+    }
+
+    // ANONYMOUS USER - Replace with login link
+    $destination = \Drupal::request()->getRequestUri();
+    $url = Url::fromRoute('user.login', [], [
+      'query' => [
+        'destination' => $destination,
+        'flag_on_login' => $nid,
+      ],
+    ])->toString();
+
+    // Build markup that mimics Flag's structure but points to login.
+    $login_heart = <<<HTML
+    <div class="flag flag-favourite js-flag-favourite-$nid action-flag">
+      <a 
+        href="$url" 
+        class="flag-anon" 
+        rel="nofollow"
+        data-flag-id="$nid"
+        title="Login to add to favorites">
+      </a>
+    </div>
+    HTML;
+
+    // Ensure different caches for auth vs anon.
+    $variables['element']['#cache']['contexts'][] = 'user';
+
+    // REMOVE ALL existing flag divs (this prevents duplicates)
+    $output = preg_replace(
+      '/<div[^>]*class="[^"]*flag flag-favourite[^"]*"[^>]*>.*?<\/div>/is',
+      '',
+      $output
+    );
+
+    // Insert the single login flag wrapper inside the card div
+    $output = preg_replace(
+      '/(<div[^>]*class="[^"]*card[^"]*"[^>]*>)/i',
+      '$1' . $login_heart,
+      $output,
+      1
+    );
+
+    // Fallback: if no card div found, prepend it
+    if (strpos($output, $login_heart) === false) {
+      $output = $login_heart . $output;
+    }
+
+    $variables['output'] = Markup::create($output);
+  }
+}
+
+/**
+ * Implements hook_webform_submission_insert().
+ */
+function ch_property_webform_submission_insert(WebformSubmission $webform_submission)
+{
+  $webform_id = $webform_submission->getWebform()->id();
+
+  if ($webform_id == 'request_booking') {
+    $year = date('Y');
+    $submission_id = $webform_submission->id();
+
+    // Generate Booking ID using submission ID.
+    $number = str_pad($submission_id, 3, '0', STR_PAD_LEFT);
+    $booking_id = "#BK-{$year}-{$number}";
+
+    // Save the booking ID back to the submission.
+    $webform_submission->setElementData('booking_id', $booking_id);
+    $webform_submission->save();
+  }
+}
+
+/**
+ * Implements hook_user_insert().
+ */
+function ch_property_user_insert(AccountInterface $account)
+{
+
+  // Current timestamp
+  $timestamp = \Drupal::time()->getRequestTime();
+
+  // Hash exactly how the module validates it.
+  $hash = user_pass_rehash($account, $timestamp);
+
+  // Build the confirmation URL.
+  $verification_link = Url::fromRoute(
+  'user_registrationpassword.confirm',
+  [
+    'uid' => $account->id(),
+    'timestamp' => $timestamp,
+    'hash' => $hash,
+  ],
+  [
+    'absolute' => TRUE,
+    // 'query' => ['activated' => 1],
+    'query' => ['destination' => '/',],
+  ]
+)->toString();
+
+  // Send custom email
+  $params = [
+    'subject' => 'Welcome to StayRelive!!!',
+    'user' => $account,
+    'verification_link' => $verification_link,
+  ];
+
+  \Drupal::service('plugin.manager.mail')->mail(
+    'ch_property',
+    'welcome_user',
+    $account->getEmail(),
+    $account->getPreferredLangcode(),
+    $params
+  );
+}
+
+/**
+ * Implements hook_user_update().
+ */
+// function ch_property_user_update(AccountInterface $account) {
+
+//   if ($account->isActive() && \Drupal::currentUser()->isAnonymous()) {
+
+//     // Log the user in programmatically
+//     user_login_finalize($account);
+
+//     // Show success message
+//     \Drupal::messenger()->addStatus(t('Your account has been activated successfully.'));
+
+//     $response = new RedirectResponse(Url::fromRoute('<front>')->toString());
+//     $response->send();
+//     exit;
+//   }
+// }
+
+
+/**
+ * Implements hook_mail().
+ */
+function ch_property_mail($key, &$message, $params)
+{
+  switch ($key) {
+
+    case 'welcome_user':
+      $build = [
+        '#theme' => 'ch_property_welcome_mail',
+        '#user' => $params['user'],
+        '#verification_link' => $params['verification_link'],
+      ];
+
+      $rendered = \Drupal::service('renderer')->render($build);
+      $rendered_string = (string) $rendered;
+
+      $message['subject'] = $params['subject'];
+      $message['body'] = [$rendered_string];
+      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8';
+      $message['headers']['MIME-Version'] = '1.0';
+      $message['headers']['Content-Transfer-Encoding'] = '8bit';
+      break;
+
+    case 'forgot_password':
+      $build = [
+        '#theme' => 'ch_property_forgot_password_mail',
+        '#user' => $params['user'],
+        '#reset_link' => $params['reset_link'],
+      ];
+
+      $rendered = \Drupal::service('renderer')->render($build);
+      $message['subject'] = $params['subject'];
+      $message['body'] = [(string) $rendered];
+      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8';
+      $message['headers']['MIME-Version'] = '1.0';
+      $message['headers']['Content-Transfer-Encoding'] = '8bit';
+      break;
+
+    case 'account_activated':
+      $build = [
+        '#theme' => 'ch_property_account_activated_mail',
+        '#user' => $params['user'],
+      ];
+
+      $rendered = \Drupal::service('renderer')->render($build);
+
+      $message['subject'] = 'Your StayRelive account is now active';
+      $message['body'] = [(string) $rendered];
+      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8';
+      $message['headers']['MIME-Version'] = '1.0';
+      $message['headers']['Content-Transfer-Encoding'] = '8bit';
+      break;
+
+  }
+}
+
+/**
+ * Implements hook_mail_alter().
+ */
+function ch_property_mail_alter(&$message)
+{
+  // Disable Drupal core's default user registration email.
+  if ($message['id'] === 'user_registrationpassword_register_confirmation_with_pass') {
+    $message['send'] = FALSE;
+  }
+
+  // Disable admin-created account email (optional)
+  if ($message['id'] === 'user_register_admin_created') {
+    $message['send'] = FALSE;
+  }
+
+  // Disable verification email (optional)
+  if ($message['id'] === 'user_register_pending_approval') {
+    $message['send'] = FALSE;
+  }
+
+  // Disable Drupal core's "forgot password" email
+  if ($message['id'] === 'user_password_reset') {
+    $message['send'] = FALSE;
+
+    $user = $message['params']['account'];
+    $langcode = $user->getPreferredLangcode();
+    $reset_link = user_pass_reset_url($user);
+
+    $params = [
+      'subject' => 'Reset your password - StayRelive',
+      'user' => $user,
+      'reset_link' => $reset_link,
+    ];
+
+    \Drupal::service('plugin.manager.mail')->mail(
+      'ch_property',
+      'forgot_password',
+      $user->getEmail(),
+      $langcode,
+      $params,
+      NULL,
+      TRUE
+    );
+  }
+
+  // Block Drupal core "account activated" email
+  if ($message['id'] === 'user_status_activated') {
+    $message['send'] = FALSE;
+
+    $user = $message['params']['account'];
+    $langcode = $user->getPreferredLangcode();
+
+    \Drupal::service('plugin.manager.mail')->mail(
+      'ch_property',
+      'account_activated',
+      $user->getEmail(),
+      $langcode,
+      [
+        'user' => $user,
+      ],
+      NULL,
+      TRUE
+    );
+  }
+}
+
+function ch_property_form_views_exposed_form_alter(
+  array &$form,
+  FormStateInterface $form_state,
+  $form_id
+) {
+  if ($form['#id'] !== 'views-exposed-form-property-search-block-1') {
+    return;
+  }
+
+  /* ---------------------------------
+   * CITY FILTER (hidden but active)
+   * --------------------------------- */
+  if (isset($form['field_city_target_id'])) {
+    $request = \Drupal::request();
+    $form['field_city_target_id']['#access'] = FALSE;
+
+    if ($request->query->has('field_city_target_id')) {
+      $form['field_city_target_id']['#default_value'] =
+        $request->query->get('field_city_target_id');
+    }
+  }
+
+  /* ---------------------------------
+   * PROPERTY TYPE → RADIOS
+   * --------------------------------- */
+  if (!isset($form['field_property_type_target_id'])) {
+    return;
+  }
+
+  $element = &$form['field_property_type_target_id'];
+  $element['#type'] = 'radios';
+
+  if (
+    empty($element['#default_value']) ||
+    !isset($element['#options'][$element['#default_value']])
+  ) {
+    $element['#default_value'] = NULL;
+  }
+
+  $element['#attributes']['class'][] = 'property-type-radios';
+  $form['#cache']['max-age'] = 0;
+}

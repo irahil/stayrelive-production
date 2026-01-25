@@ -1,0 +1,54 @@
+{% set submission_id = fields.sid.content|striptags|trim %}
+{% set webform_id = 'request_booking' %}
+
+{# Format check-in/check-out for display #}
+{% set raw_checkin = fields.webform_submission_value_2.content|striptags|trim %}
+{% set raw_checkout = fields.webform_submission_value_3.content|striptags|trim %}
+
+{# Helper macro to safely format date only if in YYYY-MM-DD #}
+{% macro format_date(value) %}
+  {% if value matches '/^\\d{4}-\\d{2}-\\d{2}$/' %}
+    {% set parts = value|split('-') %}
+    {{ parts[2] ~ '-' ~ parts[1] ~ '-' ~ parts[0] }}
+  {% else %}
+    {{ value }}
+  {% endif %}
+{% endmacro %}
+
+{% import _self as helper %}
+
+{% set checkin_formatted = helper.format_date(raw_checkin) %}
+{% set checkout_formatted = helper.format_date(raw_checkout) %}
+
+<div class="booking-card">
+  <img src="{{ property_image_url }}" alt="{{ property_title }}">
+  <div class="booking-info">
+    <div class="booking-id">Booking ID:
+      <strong>{{ fields.webform_submission_value.content }}</strong>
+    </div>
+    <h3>{{ property_title }}</h3>
+    <p class="location">{{ property_address }}</p>
+    <div class="meta">
+      <span class="meta-date">
+        <strong>Date:</strong>
+        {{ checkin_formatted }} - {{ checkout_formatted }}
+      </span>
+      <span class="meta-travellers">
+        <strong>Travellers:</strong>
+        {{ fields.webform_submission_value_4.content }} adults
+      </span>
+    </div>
+  </div>
+  <div class="booking-price">
+    <span class="price">₹{{ fields.webform_submission_value_5.content }}</span>
+    <small class="tax-note">Excludes taxes and fees</small>
+    <a href="{{ property_url }}" class="btn btn-primary">View Details</a>
+    {% if logged_in %}
+      <button 
+        class="btn btn-outline-danger cancel-booking-btn" 
+        data-submission-id="{{ submission_id }}">
+        Cancel Booking
+      </button>
+    {% endif %}
+  </div>
+</div>

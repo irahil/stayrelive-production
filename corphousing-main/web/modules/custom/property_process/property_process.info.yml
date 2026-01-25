@@ -1,0 +1,5 @@
+name: 'Property Process'
+type: module
+description: 'Provides a Drush command to import properties from a CSV.'
+core_version_requirement: ^9 || ^10
+package: Custom

@@ -1,0 +1,20 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+
+function vendor_form_style_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (in_array($form_id, [
+    'vendor_add_form',
+    'vendor_edit_form',
+    'vendor_register_form',
+  ])) {
+    $form['#attached']['library'][] = 'vendor_form_style/vendor_form_admin';
+  }
+}
+
+function vendor_form_style_page_attachments(array &$attachments) {
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  if ($route_name === 'vendor_management.vendor_list') {
+    $attachments['#attached']['library'][] = 'vendor_form_style/vendor_form_admin';
+  }
+}

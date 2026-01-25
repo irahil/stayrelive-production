@@ -1,0 +1,27 @@
+/* Colors */
+$primary: #0b8d9f;
+$secondary: rgb(51, 58, 77);
+$tertiary: #13d2ef;
+$white: #fff;
+$black: #000;
+$light: rgb(214, 238, 242);
+$golden: #cfaf6e;
+$text-primary: #666;
+$red: #ff3b30;
+$stroke-border: #e5e7eb;
+
+/* Fonts */
+$primary-font: "Poppins", sans-serif;
+$secondary-font: "Caveat", cursive;
+$icon-fonts: "Font Awesome 5 Free";
+
+// Grid breakpoints extend
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px,
+);

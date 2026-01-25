@@ -1,0 +1,398 @@
+/* -----------------------------
+   Vendor Add Form Styles
+   ----------------------------- */
+#block-claro-content .vendor-add-form {
+  max-width: 650px;
+  margin: 30px auto;
+  padding: 25px 30px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+#block-claro-content .vendor-add-form label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #222;
+  font-size: 15px;
+}
+
+#block-claro-content .vendor-add-form input[type="text"],
+#block-claro-content .vendor-add-form input[type="email"],
+#block-claro-content .vendor-add-form input[type="tel"],
+#block-claro-content .vendor-add-form select,
+#block-claro-content .vendor-add-form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #f9fbfc;
+  transition: all 0.2s ease-in-out;
+}
+
+#block-claro-content .vendor-add-form input:focus,
+#block-claro-content .vendor-add-form select:focus,
+#block-claro-content .vendor-add-form textarea:focus {
+  border-color: #009999;
+  background: #fff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 153, 153, 0.15);
+}
+
+#block-claro-content .vendor-add-form input[type="submit"] {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #009999, #006666);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.3s ease;
+}
+
+@media (max-width: 576px) {
+  #block-claro-content .vendor-add-form {
+    padding: 18px;
+  }
+
+  #block-claro-content .vendor-add-form label {
+    font-size: 13px;
+  }
+
+  #block-claro-content .vendor-add-form input,
+  #block-claro-content .vendor-add-form select,
+  #block-claro-content .vendor-add-form textarea {
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  #block-claro-content .vendor-add-form input[type="submit"] {
+    font-size: 14px;
+    padding: 12px;
+  }
+}
+
+/* -----------------------------
+   Vendor Management Table Styles
+   ----------------------------- */
+#block-claro-content .tbl-vendor {
+  width: 70%;
+  border-collapse: collapse;
+  margin: 25px auto;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  overflow: hidden;
+  font-size: 14px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
+}
+
+#block-claro-content .tbl-vendor thead {
+  background: linear-gradient(135deg, #f5f7fa, #f5f7fa);
+  color: #fff;
+}
+
+#block-claro-content .tbl-vendor th,
+#block-claro-content .tbl-vendor td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+#block-claro-content .tbl-vendor th {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+#block-claro-content .tbl-vendor tr:last-child td {
+  border-bottom: none;
+}
+
+#block-claro-content .tbl-vendor tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+#block-claro-content .tbl-vendor tr:hover {
+  background: #fff;
+}
+
+#block-claro-content .tbl-vendor td:last-child a {
+  display: inline-block;
+  padding: 7px 16px;
+  background: #009999;
+  color: #fff !important;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.25s ease, transform 0.15s ease;
+}
+
+#block-claro-content .tbl-vendor td:last-child a:hover {
+  background: #f5f7fa;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  #block-claro-content .tbl-vendor th,
+  #block-claro-content .tbl-vendor td {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 576px) {
+  #block-claro-content .tbl-vendor {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+
+    font-size: 12px;
+  }
+
+  #block-claro-content .tbl-vendor th,
+  #block-claro-content .tbl-vendor td {
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+
+  #block-claro-content .tbl-vendor td:last-child a {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+#block-srdesign-content .vendor-add-form {
+  max-width: 650px;
+  margin: 30px auto;
+  padding: 25px 30px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+#block-srdesign-content .vendor-add-form label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #222;
+  font-size: 15px;
+}
+
+#block-srdesign-content .vendor-add-form input[type="text"],
+#block-srdesign-content .vendor-add-form input[type="email"],
+#block-srdesign-content .vendor-add-form input[type="tel"],
+#block-srdesign-content .vendor-add-form select,
+#block-srdesign-content .vendor-add-form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #f9fbfc;
+  transition: all 0.2s ease-in-out;
+}
+
+#block-srdesign-content .vendor-add-form input:focus,
+#block-srdesign-content .vendor-add-form select:focus,
+#block-srdesign-content .vendor-add-form textarea:focus {
+  border-color: #009999;
+  background: #fff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 153, 153, 0.15);
+}
+
+#block-srdesign-content .vendor-add-form input[type="submit"],
+#block-srdesign-content .vendor-add-form .button {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #009999, #006666);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.3s ease;
+}
+
+#block-srdesign-content .vendor-add-form input[type="submit"]:hover,
+#block-srdesign-content .vendor-add-form .button:hover {
+  background: linear-gradient(135deg, #f5f7fa, #f5f7fa);
+  transform: translateY(-2px);
+}
+
+#block-srdesign-content .vendor-add-form #edit-back-link {
+  display: inline-block;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #e6f7f7;
+  background: #009999;
+  border: 1px solid #009999;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  margin-bottom: 20px;
+}
+
+#block-srdesign-content .vendor-add-form #edit-back-link:hover {
+  background: #e6f7f7;
+  color: #f5f7fa;
+  text-decoration: underline;
+}
+
+#block-srdesign-content .vendor-add-form fieldset {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 15px 20px;
+  margin-top: 20px;
+}
+#block-srdesign-content .vendor-add-form legend {
+  font-weight: 600;
+  color: #009999;
+  padding: 0 6px;
+  font-size: 15px;
+}
+
+#block-srdesign-content .vendor-add-form .form-radios {
+  display: flex;
+  gap: 20px;
+  margin-top: 10px;
+}
+#block-srdesign-content .vendor-add-form .form-radios label {
+  font-weight: 400;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+#block-srdesign-content .vendor-add-form table.tbl-vendor {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  font-size: 14px;
+
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+
+#block-srdesign-content .vendor-add-form table.tbl-vendor th,
+#block-srdesign-content .vendor-add-form table.tbl-vendor td {
+  border: 1px solid #e5e7eb;
+  padding: 10px;
+  text-align: left;
+}
+#block-srdesign-content .vendor-add-form table.tbl-vendor th {
+  background: #f9fafb;
+  font-weight: 600;
+  color: #444;
+}
+#block-srdesign-content .vendor-add-form table.tbl-vendor tr:nth-child(even) {
+  background: #fdfdfd;
+}
+
+@media (max-width: 576px) {
+  #block-srdesign-content .vendor-add-form {
+    padding: 18px;
+  }
+  #block-srdesign-content .vendor-add-form label {
+    font-size: 13px;
+  }
+  #block-srdesign-content .vendor-add-form input,
+  #block-srdesign-content .vendor-add-form select,
+  #block-srdesign-content .vendor-add-form textarea {
+    font-size: 13px;
+    padding: 10px;
+  }
+  #block-srdesign-content .vendor-add-form input[type="submit"] {
+    font-size: 14px;
+    padding: 12px;
+  }
+  #block-srdesign-content .vendor-add-form .form-radios {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+/* error message styling */
+
+.messages-list {
+  margin: 0;
+}
+
+.messages-list__wrapper {
+  padding: 20px 0;
+}
+
+.messages-list__wrapper .messages {
+  background: #fff;
+  border: 3px solid #192452;
+  border-radius: 0 90px 0 0;
+  color: #0b8d9f;
+  outline: 3px solid #0b8d9f;
+  margin: 15px 15px 0 15px;
+}
+
+.messages-list__wrapper .messages h2 {
+  font-size: 24px;
+}
+
+.messages-list__wrapper .messages .messages__content {
+  font-size: 20px;
+}
+
+.messages-list__wrapper .messages .messages__header {
+  display: none;
+}
+
+.messages-list__wrapper .messages a {
+  color: #f8f9fa;
+}
+
+.messages-list__wrapper .messages a:hover {
+  text-decoration: underline;
+}
+
+.messages-list__wrapper .messages--error {
+  background: #fff;
+  border-color: #192452;
+  outline-color: #0b8d9f;
+  color: #0b8d9f;
+  font-weight: 500;
+}
+
+.messages-list__wrapper .messages--error .messages__content ul.messages__list {
+  margin: 0;
+  padding-left: 1.25rem;
+  list-style-type: disc;
+}
+
+.messages-list__wrapper
+  .messages--error
+  .messages__content
+  ul.messages__list
+  .messages__item {
+  margin-bottom: 6px;
+}
+
+.messages-list__wrapper
+  .messages--error
+  .messages__content
+  ul.messages__list
+  .messages__item:last-child {
+  margin-bottom: 0;
+}

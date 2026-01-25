@@ -1,0 +1,26 @@
+{%
+set classes = [
+  'block',
+  'block-menu',
+  'navigation',
+  'menu--' ~ derivative_plugin_id|clean_class,
+  'navbar'
+]
+%}
+
+<nav role="navigation" aria-labelledby="{{ attributes.id }}-menu"{{ attributes.addClass(classes)|without('role', 'aria-labelledby') }} id="block-srdesign-mainnavigation" style="display: flex; justify-content: flex-end; width: 100%;">
+  
+  {# Hamburger toggle button #}
+  <button class="menu-toggle" aria-controls="main-menu" aria-expanded="false" style="margin-left: auto !important;">
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+  </button>
+  
+  {# Menu content #}
+  <div id="main-menu" class="menu-content">
+    {% block content %}
+      {{ content }}
+    {% endblock %}
+  </div>
+</nav>

@@ -1,0 +1,138 @@
+{#
+/**
+ * @file
+ * Theme override for a main view template.
+ *
+ * Available variables:
+ * - attributes: Remaining HTML attributes for the element.
+ * - css_name: A CSS-safe version of the view name.
+ * - css_class: The user-specified classes names, if any.
+ * - header: The optional header.
+ * - footer: The optional footer.
+ * - rows: The results of the view query, if any.
+ * - empty: The content to display if there are no rows.
+ * - pager: The optional pager next/prev links to display.
+ * - exposed: Exposed widget form/info to display.
+ * - feed_icons: Optional feed icons to display.
+ * - more: An optional link to the next page of results.
+ * - title: Title of the view, only used when displaying in the admin preview.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the view title.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the view title.
+ * - attachment_before: An optional attachment view to be displayed before the
+ *   view content.
+ * - attachment_after: An optional attachment view to be displayed after the
+ *   view content.
+ * - dom_id: Unique id for every view being printed to give unique class for
+ *   JavaScript.
+ *
+ * @see template_preprocess_views_view()
+ */
+#}
+{{ attach_library('srdesign/property_search') }}
+{%
+  set classes = [
+    'view',
+    'view-' ~ id|clean_class,
+    'view-id-' ~ id,
+    'view-display-id-' ~ display_id,
+    dom_id ? 'js-view-dom-id-' ~ dom_id,
+  ]
+%}
+
+<div{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {% if title %}
+    <h2 class="view-title">{{ title }}</h2>
+  {% endif %}
+  {{ title_suffix }}
+
+  <div class="property-view-wrapper">
+    <div class="property-sidebar">
+      {# 🗺️ Map (comes from attachment_before) #}
+      {% if attachment_before %}
+        <div class="property-map">
+          {{ attachment_before }}
+        </div>
+      {% endif %}
+
+      {# 🧩 Filter section #}
+      {% if exposed %}
+        <div class="property-filters">
+          {{ exposed }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="property-results">
+      {# Header section with title, count, and sorting - only show when properties exist #}
+      {% set has_properties = false %}
+      {% if total_properties_count is defined and total_properties_count > 0 %}
+        {% set has_properties = true %}
+      {% elseif pager and pager['#items'] and pager['#items'].total_items and pager['#items'].total_items > 0 %}
+        {% set has_properties = true %}
+      {% elseif rows and rows|length > 0 %}
+        {% set has_properties = true %}
+      {% endif %}
+      
+      {% if has_properties %}
+        <div class="property-results-header">
+          <div class="property-results-title-section">
+            <h2 class="property-results-title">
+              {% if dynamic_city_title is defined %}
+                {{ dynamic_city_title }}
+              {% elseif title %}
+                {{ title }}
+              {% else %}
+                Top Spaces
+              {% endif %}
+            </h2>
+            <p class="property-results-count">
+              {% if total_properties_count is defined %}
+                {{ total_properties_count }} properties found
+              {% elseif pager and pager['#items'] and pager['#items'].total_items %}
+                {{ pager['#items'].total_items }} properties found
+              {% elseif rows %}
+                {{ rows|length }} properties found
+              {% endif %}
+            </p>
+          </div>
+          <div class="property-results-sorting">
+            {# Sorting dropdown for Price sorting #}
+            <div class="sort-dropdown-wrapper">
+              <select class="sort-dropdown" name="sort_by" id="property-sort-select" data-drupal-selector="property-sort">
+                {% set current_sort = current_sort|default('') %}
+
+                <option value="" {% if current_sort == '' %}selected{% endif %}>Price (Sort by)</option>
+                <option value="price_asc" {% if current_sort == 'price_asc' %}selected{% endif %}>Price (Lowest first)</option>
+                <option value="price_desc" {% if current_sort == 'price_desc' %}selected{% endif %}>Price (Highest first)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      {% if rows %}
+        <div class="view-content">
+          {{ rows }}
+        </div>
+      {% elseif empty %}
+        <div class="view-empty">
+          {{ empty }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if pager %}
+    {{ pager }}
+  {% endif %}
+
+  {% if footer %}
+    <div class="view-footer">
+      {{ footer }}
+    </div>
+  {% endif %}
+</div>
+

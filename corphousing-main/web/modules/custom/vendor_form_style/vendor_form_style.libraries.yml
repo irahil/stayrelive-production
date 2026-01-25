@@ -1,0 +1,4 @@
+vendor_form_admin:
+  css:
+    theme:
+      css/vendor-form-admin.css: {}

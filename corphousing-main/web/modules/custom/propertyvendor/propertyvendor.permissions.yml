@@ -1,0 +1,3 @@
+administer propertyvendor:
+  title: 'Administer propertyvendors'
+  restrict access: true

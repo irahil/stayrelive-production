@@ -1,0 +1,11 @@
+entity.propertyfile.settings:
+  title: 'Propertyfile'
+  description: 'Configure a Propertyfile entity type.'
+  route_name:  entity.propertyfile.settings
+  parent: system.admin_structure
+
+entity.propertyfile.collection:
+  title: 'Propertyfiles'
+  description: 'List of propertyfiles.'
+  route_name: entity.propertyfile.collection
+  parent: system.admin_content

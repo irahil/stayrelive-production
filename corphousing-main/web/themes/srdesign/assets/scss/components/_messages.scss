@@ -1,0 +1,131 @@
+.messages-list {
+  margin: 0;
+  position: fixed;
+  top: 80px;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 0 12px;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+  
+  &.hidden {
+    opacity: 0;
+  }
+}
+
+.messages-list__wrapper {
+  pointer-events: none;
+  
+  .messages {
+    background: $white;
+    border: 2px solid $secondary;
+    border-radius: 12px;
+    color: $primary;
+    outline: 2px solid $primary;
+    outline-offset: -5px;
+    margin: 8px auto;
+    max-width: 1400px;
+    padding: 16px 40px 16px 20px; /* Added right padding for close button */
+    pointer-events: auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    animation: slideDown 0.4s ease-out;
+    position: relative;
+    
+    h2 {
+      font-size: 16px;
+      margin: 0 0 8px 0;
+      font-weight: 600;
+    }
+    
+    .messages__content {
+      font-size: 14px;
+      margin: 0;
+      line-height: 1.5;
+    }
+    
+    .messages__header {
+      display: none;
+    }
+    
+    a {
+      color: $light;
+      transition: color 0.2s ease;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  
+  /* Close button styles */
+  .messages__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    color: $primary;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+    font-family: Arial, sans-serif;
+    
+    &:hover {
+      opacity: 1;
+    }
+    
+    &:focus {
+      outline: 2px solid $primary;
+      outline-offset: 2px;
+      opacity: 1;
+    }
+  }
+  
+  .messages--error {
+    background: #fff;
+    border-color: #192452;
+    outline-color: $primary;
+    color: $primary;
+    font-weight: 500;
+    
+    .messages__close {
+      color: $primary;
+    }
+    
+    .messages__content {
+      ul.messages__list {
+        margin: 0;
+        padding-left: 18px;
+        list-style-type: disc;
+        
+        .messages__item {
+          margin-bottom: 4px;
+          
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

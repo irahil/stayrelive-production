@@ -1,0 +1,46 @@
+# autocomplete:
+#   version: 1.0
+#   js:
+#     js/autocomplete.js: {}
+#   dependencies:
+#     - core/jquery
+#     - core/jquery.ui
+#     - core/jquery.ui.autocomplete
+#     - core/drupal
+#     - core/once
+
+flatpickr:
+  version: 1.x
+  css:
+    theme:
+      css/flatpickr.min.css: {}
+  js:
+    js/flatpickr.min.js: {}
+    js/flatpickr.js: {}
+    js/flatpickr-init.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/once
+
+
+autocomplete:
+  version: 1.0
+  js:
+    js/autocomplete.js: {}
+  css:
+    component:
+      css/autocomplete.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/once
+
+google_map_single:
+  version: 1.x
+  js:
+    js/ch_map_single.js: {}
+    https://maps.googleapis.com/maps/api/js?key=AIzaSyBd7hoeq3JClkyQ2MQ33_jqPbzRhuB1WiA&libraries=places&callback=initMap: { type: external, attributes: { async: true, defer: true } }
+  dependencies:
+    - core/jquery
+

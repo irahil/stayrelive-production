@@ -1,0 +1,443 @@
+{{ attach_library('srdesign/flexslider') }}
+{{ attach_library('core/drupal.dialog.ajax') }}
+{{ attach_library('srdesign/srdesign') }}
+{{ attach_library('sr_share/sr_share') }}
+
+<div class="container">
+	<div id="sticky-section-tabs" class="sticky-tabs-wrapper">
+		<div class="section-tabs" id="sticky-tabs">
+			<div class="container">
+				<ul class="nav nav-tabs custom-tabs d-flex text-center w-100" id="propertyTabs">
+					<li class="nav-item flex-fill">
+						<a class="nav-link active" href="#overview">Overview</a>
+					</li>
+					<li class="nav-item flex-fill">
+						<a class="nav-link" href="#room-types">Room Types</a>
+					</li>
+					<li class="nav-item flex-fill">
+						<a class="nav-link" href="#amenities">Amenities</a>
+					</li>
+					<li class="nav-item flex-fill">
+						<a class="nav-link" href="#neighborhood">Explore Neighborhood</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="property-wrapper">
+		<h1>{{ label }}</h1>
+		<div class="property-address">	
+			<div class="area-city">
+				{{ node.field_area_name.value }} , {{ node.field_city.entity.label }}
+			</div>
+			<div class="property-actions">
+			{# ✅ Share Button with proper modal trigger #}
+			<button class="sharebutton" type="button"  data-bs-toggle="modal" data-bs-target="#sharePropertyModal">
+			Share
+			</button>
+			{# ✅ Favorite/Flag Button #}
+			{% if favourite_flag %}
+			<div class="favorite-wrapper">
+				{{ favourite_flag }}
+				<span class="favorite-text">Favorite</span>
+			</div>
+			{% endif %}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-8 col-12">
+
+				{% if node.field_media is not empty %}
+					{% set image_urls = [] %}
+					{% for item in node.field_media %}
+						{% set image_urls = image_urls|merge([
+      file_url(item.entity.uri.value)
+    ]) %}
+					{% endfor %}
+				{% else %}
+					{% set image_urls = [
+    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1024&h=768&fit=crop',
+    'https://images.unsplash.com/photo-1494526585095-c41746248156?w=1024&h=768&fit=crop',
+    'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=1024&h=768&fit=crop'
+  ] %}
+				{% endif %}
+
+				{% set image_alt = node.title.value %}
+				<div id="property-slider" class="flexslider">
+					<ul class="slides">
+						{% for url in image_urls %}
+							<li data-thumb="{{ url|trim }}">
+								<img src="{{ url|trim }}" alt="{{ image_alt }}"/>
+							</li>
+						{% endfor %}
+					</ul>
+				</div>
+
+				<div class="accordion" id="accordionProperty">
+					{% if content.field_description|render %}
+						<div class="accordion-item">
+							<h2 class="accordion-header" id="headingOne">
+								<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+									Overview
+								</button>
+							</h2>
+							<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionProperty">
+								<div class="accordion-body" id="overview">
+									{{ content.field_description }}
+
+									<div class="overview-details">
+										{% if content.field_total_bedrooms|render %}
+											<div class="d-flex gap-2">{{ content.field_total_bedrooms }}
+												Bedrooms</div>
+										{% endif %}
+
+										{% if content.field_total_bathrooms|render %}
+											<div class="d-flex gap-2">{{ content.field_total_bathrooms }}
+												Baths</div>
+										{% endif %}
+
+										{% if content.field_guest|render %}
+											<div class="d-flex gap-2">{{ content.field_guest }}
+												Residents</div>
+										{% endif %}
+
+										{% if content.field_area|render %}
+											<div class="d-flex gap-2">{{ content.field_area }}<sub>2</sub>
+											</div>
+										{% endif %}
+
+										{% if content.field_wifi|render %}
+											<div class="d-flex gap-2">{{ content.field_wifi }}
+												Wifi</div>
+										{% endif %}
+
+										{% if content.field_min_stay|render %}
+											<div class="d-flex gap-2">{{ content.field_min_stay }}
+												Min Stay</div>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+
+					{# <div class="accordion-item">
+										                        <h2 class="accordion-header" id="headingTwo">
+										                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+										                                Stay Relive Rating
+										                            </button>
+										                        </h2>
+										                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionProperty">
+										                            <div class="accordion-body">
+										                                {{ content.field_rating_summary }}
+										                                <div class="rating-individual">
+										                                    <h4>HOW WE RATED THE VILLAS ON SUNSET</h4>
+										                                    {{ content.field_rating_individual }}
+										                                </div>
+										                            </div>
+										                        </div>
+										                    </div> #}
+
+					<div class="accordion-item">
+						<h2 class="accordion-header" id="headingThree">
+							<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+								Room Types
+							</button>
+						</h2>
+						<div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree" data-bs-parent="#accordionProperty">
+							<div class="accordion-body" id="room-types">
+								<div class="row">
+									{% for room in related_rooms_full %}
+										<div class="col-md-6 mb-4">
+											<div class="card shadow-sm h-100 rounded-3">
+												<div
+													class="card-body">
+
+													{# Room Title #}
+													<h5 class="card-title mb-3">{{ room.label }}</h5>
+
+													{# Amenities #}
+													{% if room.field_room_amenities is not empty %}
+														<div class="room-amenities mb-3">
+															<ul class="room-amenities-list">
+																{% for amenity in room.field_room_amenities %}
+																	{% set label = amenity.entity.label %}
+																	{% set amenity_class = label|lower|trim|replace({' ':'-', '/':'-'}) %}
+																	<li class="{{ amenity_class }}">
+																		<i class="fas fa-check"></i>
+																		{{ label }}
+																	</li>
+																{% endfor %}
+															</ul>
+														</div>
+													{% endif %}
+
+													{# Description #}
+													{% if room.field_room_description.value %}
+														<div class="room-description">
+															{{ room.field_room_description.value|raw }}
+														</div>
+													{% endif %}
+
+													{# ✅ Room Price #}
+													{% if room.field_room_price.value %}
+														{% set room_price_raw = room.field_room_price.value %}
+														{% set room_price = (room_price_raw is iterable ? room_price_raw.0 : room_price_raw) + 0 %}
+														{% set markup_percentage_raw = node.field_markup_price.value %}
+														{% set markup_percentage = (markup_percentage_raw is iterable ? markup_percentage_raw.0 : markup_percentage_raw) + 0 %}
+														{% set total_price = room_price + (room_price * markup_percentage / 100) %}
+
+														<div class="room-price mb-3">
+															<strong>Price:</strong> ₹{{ total_price|number_format(0, '.', ',') }}
+														</div>
+													{% endif %}
+
+												</div>
+											</div>
+										</div>
+									{% else %}
+										<p>No rooms added for this property yet.</p>
+									{% endfor %}
+								</div>
+							</div>
+						</div>
+					</div>
+
+					{% if node.field_amenities is not empty %}
+						<div class="accordion-item">
+							<h2 class="accordion-header" id="headingFour">
+								<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+									Amenities
+								</button>
+							</h2>
+							<div id="collapseFour" class="accordion-collapse collapse show" aria-labelledby="headingFour" data-bs-parent="#accordionProperty">
+								<div class="accordion-body" id="amenities">
+													<ul class="amenities">
+														{% for term in node.field_amenities %}
+															{% set label = term.entity.label %}
+															{% set amenity_class = label|lower|trim|replace({' ':'-', '/':'-'}) %}
+															<li class="{{ amenity_class }}">
+																<i class="fas"></i>
+																<span>{{ label }}</span>
+															</li>
+														{% endfor %}
+													</ul>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+
+					{% if node.field_latitude.value and node.field_longitude.value %}
+						<div class="accordion-item">
+							<h2 class="accordion-header" id="headingFive">
+								<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
+									Explore Neighborhood
+								</button>
+							</h2>
+							<div id="collapseFive" class="accordion-collapse collapse show" aria-labelledby="headingFive" data-bs-parent="#accordionProperty">
+								<div
+									class="accordion-body" id="neighborhood">
+
+									{# Display fallback location text if needed #}
+									{% if content.field_location %}{% endif %}
+
+									{# Google Map Container with data attributes for JS #}
+									<div id="google_map" data-lat="{{ node.field_latitude.value }}" data-lng="{{ node.field_longitude.value }}" style="height: 400px; width: 100%; margin-top: 20px;"></div>
+
+									{{ attach_library('ch_property/google_map_single') }}
+
+								</div>
+							</div>
+						</div>
+					{% endif %}
+					{# ✅ FAQ Section #}
+					{% if faq_view %}
+					<div class="accordion-item" id="block-srdesign-views-block-faq-block-1">
+						<h2 class="accordion-header" id="headingSix">
+						<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="true" aria-controls="collapseSix">
+							FAQs
+						</button>
+						</h2>
+						<div id="collapseSix" class="accordion-collapse" aria-labelledby="headingSix" data-bs-parent="#accordionProperty">
+						<div class="accordion-body">
+							{{ faq_view }}
+						</div>
+						</div>
+					</div>
+					{% endif %}
+
+					{# <div class="accordion-item">
+										                        <h2 class="accordion-header" id="headingSix">
+										                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+										                                Things to know
+										                            </button>
+										                        </h2>
+										                        <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#accordionProperty">
+										                            <div class="accordion-body">
+										                                {{ content.field_things_to_know }}
+										                            </div>
+										                        </div>
+										                    </div> #}
+
+					{# <div class="accordion-item">
+										                        <h2 class="accordion-header" id="headingSeven">
+										                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+										                                FAQs
+										                            </button>
+										                        </h2>
+										                        <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#accordionProperty">
+										                            <div class="accordion-body">
+										                                {{ content.field_faq }}
+										                            </div>
+										                        </div>
+										                    </div> #}
+				</div>
+				
+			</div>
+			<div class="col-lg-4 col-12">
+				<div class="sidebar-sticky">
+					<div class="card">
+						<div class="card-body">
+							{% if node.field_price.value %}
+								<div class="price">
+									<strong>₹{{ node.field_price.value|number_format(0, '.', ',') }}&nbsp;</strong>
+									/
+									<span>{{ node.field_pricing_frequency.entity.name.value }}</span>
+								</div>
+							{% endif %}
+
+							<form>
+								{% set markup_percentage_raw = node.field_markup_price.value %}
+								{% set markup_percentage = (markup_percentage_raw is iterable ? markup_percentage_raw.0 : markup_percentage_raw) + 0 %}
+								{% set first_room_price_raw = related_rooms[0].price %}
+								{% set first_room_price = (first_room_price_raw is iterable ? first_room_price_raw.0 : first_room_price_raw) + 0 %}
+								{% set first_total_price = first_room_price + (first_room_price * markup_percentage / 100) %}
+
+								<div class="room-price-display" style="margin-bottom: 15px;">
+									<span id="room-price" style="font-weight: 600; font-size: 24px;">
+									₹{{ first_total_price|number_format(0, '.', ',') }}
+									</span>/night
+								</div>
+								<div class="form-group-date">
+									<div class="form-item custom-date">
+										<label for="check-in">Check In</label>
+										<div class="date-wrapper">
+											<input id="check-in" name="check_in" type="date"
+        									value="{{ content.field_available_from.0['#markup']|date('Y-m-d') }}"
+        									min="{{ 'now'|date('Y-m-d') }}"
+        									placeholder="Check In"
+        									oninput="document.getElementById('check-out').min = this.value">
+										</div>
+									</div>
+									<div class="form-item custom-date">
+										<label for="check-out">Check Out</label>
+										<div class="date-wrapper">
+											<input id="check-out" name="check_out" type="date"
+        									value="{{ content.field_available_from.0['#markup']|date('Y-m-d') }}"
+        									min="{{ 'now'|date('Y-m-d') }}"
+        									placeholder="Check Out">
+										</div>
+									</div>
+								</div>
+								<div class="form-group-guest">
+									<div class="form-item">
+										<label for="guests">Guests</label>
+										<select id="guests" name="guests">
+											<option>1</option>
+											<option>2</option>
+											<option>3</option>
+											<option>4</option>
+											<option>5</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group-room-type">
+									<div class="form-item">
+										<label>Room Types</label>
+										<select name="room_type" id="room-type">
+											{% if related_rooms is not empty %}
+											{% for room in related_rooms %}
+												{% set room_price_raw = room.price %}
+												{% set room_price = (room_price_raw is iterable ? room_price_raw.0 : room_price_raw) + 0 %}
+												{% set total_price = room_price + (room_price * markup_percentage / 100) %}
+												<option value="{{ room.nid }}" data-price="{{ total_price }}">
+												{{ room.label }}
+												</option>
+											{% endfor %}
+											{% else %}
+											<option disabled selected>No rooms available</option>
+											{% endif %}
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="form-action">
+										{% set property_name = node.label %}
+										{% set property_nid = node.id %}
+										
+										{% if logged_in %}
+											<a 
+												href="/form/request-booking?_wrapper_format=drupal_modal&property_nid={{ property_nid }}"
+												class="use-ajax request-book-button request-book-button-auth"
+												data-dialog-type="modal"
+												data-dialog-options='{"width": 664 }'
+												data-property-nid="{{ property_nid }}"
+												data-property-title="{{ property_name|e }}">
+												Request to Book
+											</a>
+										{% else %}
+											<a href="/user/login?destination={{ path('<current>') }}%3Fopen_booking=1%26property_nid={{ property_nid }}" class="request-book-button">
+												Request to Book
+											</a>
+										{% endif %}
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="card talk-to">
+						<div class="card-body">
+							<h5>Talk to stayrelive Team</h5>
+							<p>We'll help you find the perfect home, or answer any questions you may have.</p>
+							<a href="tel:+919867986799">Call us at +91 98679 86799</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{# ✅ Updated Share Modal with proper sr_share functionality #}
+<div class="block-share-button-block">
+  <div class="modal fade" id="sharePropertyModal" tabindex="-1" role="dialog" aria-labelledby="sharePropertyModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="sharePropertyModalTitle">Share {{ share_title }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="share-options">
+            {# Copy Link Button #}
+            <div class="share-option copy-url">
+              <input type="text" class="form-control" id="property-share-url" value="{{ share_url }}" readonly>
+              <span id="copy-url-btn">Copy Link</span>
+            </div>
+            
+            {# WhatsApp Share Button #}
+            <div class="share-option share-whatsapp">
+              <span id="share-whatsapp-btn">Share on WhatsApp</span>
+            </div>
+            
+            {# PDF Download Button #}
+            <div class="share-option download-pdf">
+              <a href="/pdf-export/{{ node_id }}" class="pdf-download-button" target="_blank">
+                Download as PDF
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

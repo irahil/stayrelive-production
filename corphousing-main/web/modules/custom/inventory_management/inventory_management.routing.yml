@@ -1,0 +1,86 @@
+inventory_management.property_list:
+  path: '/inventory-management/property/list'
+  defaults:
+    _form: '\Drupal\inventory_management\Form\PropertyListForm'
+    _title: 'List Property'
+  requirements:
+    _role: 'authenticated'
+
+inventory_management.file_list:
+  path: '/inventory-management/property/file/list'
+  defaults:
+    _controller: '\Drupal\inventory_management\Controller\PropertyFileController::list'
+    _title: 'List Files'
+  requirements:
+    _role: 'authenticated'
+
+inventory_management.property_add:
+  path: '/inventory-management/property/add'
+  defaults:
+    _form: '\Drupal\inventory_management\Form\PropertyDetailsForm'
+    _title: 'Add Property'
+  requirements:
+    _role: 'authenticated'
+
+inventory_management.property_edit:
+  path: '/inventory-management/property/edit/{id}'
+  defaults:
+    _form: '\Drupal\inventory_management\Form\PropertyDetailsEditForm'
+    _title: 'Edit Property'
+  requirements:
+    _permission: 'access inventory management property edit'
+
+inventory_management.property_delete:
+  path: '/inventory-management/property/delete/{id}'
+  defaults:
+    _controller: '\Drupal\inventory_management\Controller\PropertyController::delete'
+    _title: 'Delete Property'
+  requirements:
+    _permission: 'access inventory management property edit'
+
+inventory_management.property_room_add:
+  path: '/inventory-management/property/room/add/{pid}'
+  defaults:
+    _form: '\Drupal\inventory_management\Form\RoomForm'
+    _title: 'Add Room'
+  requirements:
+    _role: 'authenticated'
+
+inventory_management.property_room_edit:
+  path: '/inventory-management/property/room/edit/{pid}/{id}'
+  defaults:
+    _form: '\Drupal\inventory_management\Form\RoomEditForm'
+    _title: 'Edit Room'
+  requirements:
+    _role: 'authenticated'
+
+inventory_management.property_room_delete:
+  path: '/inventory-management/property/room/delete/{pid}/{id}'
+  defaults:
+    _controller: '\Drupal\inventory_management\Controller\PropertyController::deleteRoom'
+    _title: 'Delete Room'
+  requirements:
+    _permission: 'access inventory management property edit'
+
+inventory_management.property_upload:
+  path: '/inventory-management/property/upload'
+  defaults:
+    _form: '\Drupal\inventory_management\Form\CsvUploadForm'
+    _title: 'Upload CSV File'
+  requirements:
+    _role: 'authenticated'
+
+inventory_management.download_csv_reference:
+  path: '/inventory-management/property/download-csv-reference'
+  defaults:
+    _controller: '\Drupal\inventory_management\Controller\PropertyFileController::downloadCsvReference'
+  requirements:
+    _role: 'authenticated'
+
+inventory_management.admin_form:
+  path: '/admin/config/system/inventory-management/admin-form'
+  defaults:
+    _form: '\Drupal\inventory_management\Form\AdminForm'
+    _title: 'Inventory Settings'
+  requirements:
+    _permission: 'administer site configuration'

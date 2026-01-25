@@ -1,0 +1,5 @@
+services:
+  property_process.command.property_import:
+    class: Drupal\property_process\Commands\PropertyImportCommand
+    tags:
+      - { name: drush.command }

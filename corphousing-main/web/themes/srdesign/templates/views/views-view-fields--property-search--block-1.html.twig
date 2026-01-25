@@ -1,0 +1,118 @@
+
+{% set default_ratings = [
+  {'number': '9.2', 'text': 'Excellent'},
+  {'number': '8.5', 'text': 'Very Good'},
+  {'number': '7.9', 'text': 'Good'}
+] %}
+
+{# ------------------- CARD WRAPPER (CLICKABLE) ----------------------- #}
+<div 
+  class="property-card"
+  onclick="window.location='{{ path('entity.node.canonical', {'node': property_nid}) }}?open_booking=1'"
+  style="cursor: pointer;"
+>
+
+  <div class="card-header">
+
+    {# ✅ Use custom flag link with login redirect for anonymous users #}
+    {% if flag_link_custom is defined %}
+      {{ flag_link_custom }}
+    {% else %}
+      {{ fields.link_flag.content }}
+    {% endif %}
+    
+    {# ✅ Property Image with Fallback #}
+    {% set rendered = fields.field_primary_media.content is defined ? fields.field_primary_media.content|render : '' %}
+
+    {# (1) raw presence (array/ids) OR (2) rendered HTML contains <img tag #}
+    {% set has_raw = fields.field_primary_media is defined 
+          and fields.field_primary_media.raw is not empty 
+          and (fields.field_primary_media.raw is iterable ? (fields.field_primary_media.raw|length > 0) : true) 
+    %}
+    {% set has_img_tag = rendered matches '/<img/i' %}
+
+    <a 
+      href="{{ path('entity.node.canonical', {'node': property_nid}) }}?open_booking=1"
+      class="redirect-to-property"
+      data-property-nid="{{ property_nid }}"
+    >
+      {% if has_raw or has_img_tag %}
+        {{ fields.field_primary_media.content }}
+      {% else %}
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1024&h=768&fit=crop" alt="Property Image">
+      {% endif %}
+    </a>
+  </div>
+
+  <div class="card-body">
+
+    {# Display Name ot Title #}
+    {% set property_display_name = fields.field_display_name is defined
+      ? fields.field_display_name.content | render | striptags | trim
+      : '' %}
+    {% set property_title_fallback = fields.title.content | render | striptags | trim %}
+
+    <h4>
+      <a 
+        href="{{ path('entity.node.canonical', {'node': property_nid}) }}?open_booking=1"
+        class="redirect-to-property"
+        data-property-nid="{{ property_nid }}"
+      >
+        {{ property_display_name ?: property_title_fallback }}
+      </a>
+    </h4>
+
+    <div class="town-city">
+      {{ fields.field_area_name.content }} - {{ fields.field_city.content }}
+    </div>
+
+    {# --- Amenities --- #}
+    <div class="property-details">
+      <ul id="amenities" class="amenities">
+        {% set amenities_raw = fields.field_amenities.content|render|striptags %}
+        {% set amenities = amenities_raw|split(',') %}
+        {% for amenity in amenities|slice(0, 3) %}
+          {% set amenity_clean = amenity|trim %}
+          {% if amenity_clean %}
+            {% set amenity_class = amenity_clean|lower|replace({' ':'-', '/':'-'}) %}
+            <li class="{{ amenity_class }}" title="{{ amenity_clean }}"></li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+      
+      <div class="room-info fs-6">
+        {{ total_bedrooms|default(0) }} Bed, {{ total_bathrooms|default(0) }} Bath
+      </div>
+    </div>
+    
+    {# ✅ Price Section with Lowest Room + Markup #}
+    <div class="price">
+    {% if final_room_price is defined and final_room_price != '0' %}
+        <strong>₹{{ final_room_price }}</strong>/night
+    {% else %}
+        <strong>₹{{ field_room_price }}</strong>/night
+    {% endif %}
+    </div>
+
+    <div class="excludes-text">Excludes taxes and fees</div>
+    
+      {# ✅ Request to Book Button Integration #}
+      <div class="form-group">
+        <div class="form-action">
+
+          {% set property_name = property_display_name ?: (fields.title.content | render | striptags | trim) %}
+          {% set property_nid = fields.nid.raw 
+            | default(fields.nid.content | render | striptags | trim) 
+            | default('0') 
+          %}
+
+          <a 
+            href="{{ path('entity.node.canonical', {'node': property_nid}) }}?open_booking=1"
+            class="request-button redirect-to-property"
+            data-property-nid="{{ property_nid }}">
+            Request to Book
+          </a>
+        </div>
+      </div>
+  </div>
+</div>

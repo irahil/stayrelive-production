@@ -1,0 +1,11 @@
+vendor_management.vendor_list:
+  route_name: vendor_management.vendor_list
+  title: 'List Vendors'
+  base_route: vendor_management.vendor_list
+  weight: 0
+
+vendor_management.vendor_add:
+  route_name: vendor_management.vendor_add
+  title: 'Add Vendor'
+  base_route: vendor_management.vendor_list
+  weight: 1

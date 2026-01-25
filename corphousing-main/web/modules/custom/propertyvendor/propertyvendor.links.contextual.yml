@@ -1,0 +1,10 @@
+entity.propertyvendor.edit_form:
+  route_name: entity.propertyvendor.edit_form
+  group: propertyvendor
+  title: 'Edit'
+
+entity.propertyvendor.delete_form:
+  route_name: entity.propertyvendor.delete_form
+  group: propertyvendor
+  title: 'Delete'
+  weight: 10

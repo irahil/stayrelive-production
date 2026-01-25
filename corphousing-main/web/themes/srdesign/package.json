@@ -1,0 +1,17 @@
+{
+    "name": "corp-housing",
+    "version": "1.0.0",
+    "description": "UI project with SCSS compilation and Prettier formatting",
+    "scripts": {
+        "scss": "sass --watch assets/scss:assets/css",
+        "format": "prettier --write \"assets/**/*.{html,scss,css}\"",
+        "webp": "node convert-to-webp.js"
+    },
+    "devDependencies": {
+        "prettier": "^3.0.0",
+        "sass": "^1.75.0"
+    },
+    "dependencies": {
+        "webp-converter": "^2.3.3"
+    }
+}

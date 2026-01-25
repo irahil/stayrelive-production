@@ -1,0 +1,62 @@
+<ul class="menu">
+  {# Profile info - only show if logged in #}
+  {% if logged_in %}
+  <li class="px-3 mb-2">
+    <div class="d-flex align-items-center">
+      <div class="avatar me-3">
+        <i class="fas fa-user"></i>
+      </div>
+      <div>
+        <div class="h6 text-break">{{ user_first_name }}</div>
+      </div>
+    </div>
+  </li>
+  <li><hr class="dropdown-divider"></li>
+{% endif %}
+
+  {% import _self as menus %}
+  {{ menus.menu_links(items, attributes, 0, country_code, logged_in) }}
+
+  {# Divider before auth link #}
+  <li><hr class="dropdown-divider"></li>
+
+  {# Sign In / Logout based on login status #}
+  <li class="menu-item auth-link">
+    {% if logged_in %}
+      <a href="/user/logout" class="dropdown-item">Logout</a>
+    {% else %}
+      {% if country_code == 'ae' %}
+        <a href="/user/login" class="dropdown-item">Agent Log in/Register</a>
+      {% else %}
+        <a href="/user/login" class="dropdown-item">Log in/Register</a>
+      {% endif %}
+    {% endif %}
+  </li>
+</ul>
+
+{% macro menu_links(items, attributes, menu_level, country_code, logged_in) %}
+  {% import _self as menus %}
+  {% if items %}
+    {% for item in items %}
+      {# Skip the "Log in" and "Sign In" items since we're handling them separately #}
+      {% if item.title != 'Log in' and item.title != 'Sign In' %}
+        
+        {# Only render "My Bookings" if user is logged in #}
+        {% if item.title != 'My Bookings' or logged_in %}
+          {% set classes = [
+            'menu-item',
+            item.is_expanded ? 'menu-item--expanded',
+            item.is_collapsed ? 'menu-item--collapsed',
+            item.in_active_trail ? 'menu-item--active-trail'
+          ] %}
+          <li{{ item.attributes.addClass(classes) }}>
+            {{ link(item.title, item.url, { 'class':['dropdown-item'] }) }}
+            {% if item.below %}
+              {{ menus.menu_links(item.below, attributes, menu_level + 1, country_code, logged_in) }}
+            {% endif %}
+          </li>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endmacro %}

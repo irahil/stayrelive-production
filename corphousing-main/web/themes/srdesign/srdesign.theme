@@ -1,0 +1,611 @@
+<?php
+
+use Drupal\taxonomy\Entity\Term;
+use Drupal\Component\Utility\Html;
+use Drupal\user\Entity\User;
+
+/**
+ * Implements hook_theme_suggestions_form_alter().
+ */
+function srdesign_theme_suggestions_form_alter(&$suggestions, $variables) {
+  $form_id = $variables['element']['#form_id'];
+  if (in_array($form_id, ['user_login_form','user_register_form','user_pass','user_form']))  {
+    $suggestions[] = 'form__' . $form_id;
+  }
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function srdesign_preprocess_page(&$variables) {
+  $variables['#attached']['library'][] = 'srdesign/flexslider';
+  $current_path = \Drupal::service('path.current')->getPath();
+  $alias = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
+  $variables['current_path'] = $alias;
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function srdesign_preprocess_node(array &$variables) {
+  $node = $variables['node'];
+
+  if ($node->getType() === 'property') {
+    $property_id = $node->id();
+
+        // ✅ Attach sr_share library for property nodes
+    $variables['#attached']['library'][] = 'sr_share/sr_share';
+
+    // ✅ Attach flag module's library
+    $variables['#attached']['library'][] = 'flag/flag.link';
+
+    // ✅ Get the flag service and load the 'favourite' flag
+    $flag_service = \Drupal::service('flag');
+    $flag = $flag_service->getFlagById('favourite');
+    
+    $account = \Drupal::currentUser();
+    
+    if ($flag) {
+      if ($account->isAuthenticated()) {
+        // AUTHENTICATED USER - Use normal flag link
+        $flag_link = $flag->getLinkTypePlugin()->getAsFlagLink($flag, $node);
+        $variables['favourite_flag'] = $flag_link;
+      } else {
+        // ANONYMOUS USER - Create login redirect link
+        $current_path = \Drupal::service('path.current')->getPath();
+        $url = \Drupal\Core\Url::fromRoute('user.login', [], [
+          'query' => [
+            'destination' => $current_path,
+            'flag_on_login' => $property_id,
+          ],
+        ])->toString();
+
+        // Build markup that mimics Flag's structure but points to login
+        $login_heart = [
+          '#type' => 'markup',
+          '#markup' => '<div class="flag flag-favourite js-flag-favourite-' . $property_id . ' action-flag">
+            <a 
+              href="' . $url . '" 
+              class="flag-anon" 
+              rel="nofollow"
+              data-flag-id="' . $property_id . '"
+              title="Login to add to favorites">
+            </a>
+          </div>',
+          '#cache' => [
+            'contexts' => ['user'],
+          ],
+        ];
+
+        $variables['favourite_flag'] = $login_heart;
+      }
+    }
+
+        
+    // ✅ Load FAQ View for property page
+    $view = \Drupal\views\Views::getView('faq');
+    if ($view) {
+      $view->setDisplay('block_1'); // Use the correct display ID
+      $view->preExecute();
+      $view->execute();
+      $variables['faq_view'] = $view->render();
+    }
+    
+    // Load related rooms.
+    $query = \Drupal::entityQuery('node')
+      ->accessCheck(FALSE)
+      ->condition('type', 'room')
+      ->condition('status', 1)
+      ->condition('field_parent_id', $property_id);
+
+    $nids = $query->execute();
+
+    if (!empty($nids)) {
+      $rooms = \Drupal\node\Entity\Node::loadMultiple($nids);
+
+      // Full rooms for detailed section
+      $variables['related_rooms_full'] = $rooms;
+
+      // Simplified dropdown rooms with price
+      $related_rooms_dropdown = [];
+      foreach ($rooms as $room) {
+        $price = $room->get('field_room_price')->value ?? 0;
+        $related_rooms_dropdown[] = [
+          'nid' => $room->id(),
+          'label' => $room->label(),
+          'price' => $price,
+        ];
+      }
+      $variables['related_rooms'] = $related_rooms_dropdown;
+    }
+    // ✅ Add share URL and title
+    $variables['share_url'] = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
+    $variables['share_title'] = $node->label();
+    
+    // ✅ Pass node ID for PDF generation
+    $variables['node_id'] = $property_id;
+  }
+}
+
+
+
+function srdesign_preprocess_views_view(&$variables) {
+  $view = $variables['view'];
+
+  // Property Search main view
+  if ($view->id() == 'property_search') {
+    $variables['#cache']['contexts'][] = 'url.query_args:city';
+    $variables['#cache']['contexts'][] = 'url.query_args:rooms';
+    $variables['#cache']['contexts'][] = 'url.query_args:date';
+    $variables['#cache']['contexts'][] = 'url.query_args:sort_by';
+    // ----- 1. Total property count -----
+    $total_items = 0;
+    if (isset($view->total_rows) && $view->total_rows > 0) {
+      $total_items = $view->total_rows;
+    } elseif (isset($view->pager) && method_exists($view->pager, 'getTotalItems')) {
+      $total_items = $view->pager->getTotalItems();
+    } elseif (!empty($view->result)) {
+      $total_items = count($view->result);
+    }
+
+    $variables['total_properties_count'] = $total_items;
+
+    // ----- 2. Sorting -----
+    $request = \Drupal::request();
+    $sort_by = $request->query->get('sort_by');
+    $variables['current_sort'] = $sort_by ? $sort_by : '';
+
+    // ----- 3. Dynamic city title -----
+    $city_name = $request->query->get('city');
+    if (!empty($city_name)) {
+      $city_display = ucwords(strtolower(trim($city_name)));
+      $variables['dynamic_city_title'] = 'Top Spaces in ' . $city_display;
+    } else {
+      $variables['dynamic_city_title'] = 'Top Spaces';
+    }
+  }
+
+}
+
+
+/**
+ * Implements hook_preprocess_views_view_fields().
+ */
+function srdesign_preprocess_views_view_fields(&$variables)
+{
+  $view = $variables['view'];
+
+  // Target the specific view and display.
+  if ($view->id() == 'user_bookings' && $view->current_display == 'block_1') {
+    $fields = &$variables['fields'];
+    if (!empty($fields['webform_submission_value_1']->content)) {
+      $property_nid = trim(strip_tags($fields['webform_submission_value_1']->content));
+
+      $property = \Drupal::entityTypeManager()->getStorage('node')->load($property_nid);
+      if ($property && $property->bundle() == 'property') {
+        $variables['property_title'] = $property->label();
+        $variables['property_url'] = $property->toUrl()->toString();
+         $variables['property_area_name'] = $property->get('field_area_name')->value ?? '';
+        if (!$property->get('field_primary_media')->isEmpty()) {
+          $media = $property->get('field_primary_media')->entity;
+          if ($media && $media->hasField('field_media_image') && !$media->get('field_media_image')->isEmpty()) {
+            $image_file = $media->get('field_media_image')->entity;
+            if ($image_file) {
+              $variables['property_image_url'] = file_create_url($image_file->getFileUri());
+            }
+          }
+        }
+
+        // ✅ Optional: Add placeholder image if not found
+        if (empty($variables['property_image_url'])) {
+          $variables['property_image_url'] = 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1024&h=768&fit=crop';
+        }
+      }
+    }
+
+  }
+
+  // Apply only to your property listing view and specific display.
+  $is_property_card_view =
+    ($view->id() == 'property_search' && in_array($view->current_display, ['block_1', 'block_2'])) ||
+    ($view->id() == 'flag_bookmark' && in_array($view->current_display, ['page_2']));
+
+  if ($is_property_card_view) {
+  $row = $variables['row'];
+  $fields = &$variables['fields'];
+  $property_nid = NULL;
+
+  if ($view->id() == 'flag_bookmark' && isset($fields['field_property_reference'])) {
+    $property_nid = (int) trim(strip_tags($fields['field_property_reference']->content));
+  }
+  elseif (isset($row->_entity) && $row->_entity instanceof \Drupal\node\NodeInterface) {
+    $property_nid = $row->_entity->id();
+  }
+  elseif (isset($row->nid) && is_numeric($row->nid)) {
+    $property_nid = (int) $row->nid;
+  }
+  elseif (!empty($fields['nid']->content)) {
+    $property_nid = (int) trim(strip_tags($fields['nid']->content));
+  }
+
+  // Pass property_nid to template.
+  $variables['property_nid'] = $property_nid ?? 0;
+
+  if ($property_nid) {
+    // Load the property node.
+    $property_node = \Drupal\node\Entity\Node::load($property_nid);
+
+    // ✅ Get markup percentage from the property field.
+    $markup_percentage = 0;
+    if ($property_node->hasField('field_markup_price') && !$property_node->get('field_markup_price')->isEmpty()) {
+      $markup_percentage = (float) $property_node->get('field_markup_price')->value;
+    }
+
+    // ✅ Query all rooms for this property.
+    $room_query = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'room')
+      ->condition('status', 1)
+      ->condition('field_parent_id', $property_nid);
+
+    $room_nids = $room_query->execute();
+
+    $lowest_price = NULL;
+    $lowest_room = NULL;
+
+    if (!empty($room_nids)) {
+      // Load all room nodes.
+      $rooms = \Drupal\node\Entity\Node::loadMultiple($room_nids);
+
+      // Loop through and find the lowest price room.
+      foreach ($rooms as $room) {
+        if ($room->hasField('field_room_price') && !$room->get('field_room_price')->isEmpty()) {
+          $price = (float) $room->get('field_room_price')->value;
+          if ($lowest_price === NULL || $price < $lowest_price) {
+            $lowest_price = $price;
+            $lowest_room = $room;
+          }
+        }
+      }
+
+      if ($lowest_room) {
+        // ✅ Apply markup.
+        $final_price = $lowest_price + ($lowest_price * $markup_percentage / 100);
+        $variables['final_room_price'] = number_format($final_price, 0, '.', ',');
+
+        // ✅ Get bedrooms & bathrooms from lowest room.
+        $bedrooms = 0;
+        $bathrooms = 0;
+
+        if ($lowest_room->hasField('field_bedrooms') && !$lowest_room->get('field_bedrooms')->isEmpty()) {
+          $bedrooms = (int) $lowest_room->get('field_bedrooms')->value;
+        }
+        if ($lowest_room->hasField('field_bathrooms') && !$lowest_room->get('field_bathrooms')->isEmpty()) {
+          $bathrooms = (int) $lowest_room->get('field_bathrooms')->value;
+        }
+
+        $variables['total_bedrooms'] = $bedrooms;
+        $variables['total_bathrooms'] = $bathrooms;
+      }
+    }
+    else {
+      $variables['final_room_price'] = t('No rooms available');
+      $variables['total_bedrooms'] = 0;
+      $variables['total_bathrooms'] = 0;
+    }
+    // ✅Handle Flag for Anonymous Users in Property Listing
+      $account = \Drupal::currentUser();
+      $flag_service = \Drupal::service('flag');
+      $flag = $flag_service->getFlagById('favourite');
+
+      if ($flag) {
+        if ($account->isAuthenticated()) {
+          // Authenticated user - use normal flag link
+          $flag_link = $flag->getLinkTypePlugin()->getAsFlagLink($flag, $property_node);
+          $variables['flag_link_custom'] = $flag_link;
+        } else {
+          // Anonymous user - create login redirect link
+          $current_path = $property_node->toUrl('canonical')->toString();
+          $url = \Drupal\Core\Url::fromRoute('user.login', [], [
+            'query' => [
+              'destination' => $current_path,
+              'flag_on_login' => $property_nid,
+            ],
+          ])->toString();
+
+          // Build markup that mimics Flag's structure but points to login
+          $login_heart = [
+            '#type' => 'markup',
+            '#markup' => '<div class="flag flag-favourite js-flag-favourite-' . $property_nid . ' action-flag">
+              <a 
+                href="' . $url . '" 
+                class="flag-anon" 
+                rel="nofollow"
+                data-flag-id="' . $property_nid . '"
+                title="Login to add to favorites">
+              </a>
+            </div>',
+            '#cache' => [
+              'contexts' => ['user'],
+            ],
+          ];
+
+          $variables['flag_link_custom'] = $login_heart;
+      }
+    }
+  }
+}
+}
+
+/**
+ * Implements hook_views_pre_render().
+ * Handles property search sorting by price (asc/desc) from dropdown.
+ */
+function srdesign_views_pre_render($view) {
+  if ($view->id() === 'property_search') {
+    $view->element['#cache']['contexts'][] = 'user';
+    $view->element['#cache']['contexts'][] = 'user.roles';
+
+    $view->element['#cache']['contexts'][] = 'url.query_args:city';
+    $view->element['#cache']['contexts'][] = 'url.query_args:rooms';
+    $view->element['#cache']['contexts'][] = 'url.query_args:date';
+    $view->element['#cache']['contexts'][] = 'url.query_args:sort_by';
+  }
+
+  // Build map data for the attachment display.
+  if ($view->current_display == 'attachment_1') {
+    $map_items = [];
+
+    if (!empty($view->result)) {
+      foreach ($view->result as $row) {
+        $property = NULL;
+        $property_id = NULL;
+
+        if (isset($row->_entity) && $row->_entity instanceof \Drupal\node\NodeInterface) {
+          $property = $row->_entity;
+        }
+
+        if (!$property) {
+          if (isset($row->nid)) {
+            $property_id = $row->nid;
+          }
+          elseif (isset($row->_entity) && is_numeric($row->_entity)) {
+            $property_id = $row->_entity;
+          }
+          elseif (isset($view->field['nid'])) {
+            $property_id = $view->field['nid']->getValue($row);
+          }
+          elseif (isset($row->node_field_data_nid)) {
+            $property_id = $row->node_field_data_nid;
+          }
+
+          if ($property_id) {
+            $property = \Drupal\node\Entity\Node::load($property_id);
+          }
+        }
+
+        if ($property && $property->bundle() == 'property') {
+          if ($property->hasField('field_latitude') && !$property->get('field_latitude')->isEmpty() &&
+            $property->hasField('field_longitude') && !$property->get('field_longitude')->isEmpty()) {
+            $lat = (float) $property->get('field_latitude')->value;
+            $lng = (float) $property->get('field_longitude')->value;
+
+            if ($lat !== 0.0 || $lng !== 0.0) {
+              $map_items[] = [
+                'title' => $property->label(),
+                'url' => $property->toUrl('canonical', ['absolute' => TRUE])->toString(),
+                'address' => $property->get('field_display_address')->value,
+                'lat' => $lat,
+                'lng' => $lng,
+              ];
+            }
+          }
+        }
+      }
+    }
+
+    $view->element['#attached']['drupalSettings']['property_map'] = $map_items;
+    return;
+  }
+
+  // --- CACHE FIX for Anonymous Users ---
+  // Ensures sorting works properly even when not logged in.
+
+  // --- Get "sort_by" from URL ---
+  $request = \Drupal::request();
+  $sort_by = $request->query->get('sort_by');
+
+  // Allow only valid values.
+  if (!$sort_by || !in_array($sort_by, ['price_asc', 'price_desc'])) {
+    return;
+  }
+
+  // --- If view has no results, exit early ---
+  if (empty($view->result)) {
+    return;
+  }
+
+  try {
+
+    // Collect property IDs - handle both authenticated and anonymous users
+    // Also create a mapping of row index to property ID
+    $property_ids = [];
+    $row_to_property_id = [];
+    
+    foreach ($view->result as $index => $row) {
+      $property = NULL;
+      $property_id = NULL;
+      
+      // Try to get entity from row (works for authenticated users)
+      if (isset($row->_entity) && $row->_entity && is_object($row->_entity)) {
+        $property = $row->_entity;
+        if ($property && $property->bundle() == 'property') {
+          $property_id = $property->id();
+        }
+      }
+      
+      // For anonymous users, try multiple ways to get the node ID
+      if (!$property_id) {
+        // Try nid property
+        if (isset($row->nid)) {
+          $property_id = $row->nid;
+        }
+        // Try _entity if it's just an ID
+        elseif (isset($row->_entity) && is_numeric($row->_entity)) {
+          $property_id = $row->_entity;
+        }
+        // Try accessing through view fields
+        elseif (isset($view->field['nid'])) {
+          $property_id = $view->field['nid']->getValue($row);
+        }
+        // Try accessing through result row properties
+        elseif (isset($row->node_field_data_nid)) {
+          $property_id = $row->node_field_data_nid;
+        }
+      }
+      
+      // Load property if we have an ID but no entity
+      if ($property_id && !$property) {
+        $property = \Drupal\node\Entity\Node::load($property_id);
+      }
+      
+      if ($property && $property->bundle() == 'property') {
+        $property_id = $property->id();
+        $property_ids[] = $property_id;
+        $row_to_property_id[$index] = $property_id;
+      }
+    }
+
+    if (empty($property_ids)) {
+      return;
+    }
+
+    // Query all rooms for all properties at once
+    $room_nids = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'room')
+      ->condition('status', 1)
+      ->condition('field_parent_id', $property_ids, 'IN')
+      ->execute();
+
+    // Load all rooms
+    $rooms = !empty($room_nids) ? \Drupal\node\Entity\Node::loadMultiple($room_nids) : [];
+    
+    // Group rooms by property_id and find minimum price for each
+    $room_prices = [];
+    foreach ($rooms as $room) {
+      if ($room->hasField('field_parent_id') && !$room->get('field_parent_id')->isEmpty()) {
+        $property_id = NULL;
+        $field_parent_id = $room->get('field_parent_id');
+        if ($field_parent_id->target_id) {
+          $property_id = (int) $field_parent_id->target_id;
+        } elseif ($field_parent_id->value) {
+          $property_id = (int) $field_parent_id->value;
+        }
+        
+        if ($property_id && in_array($property_id, $property_ids)) {
+          if ($room->hasField('field_room_price') && !$room->get('field_room_price')->isEmpty()) {
+            $price = (float) $room->get('field_room_price')->value;
+            // Track minimum price for each property
+            if (!isset($room_prices[$property_id]) || $price < $room_prices[$property_id]) {
+              $room_prices[$property_id] = $price;
+            }
+          }
+        }
+      }
+    }
+
+    // Calculate final prices and attach to view results
+    // Use the mapping we created to get property IDs reliably
+    foreach ($view->result as $index => &$row) {
+      $property_id = isset($row_to_property_id[$index]) ? $row_to_property_id[$index] : NULL;
+      
+      if ($property_id) {
+        // Load property to get markup
+        $property = \Drupal\node\Entity\Node::load($property_id);
+        
+        if ($property && $property->bundle() == 'property') {
+          $lowest_price = isset($room_prices[$property_id]) ? (float) $room_prices[$property_id] : NULL;
+          
+          // Get markup percentage
+          $markup = 0;
+          if ($property->hasField('field_markup_price') && !$property->get('field_markup_price')->isEmpty()) {
+            $markup = (float) $property->get('field_markup_price')->value;
+          }
+          
+          // Calculate: lowest_price + (lowest_price * markup / 100)
+          $final_price = $lowest_price !== NULL 
+            ? $lowest_price + ($lowest_price * $markup / 100) 
+            : PHP_INT_MAX;
+          
+          $row->calculated_price = $final_price;
+        } else {
+          $row->calculated_price = PHP_INT_MAX;
+        }
+      } else {
+        $row->calculated_price = PHP_INT_MAX;
+      }
+    }
+
+    // Sort Results Based on User Selection
+    $index_order = array_keys($view->result);
+    usort($index_order, function ($index_a, $index_b) use ($view, $sort_by) {
+      $price_a = isset($view->result[$index_a]->calculated_price) ? $view->result[$index_a]->calculated_price : PHP_INT_MAX;
+      $price_b = isset($view->result[$index_b]->calculated_price) ? $view->result[$index_b]->calculated_price : PHP_INT_MAX;
+
+      if ($sort_by === 'price_asc') {
+        return $price_a <=> $price_b;
+      }
+      return $price_b <=> $price_a;
+    });
+
+    $sorted_result = [];
+    foreach ($index_order as $sorted_index) {
+      $sorted_result[] = $view->result[$sorted_index];
+    }
+    $view->result = $sorted_result;
+
+    if (isset($view->style_plugin) && !empty($view->style_plugin->rendered_fields)) {
+      $sorted_rendered_fields = [];
+      foreach ($index_order as $sorted_index) {
+        if (isset($view->style_plugin->rendered_fields[$sorted_index])) {
+          $sorted_rendered_fields[] = $view->style_plugin->rendered_fields[$sorted_index];
+        }
+      }
+      $view->style_plugin->rendered_fields = $sorted_rendered_fields;
+    }
+
+  } catch (\Exception $e) {
+    // Silently fail to prevent breaking the page
+  }
+}
+
+
+/**
+ * Implements hook_preprocess_HOOK() for menu templates.
+ */
+function srdesign_preprocess_menu(&$variables) {
+  // Get current user.
+  $account = \Drupal::currentUser();
+  $variables['logged_in'] = $account->isAuthenticated();
+
+   // ✅ VERY IMPORTANT: vary menu cache per user
+  $variables['#cache']['contexts'][] = 'user';
+
+  // Only add user details if logged in.
+  if ($account->isAuthenticated()) {
+    $user = User::load($account->id());
+    $variables['user_first_name'] = $account->getDisplayName();
+    $variables['user_mail'] = $user->getEmail();
+  }
+  else {
+    $variables['user_first_name'] = '';
+    $variables['user_last_name'] = '';
+    $variables['user_mail'] = '';
+    $variables['sr_admin_link'] = '';
+  }
+}

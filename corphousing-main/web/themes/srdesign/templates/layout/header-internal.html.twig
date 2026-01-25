@@ -1,0 +1,46 @@
+<header class="header-inner" role="banner">
+  <div class="container d-flex align-items-center justify-content-between">
+    
+    <div id="block-srdesign-site-branding" class="block block-system block-system-branding-block">
+      <a href="/" rel="home" class="site-logo">
+        <img src="{{ base_path }}themes/srdesign/assets/images/common/new-inner-logo.png" alt="Home" class="srdesign-logo-img">
+      </a>
+    </div>
+
+    {# Filter Bar - (shown only on property search page) #}
+    {% if path('<current>') == '/property/search' %}
+      <div class="filter-bar-wrapper d-flex justify-content-center flex-grow-1 mx-3" id="desktop-filter">
+        <div class="filter-bar d-flex align-items-center" id="filter-toggle">
+          <div class="filter-item me-3">
+            <i class="fa-solid fa-location-dot"></i>&nbsp; City
+          </div>
+          <div class="filter-item me-3">
+            <i class="fa-regular fa-calendar"></i>&nbsp; Date Range
+          </div>
+          <div class="filter-item me-3">
+            <i class="fa-regular fa-user"></i>&nbsp; Adults
+          </div>
+          <button class="btn d-flex align-items-center justify-content-center rounded-circle p-2 ms-2" style="width: 36px; height: 36px;">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </div>
+      </div>
+    {% endif %}
+
+    <div id="inner-search-wrapper">
+      {{ drupal_block('inner_search_block') }}
+    </div>
+
+    {# Mobile/Tablet Filter Button - Moved after search block #}
+    {% if path('<current>') == '/property/search' %}
+      <button class="btn btn-outline-secondary filter-btn-mobile d-lg-none" id="filter-btn-mobile">
+        <i class="fa-solid fa-filter"></i> Filter
+      </button>
+    {% endif %}
+
+    <nav class="navbar navbar-expand-lg ms-auto">
+      {{ page.navigation }}
+    </nav>
+
+  </div>
+</header>

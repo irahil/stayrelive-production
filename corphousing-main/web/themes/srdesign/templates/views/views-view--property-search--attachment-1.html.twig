@@ -1,0 +1,26 @@
+<div class="map-preview-card">
+  <div class="map-preview-bg" data-map-open role="button" aria-label="Open map">
+
+    <img
+  src="{{ file_url(directory ~ '/assets/images/property/property_map_preview.png') }}"
+  alt="Property locations map preview"
+  class="property-map-preview-img"
+/>
+  </div>
+</div>
+
+<!-- MAP MODAL -->
+<div class="map-modal" data-map-modal hidden>
+  <div class="map-modal-overlay" data-map-close></div>
+
+  <div class="map-modal-wrapper">
+    <button class="map-modal-close" data-map-close aria-label="Close map">
+      ✕
+    </button>
+
+    <div id="property-map" class="property-map-full"></div>
+  </div>
+</div>
+
+{{ attach_library('srdesign/leaflet') }}
+{{ attach_library('srdesign/property_map') }}

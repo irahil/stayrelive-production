@@ -1,0 +1,5 @@
+name: Vendor Form Style
+type: module
+description: 'Custom CSS for vendor add form and vendor management table in admin (Claro).'
+core_version_requirement: ^10
+package: Custom

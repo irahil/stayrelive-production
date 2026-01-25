@@ -1,0 +1,104 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a view of unformatted rows.
+ *
+ * Available variables:
+ * - title: The title of this group of rows. May be empty.
+ * - rows: A list of the view's row items.
+ *   - attributes: The row's HTML attributes.
+ *   - content: The row's content.
+ * - view: The view object.
+ * - default_row_class: A flag indicating whether default classes should be
+ *   used on rows.
+ *
+ * @see template_preprocess_views_view_unformatted()
+ *
+ * @ingroup themeable
+ */
+#}
+
+<div class="user-bookings">
+
+  {# Define tab keys and labels (adjust labels if needed) #}
+  {% set statuses = {
+    'pending_booking': 'Upcoming',
+    'pending_booking': 'Ongoing',
+    'confirmed_booking': 'Completed',
+    'canceled_booking': 'Cancelled'
+  } %}
+
+  {# Initialize grouped map with empty arrays for each status and an 'others' bucket #}
+  {% set grouped = {} %}
+  {% for key, label in statuses %}
+    {% set grouped = grouped | merge({ (key): [] }) %}
+  {% endfor %}
+  {% set grouped = grouped | merge({ 'others': [] }) %}
+
+  {# Build grouped arrays by iterating rows once #}
+  {% for row in rows %}
+    {# getData() returns an assoc array of webform element values #}
+    {% set data = row.content['#row']._entity.getData() %}
+
+    {# Safely get booking_status (may be null) #}
+    {% set raw_status = attribute(data, 'booking_status') %}
+
+    {# normalize: lowercase, spaces -> underscore (adjust if your values already match keys) #}
+    {% if raw_status is defined and raw_status is not empty %}
+      {% set normalized = raw_status|lower|replace({' ': '_'}) %}
+    {% else %}
+      {% set normalized = 'others' %}
+    {% endif %}
+
+    {# Put row into matching bucket, or 'others' if not matched #}
+    {% if normalized in statuses|keys %}
+      {% set grouped = grouped | merge({ (normalized): (grouped[normalized] | merge([row])) }) %}
+    {% else %}
+      {% set grouped = grouped | merge({ 'others': (grouped['others'] | merge([row])) }) %}
+    {% endif %}
+  {% endfor %}
+
+  {# --- Tabs (buttons) with counts) --- #}
+  <div class="tabs" role="tablist" aria-label="Booking status tabs">
+    {% for key, label in statuses %}
+      <button class="tab {% if loop.first %}active{% endif %}"
+              data-tab="{{ key }}"
+              role="tab"
+              aria-controls="tab-{{ key }}">
+        {{ label }} ({{ grouped[key]|length }})
+      </button>
+    {% endfor %}
+    {# optional Others tab if there are unmapped statuses #}
+    {% if grouped.others|length > 0 %}
+      <button class="tab" data-tab="others" role="tab" aria-controls="tab-others">
+        Others ({{ grouped.others|length }})
+      </button>
+    {% endif %}
+  </div>
+
+  {# --- Tab contents --- #}
+  {% for key, label in statuses %}
+    <div class="tab-content {% if loop.first %}active{% endif %}" id="tab-{{ key }}" role="tabpanel" aria-labelledby="tab-{{ key }}">
+      {% if grouped[key]|length > 0 %}
+        {% for row in grouped[key] %}
+          <div class="my-bookings">
+            {{ row.content }}
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>No {{ label }} bookings found.</p>
+      {% endif %}
+    </div>
+  {% endfor %}
+
+  {# Others content if exists #}
+  {% if grouped.others|length > 0 %}
+    <div class="tab-content" id="tab-others" role="tabpanel" aria-labelledby="tab-others">
+      {% for row in grouped.others %}
+        <div class="my-bookings">
+          {{ row.content }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>

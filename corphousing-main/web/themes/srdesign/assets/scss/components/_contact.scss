@@ -1,0 +1,209 @@
+.page-contact-us {
+  #block-srdesign-contactbanner {
+    position: relative;
+    background: url("https://corphousing.in/sites/default/files/inline-images/contact-banner.png")
+      0 0 no-repeat;
+    background-size: cover;
+    position: absolute;
+    top: 20px;
+    right: 0;
+    height: 66%;
+    width: 100%;
+    img {
+      position: absolute;
+      display: none;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      background:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 20%),
+        linear-gradient(
+          0deg,
+          rgba(255, 255, 255, 1) 0%,
+          rgba(255, 255, 255, 0) 50%
+        );
+    }
+  }
+
+  .container {
+    @media (max-width: 500px) {
+      max-width: 90%;
+    }
+    &.block-webform-block {
+      background-color: $white;
+      padding: 20px !important;
+      border-radius: 16px;
+      z-index: 9;
+      position: relative;
+      max-width: 94%;
+      margin-top: 60px;
+
+      @media (min-width: 1200px) {
+        max-width: 1120px;
+        border-radius: 32px;
+        padding: 80px 72px 64px 72px !important;
+        margin-top: 120px;
+      }
+    }
+  }
+  .webform-submission-contact-form {
+    display: flex;
+    justify-content: space-between;
+
+    @media (max-width: 992px) {
+      gap: 30px;
+      flex-direction: column;
+    }
+
+    #edit-flexbox-01 {
+      flex: 1;
+      @media (max-width: 1024px) {
+        width: 40%;
+      }
+
+      @media (max-width: 992px) {
+        width: 100%;
+      }
+
+      h1 {
+        color: #192451;
+        line-height: 100%;
+        width: 423px;
+        @include primary-heading();
+        @media (min-width: 1024px) {
+          height: 63px;
+        }
+      }
+
+      .contact-desc {
+        color: rgba(51, 58, 77, 1);
+        font-size: 20px;
+        font-weight: 500;
+        padding: 20px 0;
+        letter-spacing: 0.5px;
+        line-height: 34px;
+
+        @media (max-width: 1024px) {
+          font-size: 16px;
+          font-weight: 400;
+          padding: 0;
+        }
+      }
+
+      .contact-info {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+
+        .contact-item {
+          position: relative;
+          padding-left: 60px;
+          font-size: 14px;
+
+          a {
+            display: block;
+            color: inherit;
+            font-size: inherit;
+            text-decoration: none;
+            line-height: 100%;
+            height: 25px;
+            //opacity: 0.6;
+          }
+
+          p {
+            margin-bottom: 0 !important;
+            opacity: 0.6;
+          }
+
+          strong {
+            display: block;
+            opacity: 1;
+            font-weight: 600;
+            font-size: 14px;
+            padding-bottom: 6px;
+          }
+
+          @mixin contact-icon($icon) {
+            &::before {
+              content: $icon;
+              font-family: $icon-fonts;
+              font-weight: 900;
+              position: absolute;
+              top: 0;
+              left: 0;
+              color: $primary;
+              font-size: 20px;
+              background-color: #e1eff1;
+              border-radius: 50%;
+              height: 46px;
+              width: 46px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+          }
+
+          &.email {
+            @include contact-icon("\f0e0");
+          }
+
+          &.phone {
+            @include contact-icon("\f095");
+          }
+
+          &.address {
+            @include contact-icon("\f3c5");
+          }
+
+          &.hours {
+            @include contact-icon("\f017");
+          }
+        }
+      }
+    }
+    #edit-flexbox-02 {
+      flex: 1;
+      flex-direction: column;
+      gap: 20px;
+      padding: 48px;
+      border: 1px solid #e1eff1;
+      border-radius: 20px;
+
+      @media (min-width: 992px) {
+        margin: 0 0 0 20px;
+      }
+
+      @media (max-width: 992px) {
+        width: 100%;
+        padding: 12px;
+      }
+
+      #edit-flexbox {
+        gap: 24px;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        @media (max-width: 520px) {
+          display: block;
+        }
+        .webform-flex--container {
+          margin: 0;
+        }
+      }
+
+      .form-actions {
+        .form-submit {
+          margin: 0;
+          @extend .global-btn;
+        }
+      }
+    }
+  }
+}

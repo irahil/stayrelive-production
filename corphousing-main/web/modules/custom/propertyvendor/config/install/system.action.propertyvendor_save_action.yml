@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - propertyvendor
+id: propertyvendor_save_action
+label: 'Save propertyvendors'
+type: propertyvendor
+plugin: entity:save_action:propertyvendor
+configuration: {  }

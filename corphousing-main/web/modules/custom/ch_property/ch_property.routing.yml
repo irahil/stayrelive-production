@@ -1,0 +1,47 @@
+ch_property.town_city_autocomplete:
+  path: '/ch-property/town-city-autocomplete/{field_name}/{count}'
+  defaults:
+    _controller: '\Drupal\ch_property\Controller\TownCityAutocompleteController::getCities'
+    _title: 'Town/City autocomplete'
+  requirements:
+    _permission: 'access content'
+  options:
+    parameters:
+      field_name:
+        type: 'string'
+      count:
+        type: 'integer'
+        
+request_booking.form:
+  path: '/form/request-boooking'
+  defaults:
+    _form: '\Drupal\ch_property\Form\RequestBookingForm'
+    _title: 'Request Booking'
+  requirements:
+    _permission: 'access content'
+  options:
+    _wrapper_format: TRUE
+
+ch_property.city_json:
+  path: '/city-autocomplete'
+  defaults:
+    _controller: '\Drupal\ch_property\Controller\TownCityAutocompleteController::getCities'
+  requirements:
+    _permission: 'access content'
+
+ch_property.cancel_booking:
+  path: '/cancel-booking/{submission_id}'
+  defaults:
+    _controller: '\Drupal\ch_property\Controller\BookingController::cancelBooking'
+    _title: 'Cancel Booking'
+  requirements:
+    _permission: 'access content'
+    submission_id: '\d+'
+
+ch_property.property_search:
+  path: '/property/search'
+  defaults:
+    _controller: '\Drupal\ch_property\Controller\PropertySearchController::searchPage'
+    _title: 'Property Search page'
+  requirements:
+    _permission: 'access content'

@@ -1,0 +1,115 @@
+{# ---------------------------------------------------------
+ # Property Search – Block 2 card
+ # Mirrors the Block 1 logic but simplified for the home grid.
+ # --------------------------------------------------------- #}
+
+{# Replicate Block 1 card markup using view fields #}
+
+{% set property_display_name = fields.field_display_name is defined
+  ? fields.field_display_name.content | render | striptags | trim
+  : '' %}
+{% set property_title_fallback = fields.title.content | render | striptags | trim %}
+{% set property_name = property_display_name ?: property_title_fallback %}
+
+{% set area_name = fields.field_area_name.content is defined
+  ? fields.field_area_name.content | render | striptags | trim
+  : '' %}
+{% set city_name = fields.field_city.content is defined
+  ? fields.field_city.content | render | striptags | trim
+  : '' %}
+
+{% set markup_price = fields.field_markup_price.content is defined
+  ? fields.field_markup_price.content | render | striptags | trim
+  : '' %}
+
+{% set property_nid = property_nid is defined ? property_nid : 0 %}
+
+{% set property_url = '#' %}
+
+{% for key in fields|keys %}
+  {% if property_url == '#' and (key starts with 'path' or key starts with 'link_to_content' or key starts with 'view_node' or key == 'view') %}
+    {% set raw_candidate = attribute(fields, key).content | render | trim %}
+    {% if raw_candidate %}
+      {% set candidate_url = raw_candidate %}
+      {% if 'href="' in raw_candidate %}
+        {% set href_parts = raw_candidate|split('href="') %}
+        {% if href_parts|length > 1 %}
+          {% set candidate_url = href_parts[1]|split('"')|first %}
+        {% endif %}
+      {% endif %}
+      {% set candidate_url = candidate_url|striptags|trim %}
+      {% if candidate_url %}
+        {% set property_url = candidate_url %}
+      {% endif %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{% if property_url == '#' and property_nid > 0 %}
+  {% set property_url = path('entity.node.canonical', {'node': property_nid}) %}
+{% endif %}
+
+<div class="card property-card property-card--featured"  data-aos-duration="3000">
+  <div class="property-card__media-wrapper">
+    {% if flag_link_custom is defined %}
+      <div class="property-card__favorite">
+        {{ flag_link_custom }}
+      </div>
+    {% elseif fields.link_flag is defined %}
+      <div class="property-card__favorite">
+        {{ fields.link_flag.content }}
+      </div>
+    {% endif %}
+
+    {% if property_url != '#' %}
+      <a href="{{ property_url }}">
+    {% endif %}
+    {% if fields.field_primary_media is defined and fields.field_primary_media.content %}
+      {{ fields.field_primary_media.content }}
+    {% else %}
+      <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1024&h=768&fit=crop"
+           alt="{{ property_name }}">
+    {% endif %}
+    {% if property_url != '#' %}
+      </a>
+    {% endif %}
+  </div>
+
+  <div class="card-body">
+    {% if property_url != '#' %}
+      <a href="{{ property_url }}">
+        <h4>{{ property_name }}</h4>
+      </a>
+    {% else %}
+      <h4>{{ property_name }}</h4>
+    {% endif %}
+
+    <div class="property-details">
+      <ul id="amenities" class="amenities">
+        {% set amenities_field = fields.field_amenities_1 ?? fields.field_amenities ?? null %}
+        {% set amenities_raw = amenities_field and amenities_field.content is defined
+          ? amenities_field.content|render|striptags
+          : '' %}
+        {% set amenities = amenities_raw|split(',') %}
+        {% for amenity in amenities|slice(0, 3) %}
+          {% set amenity_clean = amenity|trim %}
+          {% if amenity_clean %}
+            {% set amenity_slug = amenity_clean|lower|replace({' ':'-', '/':'-'}) %}
+            <li class="amenity-icon amenity-icon--{{ amenity_slug }} {{ amenity_slug }}" title="{{ amenity_clean }}">
+              <span class="amenity-icon__visual"></span>
+              <span class="amenity-icon__label">{{ amenity_clean }}</span>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+
+      <div class="room-info">
+        {{ total_bedrooms|default(0) }} {{ 'Bed'|t }}, {{ total_bathrooms|default(0) }} {{ 'Bath'|t }}
+      </div>
+    </div>
+
+    <div class="price">
+      {{ 'From'|t }} <strong>₹{{ final_room_price is defined and final_room_price != '0' ? final_room_price : markup_price }}</strong>/night
+    </div>
+  </div>
+</div>

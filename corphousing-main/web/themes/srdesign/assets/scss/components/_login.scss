@@ -1,0 +1,148 @@
+.sr-container {
+  color: $white;
+  background: #f8f9fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 15px;
+  font-family: $primary-font;
+
+  a {
+    color: $primary;
+    text-decoration: underline;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .form-container {
+    color: $black;
+    background: $white;
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 500px;
+    margin: 40px 0;
+    width: 100%;
+    box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.1);
+
+    p {
+      img {
+        filter: invert(1);
+        height: 60px;
+      }
+    }
+
+    input:not([type="submit"]) {
+      border-radius: 40px;
+      border: 1px solid $primary;
+      transition: all 0.3s ease;
+      &:hover,
+      &:focus {
+        border: 1px solid $primary !important;
+      }
+    }
+
+    .form-actions {
+      margin-bottom: 0;
+    }
+
+    .open-auth-wrapper {
+      a {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        width: 100%;
+        font-size: 0.875rem;
+        text-align: center;
+        text-decoration: none;
+        color: #fff;
+        border-radius: 4px;
+        transition: background-color 0.3s, box-shadow 0.3s;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border-radius: 40px;
+      }
+      img {
+        height: 2.5rem;
+        border-radius: 40px;
+        margin: 0.25rem 1rem 0.25rem 0.25rem;
+      }
+      .google {
+        background-color: #4285f4;
+        display: none;
+        &:hover {
+          box-shadow: 0 2px 4px rgba(39, 54, 86, 0.14),
+            0 1px 10px rgba(39, 54, 86, 0.2);
+        }
+      }
+      .facebook {
+        background-color: #3b5998;
+        margin-top: 1rem;
+        display: none;
+        &:hover {
+          box-shadow: 0 2px 4px rgba(39, 54, 86, 0.14),
+            0 1px 10px rgba(39, 54, 86, 0.2);
+        }
+      }
+    }
+
+    .login-form__divider {
+      border-bottom: 1px solid #e3dede;
+      color: #273656;
+      font-size: 1rem;
+      line-height: 1.571rem;
+      margin-bottom: 1rem;
+      padding-top: 6px;
+      position: relative;
+      text-align: center;
+      display: none;
+
+      span {
+        color: $black;
+        background: $white;
+        padding: 0 0.625rem;
+        position: relative;
+        top: 10px;
+      }
+    }
+
+    .user-login-form {
+      .form-item__description {
+        color: $black;
+      }
+    }
+
+    .user-register-form {
+      details {
+        display: none;
+      }
+
+      // Hide Vendor ID field
+      .field--name-field-vendor-id,
+      #edit-field-vendor-id-wrapper {
+        display: none !important;
+      }
+    }
+
+    .form-submit {
+      color: $white;
+      font-weight: 400;
+      margin: 0 !important;
+      border-radius: 40px;
+      background-color: $primary;
+      font-family: $primary-font;
+      
+      &:hover {
+        background-color: $secondary !important;
+      }
+    }
+  }
+
+  .password-suggestions {
+    display: none;
+  }
+}
+
+#block-srdesign-socialauthlogin {
+  display: none !important;
+}

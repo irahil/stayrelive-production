@@ -1,0 +1,118 @@
+<?php
+
+use Drupal\user\UserInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+
+function sr_share_preprocess_block(&$variables) {
+  if ($variables['elements']['#plugin_id'] == 'share_button_block') {
+    $variables['#attached']['library'][] = 'sr_share/sr_share';
+  }
+}
+
+
+/**
+ * Implements hook_form_alter() to set destination for anonymous users.
+ */
+function sr_share_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  // Only proceed for anonymous users
+  if (\Drupal::currentUser()->isAnonymous()) {
+    // Handle login forms
+    if (in_array($form_id, ['user_login_form', 'user_login_block_form'])) {
+      $current_request = \Drupal::request();
+      $current_path = $current_request->getPathInfo();
+      
+      // Get the raw path (without language prefix if any)
+      $raw_path = $current_request->getRequestUri();
+      
+      // Exclude certain paths where we don't want to redirect back
+      $excluded_paths = [
+        '/user/login',
+        '/user/register',
+        '/user/password',
+        '/user/logout',
+      ];
+      
+      if (!in_array($current_path, $excluded_paths)) {
+        $session = \Drupal::service('session');
+        
+        // Store both the alias and system path to handle all cases
+        $destination = $raw_path;
+        
+        // If we're on a node page, store the node ID for potential flagging
+        if ($node = \Drupal::routeMatch()->getParameter('node')) {
+          if (is_object($node)) {
+            $session->set('flag_node_id', $node->id());
+          }
+        }
+        
+        // Store destination in session for later use in form submission
+        $session->set('sr_share_destination', $destination);
+        
+        // Add custom submit handler to handle redirect after login
+        $form['#submit'][] = 'sr_share_login_redirect';
+      }
+    }
+  }
+}
+
+/**
+ * Custom submit handler for login form to handle redirects.
+ */
+function sr_share_login_redirect(array &$form, FormStateInterface $form_state) {
+  $session = \Drupal::service('session');
+  $destination = $session->get('sr_share_destination');
+  
+  // Only set redirect if we have a destination and no other redirect is already set
+  if ($destination && !$form_state->getRedirect()) {
+    // Clear the destination from session
+    $session->remove('sr_share_destination');
+    
+    // Ensure the destination is properly formatted
+    $destination = ltrim($destination, '/');
+    
+    try {
+      $url = Url::fromUserInput('/' . $destination);
+      // If fromUserInput succeeds without exception, the URL is valid
+      $form_state->setRedirectUrl($url);
+    } catch (\Exception $e) {
+      \Drupal::logger('sr_share')->error('Invalid destination URL in login redirect: ' . $destination . ' - ' . $e->getMessage());
+    }
+  }
+}
+
+/**
+ * Implements hook_user_login().
+ * 
+ * Note: This hook should NOT perform redirects as it runs during the login
+ * process and can break the normal login flow. Redirects should be handled
+ * in form submission handlers.
+ */
+function sr_share_user_login(UserInterface $account) {
+  $session = \Drupal::service('session');
+
+  // Retrieve the flag_node_id from the session.
+  $flag_node_id = $session->get('flag_node_id');
+
+  // Process flagging if a flag_node_id is set.
+  if ($flag_node_id) {
+    $node = \Drupal\node\Entity\Node::load($flag_node_id);
+    if ($node) {
+      $flag_service = \Drupal::service('flag');
+      $flag = $flag_service->getFlagById('favourite');
+      if ($flag) {
+        $flagging = $flag_service->getFlagging($flag, $node, $account);
+
+        if (!$flagging) {
+          $flag_service->flag($flag, $node, $account);
+        }
+      }
+    }
+    // Clear the flag_node_id after processing
+    $session->remove('flag_node_id');
+  }
+  
+  // Note: Redirects are now handled in the form submission handler
+  // (sr_share_login_redirect) which uses Drupal's standard FormState
+  // redirect mechanism instead of using exit() which can break the login flow.
+}

@@ -1,0 +1,490 @@
+#block-srdesign-views-block-user-bookings-block-1 {
+    background: #f4f6f9;
+    padding: 60px 220px;
+    min-height: calc(100vh - 200px);
+    @include media-breakpoint-down(xl) {
+        padding: 60px 80px;
+    }
+    @include media-breakpoint-down(lg) {
+        padding: 40px 40px;
+    }
+    @include media-breakpoint-down(sm) {
+        padding: 30px 20px;
+    }
+    
+    .tabs {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-direction: row;
+        gap: 40px;
+        margin-bottom: 32px;
+        border-bottom: 1px solid #d1d5db !important;
+        flex-wrap: wrap;
+        box-shadow: none;
+        border: none;
+        .tab {
+            position: relative;
+            padding: 12px 0;
+            font-weight: 500;
+            font-size: 15px;
+            color: rgba(51, 58, 77, 0.8);
+            cursor: pointer;
+            border: none;
+            background: none;
+            transition: all 0.3s ease;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            font-family: $primary-font;
+            &:focus {
+                outline: none !important;
+                box-shadow: none !important;
+            }
+            &.active {
+                color: $primary;
+                font-weight: 600;
+                &::after {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    bottom: -1px;
+                    width: 100%;
+                    height: 3px;
+                    background: $primary;
+                    border-radius: 2px;
+                }
+            }
+        }
+        @include media-breakpoint-down(md) {
+            gap: 24px;
+            font-size: 13px;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+    }
+    
+    .tab-content {
+        display: none;
+        &.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+        p {
+            text-align: center;
+            color: rgba(51, 58, 77, 0.8);
+            padding: 40px 0;
+            font-size: 15px;
+        }
+    }
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .view-header {
+        margin-bottom: 40px;
+        h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: $secondary;
+            margin-bottom: 8px;
+            font-family: $primary-font;
+            @include media-breakpoint-down(md) {
+                font-size: 26px;
+            }
+            @include media-breakpoint-down(sm) {
+                font-size: 24px;
+            }
+        }
+        p {
+            color: rgba(51, 58, 77, 0.8);
+            font-size: 15px;
+            margin-bottom: 0;
+            font-family: $primary-font;
+            @include media-breakpoint-down(sm) {
+                font-size: 14px;
+            }
+        }
+    }
+    
+    .my-bookings {
+        background: none !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        .booking-card {
+            display: flex;
+            background: $white;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+            &:hover {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+            
+            img {
+                width: 280px;
+                min-width: 280px;
+                height: 200px;
+                object-fit: cover;
+                border-radius: 8px;
+                margin: 16px;
+                background-color: #f3f4f6;
+                @include media-breakpoint-down(lg) {
+                    width: 240px;
+                    min-width: 240px;
+                }
+            }
+            
+            .booking-info {
+                flex: 1;
+                padding: 24px 20px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                .booking-id {
+                    font-size: 13px;
+                    color: rgba(51, 58, 77, 0.8);
+                    margin-bottom: 8px;
+                    font-family: $primary-font;
+                    strong {
+                        color: $secondary;
+                        font-weight: 600;
+                    }
+                }
+                h3 {
+                    font-size: 20px;
+                    font-weight: 600;
+                    color: $secondary;
+                    margin: 0 0 6px 0;
+                    line-height: 1.3;
+                    font-family: $primary-font;
+                    @include media-breakpoint-down(lg) {
+                        font-size: 18px;
+                    }
+                }
+                .location {
+                    font-size: 14px;
+                    font-weight: 500;
+                    text-align: start;
+                    color: rgba(51, 58, 77, 0.8);
+                    margin: 0 0 20px 0;
+                    font-family: $primary-font;
+                    border-bottom: 1px solid rgba(0, 0, 0, 0.24);
+                    padding: 0 0 10px 0;
+                }
+                .meta {
+                    display: flex;
+                    align-items: center;
+                    gap: 32px;
+                    font-size: 14px;
+                    color: rgba(51, 58, 77, 0.6);
+                    font-family: $primary-font;
+                    span {
+                        display: flex;
+                        flex-direction: column;
+                        color: $secondary;
+                        gap: 8px;
+                        padding-left: 32px;
+                        position: relative;
+                        strong {
+                            color: $secondary;
+                            font-weight: 600;
+                        }
+                        &::before {
+                            content: '';
+                            position: absolute;
+                            left: 0;
+                            height: 24px;
+                            width: 24px;
+                            background-size: contain;
+                            background-repeat: no-repeat;
+                            background-position: center;
+                        }
+                    }
+                    .meta-date::before {
+                        background-image: url(/themes/srdesign/assets/images/common/calender.png);
+                    }
+                    .meta-travellers::before {
+                        background-image: url(/themes/srdesign/assets/images/common/profile.png);
+                    }
+                    @include media-breakpoint-down(md) {
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 8px;
+                    }
+                }
+            }
+            
+            .booking-price {
+                min-width: 220px;
+                border-left: 1px solid #e5e7eb;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                padding: 24px;
+                
+                .price {
+                    font-size: 28px;
+                    font-weight: 700;
+                    color: $secondary;
+                    margin-bottom: 4px;
+                    font-family: $primary-font;
+                }
+                
+                .tax-note {
+                    font-size: 12px;
+                    color: #9ca3af;
+                    margin-bottom: 16px;
+                    font-family: $primary-font;
+                }
+                
+                .btn {
+                    width: 100%;
+                    padding: 12px 20px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    font-family: $primary-font;
+                    border: none;
+                    margin-bottom: 8px;
+                    
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                }
+                
+                .btn-primary {
+                    @extend .global-btn;
+                    background: #0891b2;
+                    color: $white;
+                    border: 1px solid #0891b2;
+                    
+                    &:hover {
+                        background: #0e7490;
+                        border-color: #0e7490;
+                    }
+                }
+                
+                .btn-outline-danger {
+                    background: transparent;
+                    border: 1px solid #ef4444;
+                    color: #ef4444;
+                    
+                    &:hover {
+                        background: #fef2f2;
+                    }
+                }
+                
+                @include media-breakpoint-down(md) {
+                    border-left: none;
+                    border-top: 1px solid #e5e7eb;
+                    min-width: 100%;
+                }
+            }
+            
+            @include media-breakpoint-only(md) {
+                flex-direction: column;
+                margin-left: auto;
+                margin-right: auto;
+                
+                img {
+                    width: 100%;
+                    min-width: 100%;
+                    height: auto;
+                    margin: 0;
+                    border-radius: 0;
+                    border-top-left-radius: 12px;
+                    border-top-right-radius: 12px;
+                }
+                
+                .booking-info {
+                    padding: 16px;
+                    
+                    .booking-id {
+                        font-size: 12px;
+                        margin-bottom: 6px;
+                    }
+                    
+                    h3 {
+                        font-size: 17px;
+                        margin-bottom: 8px;
+                    }
+                    
+                    .location {
+                        font-size: 13px;
+                        margin-bottom: 16px;
+                        padding-bottom: 16px;
+                    }
+                    
+                    .meta {
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 12px;
+                        margin-top: 0;
+                        
+                        span {
+                            font-size: 13px;
+                            gap: 4px;
+                            padding-left: 28px;
+                            
+                            &::before {
+                                height: 20px;
+                                width: 20px;
+                            }
+                        }
+                    }
+                }
+                
+                .booking-price {
+                    width: 100%;
+                    min-width: 100%;
+                    border-left: none;
+                    border-top: 1px solid #e5e7eb;
+                    padding: 16px;
+                    
+                    .price {
+                        font-size: 24px;
+                        margin-bottom: 4px;
+                    }
+                    
+                    .tax-note {
+                        font-size: 11px;
+                        margin-bottom: 12px;
+                    }
+                    
+                    .btn {
+                        width: 100%;
+                        padding: 10px 16px;
+                        font-size: 13px;
+                        margin-bottom: 8px;
+                        margin-top: 0;
+                        
+                        &:last-child {
+                            margin-bottom: 0;
+                        }
+                    }
+                }
+            }
+            
+            @include media-breakpoint-down(sm) {
+                flex-direction: column;
+                img {
+                    width: 100%;
+                    min-width: 100%;
+                    height: 200px;
+                    margin: 0;
+                    border-radius: 0;
+                }
+                .booking-info {
+                    padding: 20px;
+                    .meta {
+                        margin-top: 16px;
+                    }
+                }
+                .booking-price {
+                    width: 100%;
+                    min-width: 100%;
+                    border-left: none;
+                    border-top: 1px solid #e5e7eb;
+                    padding: 20px;
+                    .price {
+                        font-size: 24px;
+                    }
+                    .btn {
+                        width: 100%;
+                        margin-top: 10px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Admin management page scss
+
+$primary-color: #0b8fa0;
+$primary-hover: #087784;
+$text-color: #333;
+$bg-color: #fff;
+$border-color: #eee;
+
+table.booking-admin-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 14px;
+  background-color: $bg-color;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  thead {
+    tr {
+      th {
+        background: $primary-color;
+        color: #fff;
+        text-align: left;
+        padding: 18px 22px;
+        font-weight: 700;
+        font-size: 14px;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: #f9f9f9;
+      }
+
+      td {
+        padding: 12px 16px;
+        vertical-align: top;
+        color: $text-color;
+        border-bottom: 1px solid $border-color;
+
+        strong {
+          display: inline-block;
+          width: 90px;
+          font-weight: 600;
+          color: $primary-color;
+        }
+
+        a.btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          text-decoration: none;
+          border-radius: 6px;
+          padding: 6px 12px;
+          font-size: 14px;
+          font-weight: 500;
+
+          &.btn-primary {
+            background-color: $primary-color;
+            color: #fff;
+
+            &:hover {
+              background-color: $primary-hover;
+            }
+          }
+        }
+      }
+    }
+  }
+}

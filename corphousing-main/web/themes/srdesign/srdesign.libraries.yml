@@ -1,0 +1,85 @@
+srdesign:
+  version: VERSION
+  css:
+    theme:
+      assets/css/style.css: {}
+      https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css: {}
+      https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css: {}
+      https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap: { type: external, minified: true }
+
+
+  js:
+    https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js: { type: external }
+    assets/js/lenis.min.js: {}
+    assets/js/script.js: {}
+
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery
+    - core/once
+    - srdesign/aos
+    - srdesign/gsap
+
+flexslider:
+  version: 2.x
+  css:
+    theme:
+      https://cdnjs.cloudflare.com/ajax/libs/flexslider/2.7.2/flexslider.min.css: {}
+  js:
+    https://cdnjs.cloudflare.com/ajax/libs/flexslider/2.7.2/jquery.flexslider-min.js: { type: external, minified: true }
+  dependencies:
+    - core/jquery
+
+gsap:
+  version: 3.x
+  js:
+    https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js: { type: external, minified: true }
+
+aos:
+  version: 2.3.4
+  css:
+    theme:
+      https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css: { type: external }
+  js:
+    https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js: { type: external, minified: true }
+
+leaflet:
+  version: 1.9.4
+  css:
+    theme:
+      https://unpkg.com/leaflet@1.9.4/dist/leaflet.css: {}
+  js:
+    https://unpkg.com/leaflet@1.9.4/dist/leaflet.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+
+property_map:
+  version: 1.x
+  js:
+    assets/js/property-map.js: {}
+    # https://maps.googleapis.com/maps/api/js?key=AIzaSyBd7hoeq3JClkyQ2MQ33_jqPbzRhuB1WiA&libraries=places&callback=initMap: { type: external, attributes: { async: true, defer: true } }
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery
+    - core/once
+
+property_search:
+  version: 1.x
+  js:
+    assets/js/property-search.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+
+property_list:
+  version: 1.x
+  js:
+    assets/js/property-list.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/drupal.dialog
+    - core/once

@@ -1,0 +1,93 @@
+/* Hide the share button in specific context */
+.page-node-type-property .apartment-photos > .container-fluid > .row .block-share-button-block > button {
+    display: none;
+}
+
+/* Modal dialog styling */
+.block-share-button-block .modal .modal-dialog {
+    border: 0;
+}
+
+/* Modal body layout */
+.block-share-button-block .modal-body .share-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Share option containers */
+.block-share-button-block .modal-body .share-option {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Input field styling */
+.block-share-button-block .modal-body .share-option input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Clickable spans and links */
+.block-share-button-block .modal .modal-dialog span,
+.block-share-button-block .modal .modal-dialog a {
+    cursor: pointer;
+    padding: 10px 10px 10px 46px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+    display: block;
+    transition: background-color 0.3s ease;
+}
+
+.block-share-button-block .modal .modal-dialog span:hover,
+.block-share-button-block .modal .modal-dialog a:hover {
+    background-color: #f5f5f5;
+}
+
+/* Copy URL icon */
+.block-share-button-block .modal .modal-dialog .copy-url span {
+    background: url(../images/copy.png) no-repeat;
+    background-size: 24px;
+    background-position: 10px center;
+}
+
+/* WhatsApp icon */
+.block-share-button-block .modal .modal-dialog .share-whatsapp span {
+    background: url(../images/whatsapp.png) no-repeat;
+    background-size: 24px;
+    background-position: 10px center;
+}
+
+/* PDF download icon */
+.block-share-button-block .modal .modal-dialog .download-pdf a {
+    background: url(../images/pdf.png) no-repeat;
+    background-size: 24px;
+    background-position: 10px center;
+    padding-left: 46px;
+}
+
+.block-share-button-block .modal .modal-dialog .download-pdf a:focus {
+    outline: none;
+}
+
+/* Modal header styling */
+.block-share-button-block .modal-header {
+    border-bottom: 1px solid #dee2e6;
+    padding: 1rem;
+}
+
+.block-share-button-block .modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Close button */
+.block-share-button-block .btn-close {
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+}

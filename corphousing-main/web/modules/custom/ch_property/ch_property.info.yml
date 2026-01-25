@@ -1,0 +1,8 @@
+name: Corporate Housing Property
+type: module
+description: 'Custom property management and search functionality'
+core_version_requirement: ^10
+package: Custom
+
+libraries:
+  - core/jquery.ui.autocomplete

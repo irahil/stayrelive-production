@@ -1,0 +1,13 @@
+sr_share:
+  css:
+    theme:
+      css/sr_share.css: {}
+  js:
+    js/sr_share.js: {}
+    js/favourites.js: {}
+  dependencies:
+    - core/jquery
+    - core/bootstrap
+    - core/drupalSettings
+    - core/once
+    - core/drupal

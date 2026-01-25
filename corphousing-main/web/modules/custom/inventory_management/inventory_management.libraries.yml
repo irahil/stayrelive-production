@@ -1,0 +1,4 @@
+property_list:
+  dependencies:
+    - srdesign/property_list
+
