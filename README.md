@@ -5,7 +5,7 @@ This project includes features like apartment search and bookings, host dashboar
 
 | Layer               | Technologies                                                |
 | ------------------- | ----------------------------------------------------------- |
-| **Frontend**        | HTML, CSS, jQUERY |
+| **Frontend**        | HTML, CSS, JAVASCRIPT |
 | **Backend**         | DRUPAL |
 | **Database**        | MySQL |
 | **Deployment**      | GITHUB |
@@ -14,6 +14,7 @@ This project includes features like apartment search and bookings, host dashboar
 
 Live Website
 https://stayrelive.com/
+https://corphousing.in/
 
 
 
