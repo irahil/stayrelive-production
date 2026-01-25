@@ -87,6 +87,7 @@ class Importer {
 
     public static function getTaxonomyTerms($arr_term_name, $taxonomy_machine_name) {
         $tid = [];
+        $tids = [];
         if(!is_array($arr_term_name) && $arr_term_name != "") {
             $str_term_name = $arr_term_name;
             unset($arr_term_name);

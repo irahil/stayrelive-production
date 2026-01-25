@@ -5,6 +5,7 @@ sr_lib:
   dependencies:
     - core/jquery
     - core/drupal
+    - core/once
 sr_autocomplete_lib:
   version: VERSION
   css:

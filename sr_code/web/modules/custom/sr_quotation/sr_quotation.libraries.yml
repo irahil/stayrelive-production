@@ -15,3 +15,36 @@ quotation-dashboard-style:
   css:
     theme:
       css/quotation-dashboard-style.css: {}
+
+quotation-pdf-preview:
+  css:
+    theme:
+      https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css: { type: external }
+  dependencies:
+    - srdesign/srdesign
+
+# dropzone_cropper:
+#   version: 1.x
+#   css:
+#     theme:
+#       css/quotation-form.css: {}
+
+#   js:
+#     js/dropzone-cropper.js: {}
+#   dependencies:
+#     - dropzonejs/dropzonejs
+#     - sr_quotation/cropper
+
+dropzone-cropper:
+  css:
+    theme:
+      /libraries/cropperjs/dist/cropper.min.css: { type: external }
+      css/quotation-form.css: {}
+  js:
+    /libraries/cropperjs/dist/cropper.min.js: { type: external }
+    js/dropzone-cropper.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - dropzonejs/dropzonejs

@@ -187,21 +187,6 @@ button[type="submit"]:hover {
   margin-bottom: 1.5rem;
 }
 
-/* .amenities-section label {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1.5px solid #cfd8dc;
-  border-radius: 10px;
-  padding: 10px 18px;
-  font-size: 14px;
-  background: #fff;
-  color: #333;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-weight: 500;
-} */
-
 .quotation-form-page .amenities-section .form-checkboxes .js-form-type-checkbox{
     display: flex;
     align-items: center;
@@ -224,18 +209,45 @@ ease;
   top:0;
 }
 
-/* .amenities-section input[type="checkbox"],
-.amenities-section input[type="radio"] {
-  display: none;
-} */
+/* ===== Amenities Scroll Container ===== */
+.amenities-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
-/* .amenities-section input[type="checkbox"]:checked + label,
-.amenities-section input[type="radio"]:checked + label {
-  background: #e8f6ff;
-  border-color: #0074b8;
-  color: #0074b8;
-  box-shadow: inset 0 0 0 2px #0074b8;
-} */
+.amenities-search {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #cfd8dc;
+  font-size: 14px;
+  background: #f7fbfc;
+}
+
+.amenities-scroll {
+  max-height: 330px;
+  overflow-y: auto;
+  padding-right: 6px;
+  border: 1px solid #d6e4ed;
+  border-radius: 10px;
+  background: #f9fdff;
+}
+
+.amenities-scroll .form-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  padding: 10px;
+}
+
+.amenities-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.amenities-scroll::-webkit-scrollbar-thumb {
+  background: #b0d6e5;
+  border-radius: 4px;
+}
+
 
 /* --- Section Titles --- */
 .quotation-form-page .quotation-form-sections .fieldset__label {
@@ -310,3 +322,193 @@ ease;
     font-size: 1.125rem;
     max-width: 50rem;
 }
+
+.quotation-form-page .dropzone {
+  border: 2px dashed #0074b8;
+  padding: 20px;
+  border-radius: 10px;
+  background: #f6fbff;
+}
+
+.quotation-form-page .dropzone .dz-message {
+  font-size: 18px;
+  color: #00567e;
+}
+
+
+/* crop image model css start  */
+
+/* ======= FULLSCREEN DARK BACKDROP ======= */
+.cropper-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  overflow: hidden;
+  opacity: 1;
+}
+
+/* ======= MODAL BOX ======= */
+.cropper-container {
+  background: #ffffff;
+  padding: 15px;
+  width: 890px;
+  height: 600px;
+  max-width: 95vw;
+  max-height: 85vh;
+  border-radius: 12px;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ======= ACTION BUTTONS & CROPPER CONTROLS ======= */
+.cropper-container .cropper-controls {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+  z-index: 1;
+}
+
+/* ===== Toolbar ===== */
+.cropper-container .cropper-controls .cropper-toolbar {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0 15px 0;
+  justify-content: center;
+}
+
+.cropper-toolbar button {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px; /* Ensures uniform square buttons */
+  height: 42px;
+}
+
+/* Icon size & spacing */
+.cropper-toolbar button i {
+  font-size: 18px;
+  color: #333;
+}
+
+/* Hover effect */
+.cropper-toolbar button:hover {
+  background: #0B8D9F;
+  color: #fff;
+  border-color: #0B8D9F;
+  transform: translateY(-1px);
+}
+
+.cropper-toolbar button:hover i {
+  color: #fff;
+}
+
+.cropper-container .cropper-controls .cropper-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.cropper-btn {
+  padding: 12px 25px;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  height: 44px;
+  min-width: 120px;
+  text-align: center;
+}
+
+.cropper-btn.crop-btn {
+  background: #0B8D9F;
+}
+
+.cropper-btn.crop-btn:hover {
+  background: #0B8D9F;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 116, 217, 0.3);
+}
+
+.cropper-btn.cancel-btn {
+  background: #6c757d;
+}
+.cropper-btn#crop-image-btn {
+  background-color: #0B8D9F;
+  color: rgb(214, 238, 242);
+}
+.cropper-btn#crop-image-btn:hover {
+  background-color: rgb(214, 238, 242);
+  color: #0B8D9F;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 116, 217, 0.3);
+}
+.cropper-btn.cancel-btn {
+  background: #6c757d;
+}
+
+.cropper-btn.cancel-btn:hover {
+  background: #5a6268;
+  transform: translateY(-1px);
+}
+
+/* Ensure buttons are clickable */
+.cropper-btn:active {
+  transform: translateY(0);
+}
+
+.quotation-form-sections .dropzone .dz-preview.dz-image-preview{
+  background: #fff;
+  z-index: 0;
+}
+
+
+
+/* Mobile Responsive */
+@media(max-width: 480px) {
+  .cropper-container {
+    width: 95vw;
+    max-height: 90vh;
+  }
+  .cropper-container img {
+    max-height: 50vh;
+  }
+  .cropper-actions {
+    flex-direction: column;
+  }
+  .cropper-btn {
+    width: 100%;
+  }
+}
+
+
+
+
+
+/* crop image model css end  */
+
+
+
+/* ===== Toolbar Buttons (Font Awesome Icons) ===== */
+

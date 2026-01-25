@@ -1,0 +1,69 @@
+.property-hero {
+  @extend .bdr-radius;
+}
+
+.list-columns {
+  @include media-breakpoint-up(sm) {
+    column-count: 2;
+    column-gap: 20px;
+  }
+
+  li {
+    display: inline-block;
+    width: 100%;
+    padding-bottom: 20px;
+    span {
+      color: $primary;
+      display: block;
+      font-weight: bold;
+    }
+  }
+}
+
+.quote-wrapper {
+  @extend .bdr-radius;
+  border: 2px solid $medium-grey;
+  color: $secondary;
+  position: relative;
+  padding: toRem(25);
+
+  @include media-breakpoint-down(xl) {
+    margin-bottom: toRem(20);
+  }
+
+  h4 {
+    padding: toRem(20) toRem(25) toRem(25) toRem(90);
+    font-size: toRem(36);
+
+    @include media-breakpoint-down(md) {
+      font-size: toRem(30);
+    }
+    &::before {
+      content: "";
+      display: block;
+      background-size: contain;
+      background-repeat: no-repeat;
+      position: absolute;
+      top: toRem(20);
+      left: toRem(20);
+      height: toRem(78);
+      width: toRem(78);
+    }
+
+    &.icon-one::before {
+      background-image: url("../images/home/icon-booking.png");
+    }
+
+    &.icon-two::before {
+      background-image: url("../images/home/icon-bespoke.png");
+    }
+
+    &.icon-three::before {
+      background-image: url("../images/home/icon-safety.png");
+    }
+
+    &.icon-four::before {
+      background-image: url("../images/home/icon-hospitality.png");
+    }
+  }
+}

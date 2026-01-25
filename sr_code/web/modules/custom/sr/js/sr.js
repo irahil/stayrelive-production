@@ -218,3 +218,19 @@ jQuery(document).ready(function () {
       jQuery(this).hide(); // Hide clear button after clearing field
   });
 });
+
+(function (Drupal, once) {
+  Drupal.behaviors.autoSubmitPriceForm = {
+    attach: function (context) {
+      once('auto-submit-price', '#flatpickr_date_range', context).forEach(function (element) {
+
+        element.addEventListener('change', function () {
+          if (element.value.includes(' to ')) {
+            element.closest('form').submit();
+          }
+        });
+
+      });
+    }
+  };
+})(Drupal, once);

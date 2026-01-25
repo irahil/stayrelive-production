@@ -348,7 +348,7 @@ class PropertySearchForm extends FormBase {
     $to_date = new DrupalDateTime($to_date);
     $booking_days = $to_date->diff($from_date)->format("%a");
 
-    $search_perm['query']['property_source'] = array('plumguide', 'ratehawk', 'interhome');
+    $search_perm['query']['property_source'] = array('plumguide', 'ratehawk', 'interhome', 'spacest');
 
     if ($booking_days >= 30) {
       array_push($search_perm['query']['property_source'], 'homelike');

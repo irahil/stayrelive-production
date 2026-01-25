@@ -73,6 +73,9 @@ class ImportProperty implements ContainerInjectionInterface {
             case 'plumguide':
                 CsvParser::parse($property_name, $arr_property);
             break;
+            case 'spacest':
+                JsonParser::parse($property_name, $arr_property);
+            break;
             default:
         }
     }
@@ -97,13 +100,21 @@ class ImportProperty implements ContainerInjectionInterface {
                     array_map('unlink', glob("{$private_path_to_process}*.".$arr_property['file_type']));
 
                     $file_name = date("Y-m-d-H-i-s")."_".$property_name.".".$arr_property['file_type'];
-                    $response = $client->request('GET', $arr_property['download']['endpoint'], [
-                        'sink' => $private_path_to_process.$file_name,
-                        'auth' => [
-                            $arr_property['download']['username'],
-                            $arr_property['download']['password']
-                        ]
-                    ]);
+
+                    if (!isset($arr_property['download']['username']) || $arr_property['download']['username'] == ''
+                        || !isset($arr_property['download']['password']) || $arr_property['download']['password'] == '') {
+                        $response = $client->request('GET', $arr_property['download']['endpoint'], [
+                            'sink' => $private_path_to_process.$file_name
+                        ]);
+                    } else {
+                        $response = $client->request('GET', $arr_property['download']['endpoint'], [
+                            'sink' => $private_path_to_process.$file_name,
+                            'auth' => [
+                                $arr_property['download']['username'],
+                                $arr_property['download']['password']
+                            ]
+                        ]);
+                    }
 
                     $result = json_decode($response->getBody(), TRUE);
 

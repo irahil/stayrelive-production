@@ -17,14 +17,24 @@ function sr_quotation_theme($existing, $type, $theme, $path) {
         'add_link' => NULL,
       ],
       'template' => 'quotation-dashboard',
-      // 'path' => drupal_get_path('module', 'sr_quotation') . '/templates',
     ],
     'pdf__quotation' => [
       'variables' => [
-        'record' => NULL,
+        'data' => [],
         'image_urls' => [],
+        'location_screenshot_urls' => [],
       ],
       'template' => 'pdf--quotation',
+      'path' => $module_path . '/templates',
+    ],
+    // 🆕 HTML PREVIEW TEMPLATE
+    'quotation_preview' => [
+      'variables' => [
+        'data' => [],
+        'image_urls' => [],
+        'location_screenshot_urls' => [],
+      ],
+      'template' => 'quotation-preview',
       'path' => $module_path . '/templates',
     ],
   ];

@@ -18477,7 +18477,11 @@ main li,
 .pager__items li.pager__item--ellipsis {
   display: none;
 }
-.pager__items .pager__item--first .pager__link, .pager__items .pager__item-title--backwards .pager__link, .pager__items .pager__item--previous .pager__link, .pager__items .pager__item--next .pager__link, .pager__items .pager__item--last .pager__link {
+.pager__items .pager__item--first .pager__link,
+.pager__items .pager__item-title--backwards .pager__link,
+.pager__items .pager__item--previous .pager__link,
+.pager__items .pager__item--next .pager__link,
+.pager__items .pager__item--last .pager__link {
   background-color: transparent;
   color: #0B8D9F;
 }
@@ -18494,14 +18498,16 @@ form input[type=date]::-webkit-inner-spin-button,
 form input[type=date]::-webkit-calendar-picker-indicator {
   display: block;
 }
-form input.form-element, form select.form-element {
+form input.form-element,
+form select.form-element {
   background-color: rgb(214, 238, 242);
   color: #192452;
   border-radius: 5.625rem;
   font-size: 1.125rem;
   max-width: 25rem;
 }
-form input.form-element::focus, form select.form-element::focus {
+form input.form-element::focus,
+form select.form-element::focus {
   border-radius: 5.625rem;
 }
 form .form-textarea-wrapper textarea {
@@ -18582,13 +18588,16 @@ form .form-actions {
   border: 3px solid #192452 !important;
   padding: 1.25rem;
 }
-.flatpickr-calendar .flatpickr-next-month, .flatpickr-calendar .flatpickr-prev-month {
+.flatpickr-calendar .flatpickr-next-month,
+.flatpickr-calendar .flatpickr-prev-month {
   padding: 0 !important;
 }
-.flatpickr-calendar .flatpickr-next-month:hover svg, .flatpickr-calendar .flatpickr-prev-month:hover svg {
+.flatpickr-calendar .flatpickr-next-month:hover svg,
+.flatpickr-calendar .flatpickr-prev-month:hover svg {
   fill: #0B8D9F;
 }
-.flatpickr-calendar .flatpickr-weekdays .flatpickr-weekdaycontainer, .flatpickr-calendar .flatpickr-days .dayContainer {
+.flatpickr-calendar .flatpickr-weekdays .flatpickr-weekdaycontainer,
+.flatpickr-calendar .flatpickr-days .dayContainer {
   padding-right: 10px;
   border-right: 2px dashed #0B8D9F;
 }
@@ -18617,14 +18626,14 @@ form .form-actions {
 }
 .flatpickr-calendar .flatpickr-day.endRange:hover {
   background: #0B8D9F;
-  border-color: #1C234F;
+  border-color: #1c234f;
   color: #fff;
 }
 .flatpickr-calendar .flatpickr-day.inRange {
-  background-color: #d1d1d1 !important;
+  background-color: #bbdfe4 !important;
   border-width: 0 !important;
   color: #192452;
-  box-shadow: -5px 0 0 #d1d1d1, 5px 0 0 #d1d1d1 !important;
+  box-shadow: -5px 0 0 #bbdfe4, 5px 0 0 #bbdfe4 !important;
 }
 
 .gm-style a {
@@ -18668,16 +18677,24 @@ form .form-actions {
   display: none;
 }
 
-.text-formatted .page-header, .contact-form .page-header, .page-header.page-content {
+.text-formatted .page-header,
+.contact-form .page-header,
+.page-header.page-content {
   background-color: #0B8D9F;
   display: block;
   padding: 3.125rem 0;
   margin-bottom: 50px;
 }
-.text-formatted .page-header h3, .text-formatted .page-header .h3, .contact-form .page-header h3, .contact-form .page-header .h3, .page-header.page-content h3, .page-header.page-content .h3 {
+.text-formatted .page-header h3, .text-formatted .page-header .h3,
+.contact-form .page-header h3,
+.contact-form .page-header .h3,
+.page-header.page-content h3,
+.page-header.page-content .h3 {
   color: #fff;
 }
-.text-formatted .page-header img, .contact-form .page-header img, .page-header.page-content img {
+.text-formatted .page-header img,
+.contact-form .page-header img,
+.page-header.page-content img {
   display: none;
 }
 
@@ -18693,14 +18710,14 @@ form .form-actions {
   padding-left: 0;
 }
 
-.bdr-radius, .approach-section img, .approach-section, .founder-bgwrapper, .home-hero.about img::after, .home-hero.about .home-hero-image img, .about-header img,
+.bdr-radius, .quote-wrapper, .property-hero, .approach-section img, .approach-section, .founder-bgwrapper, .home-hero.about img::after, .home-hero.about .home-hero-image img, .about-header img,
 .about-rowone img,
 .about-rowtwo img,
 .about-rowthree img, .sr-featured .featured-wrapper .card, .sr-featured .featured-wrapper, .booking-type, .sr-types .sr-type-image, .sr-types .sr-types-wrapper, .simplify-search .simplify-wrapper, .why-we .why-we-wrapper, .city-carousel .cities-wrapper .city-wrapper a::after, .city-carousel .cities-wrapper .city-wrapper img, .city-carousel .cities-wrapper .city-wrapper, .view-hero-slider .view-content .slick-slide .slide__caption .slide__description video, .view-hero-slider .view-content .slick-slide .slide__caption .slide__description .field__item img, .view-hero-slider .view-content .slick-slide .slide__caption .slide__description .field__item::before, .home-hero .home-hero-image video, .home-hero .home-hero-image img, .home-hero .home-hero-image::after, .home-hero .home-hero-image::before {
   border-radius: 0.625rem;
 }
 @media (min-width: 768px) {
-  .bdr-radius, .approach-section img, .approach-section, .founder-bgwrapper, .home-hero.about img::after, .home-hero.about .home-hero-image img, .about-header img,
+  .bdr-radius, .quote-wrapper, .property-hero, .approach-section img, .approach-section, .founder-bgwrapper, .home-hero.about img::after, .home-hero.about .home-hero-image img, .about-header img,
   .about-rowone img,
   .about-rowtwo img,
   .about-rowthree img, .sr-featured .featured-wrapper .card, .sr-featured .featured-wrapper, .booking-type, .sr-types .sr-type-image, .sr-types .sr-types-wrapper, .simplify-search .simplify-wrapper, .why-we .why-we-wrapper, .city-carousel .cities-wrapper .city-wrapper a::after, .city-carousel .cities-wrapper .city-wrapper img, .city-carousel .cities-wrapper .city-wrapper, .view-hero-slider .view-content .slick-slide .slide__caption .slide__description video, .view-hero-slider .view-content .slick-slide .slide__caption .slide__description .field__item img, .view-hero-slider .view-content .slick-slide .slide__caption .slide__description .field__item::before, .home-hero .home-hero-image video, .home-hero .home-hero-image img, .home-hero .home-hero-image::after, .home-hero .home-hero-image::before {
@@ -18708,7 +18725,7 @@ form .form-actions {
   }
 }
 @media (min-width: 992px) {
-  .bdr-radius, .approach-section img, .approach-section, .founder-bgwrapper, .home-hero.about img::after, .home-hero.about .home-hero-image img, .about-header img,
+  .bdr-radius, .quote-wrapper, .property-hero, .approach-section img, .approach-section, .founder-bgwrapper, .home-hero.about img::after, .home-hero.about .home-hero-image img, .about-header img,
   .about-rowone img,
   .about-rowtwo img,
   .about-rowthree img, .sr-featured .featured-wrapper .card, .sr-featured .featured-wrapper, .booking-type, .sr-types .sr-type-image, .sr-types .sr-types-wrapper, .simplify-search .simplify-wrapper, .why-we .why-we-wrapper, .city-carousel .cities-wrapper .city-wrapper a::after, .city-carousel .cities-wrapper .city-wrapper img, .city-carousel .cities-wrapper .city-wrapper, .view-hero-slider .view-content .slick-slide .slide__caption .slide__description video, .view-hero-slider .view-content .slick-slide .slide__caption .slide__description .field__item img, .view-hero-slider .view-content .slick-slide .slide__caption .slide__description .field__item::before, .home-hero .home-hero-image video, .home-hero .home-hero-image img, .home-hero .home-hero-image::after, .home-hero .home-hero-image::before {
@@ -19012,6 +19029,28 @@ header .navbar-brand {
 .messages-list .messages a:hover {
   color: #0B8D9F !important;
   text-decoration: none !important;
+}
+
+.wrapper123 .container .form-container {
+  color: #000;
+  background: #fff;
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 500px;
+  margin: 40px 0;
+  width: 100%;
+  box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.1);
+}
+.wrapper123 .container .form-container .user-form .container .row .col-sm-6 {
+  width: 100%;
+}
+.wrapper123 .container .form-container .user-form .container .row .col-sm-6 .form-submit {
+  font-size: 12px;
+}
+.wrapper123 .container .form-container .user-form .container .row .col-sm-6 .password-suggestions .password-suggestions__tip {
+  font-size: 12px;
+  padding-left: 30px;
+  padding-right: 30px;
 }
 
 .home-hero {
@@ -22925,6 +22964,67 @@ footer #block-footer ul li a:hover {
 }
 .messages-list__wrapper .messages a:hover {
   text-decoration: underline;
+}
+
+@media (min-width: 576px) {
+  .list-columns {
+    column-count: 2;
+    column-gap: 20px;
+  }
+}
+.list-columns li {
+  display: inline-block;
+  width: 100%;
+  padding-bottom: 20px;
+}
+.list-columns li span {
+  color: #0B8D9F;
+  display: block;
+  font-weight: bold;
+}
+
+.quote-wrapper {
+  border: 2px solid #babecb;
+  color: #192452;
+  position: relative;
+  padding: 1.5625rem;
+}
+@media (max-width: 1199.98px) {
+  .quote-wrapper {
+    margin-bottom: 1.25rem;
+  }
+}
+.quote-wrapper h4, .quote-wrapper .h4 {
+  padding: 1.25rem 1.5625rem 1.5625rem 5.625rem;
+  font-size: 2.25rem;
+}
+@media (max-width: 767.98px) {
+  .quote-wrapper h4, .quote-wrapper .h4 {
+    font-size: 1.875rem;
+  }
+}
+.quote-wrapper h4::before, .quote-wrapper .h4::before {
+  content: "";
+  display: block;
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 1.25rem;
+  left: 1.25rem;
+  height: 4.875rem;
+  width: 4.875rem;
+}
+.quote-wrapper h4.icon-one::before, .quote-wrapper .icon-one.h4::before {
+  background-image: url("../images/home/icon-booking.png");
+}
+.quote-wrapper h4.icon-two::before, .quote-wrapper .icon-two.h4::before {
+  background-image: url("../images/home/icon-bespoke.png");
+}
+.quote-wrapper h4.icon-three::before, .quote-wrapper .icon-three.h4::before {
+  background-image: url("../images/home/icon-safety.png");
+}
+.quote-wrapper h4.icon-four::before, .quote-wrapper .icon-four.h4::before {
+  background-image: url("../images/home/icon-hospitality.png");
 }
 
 /*# sourceMappingURL=style.css.map */

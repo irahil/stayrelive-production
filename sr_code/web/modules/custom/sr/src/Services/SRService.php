@@ -42,8 +42,8 @@ class SRService {
 //\Drupal::logger('my_module')->info('Price Field : ' . $field_price);
 
       // Since homelike price is of 30 days. so getting per night price.
-      if ($field_property_source == 'homelike' && $field_price > 0) {
-        $field_price = ($field_price/30);
+      if ($field_property_source == 'spacest' && $field_price > 0) {
+        $field_price = ($field_price/31);
       }
 // \Drupal::logger('my_module')->info('1 day Price : ' . $field_price);
 

@@ -25,6 +25,7 @@
         "drupal/ctools": "^4.0",
         "drupal/datetime_flatpickr": "^2.0",
         "drupal/delete_all": "3.0",
+        "drupal/dropzonejs": "^2.11",
         "drupal/entity_reference_revisions": "^1.10",
         "drupal/extra_image_field_classes": "^1.2",
         "drupal/flag": "^4.0@beta",
@@ -49,8 +50,8 @@
         "drupal/webform": "^6.2",
         "drush/drush": "^12.5",
         "guzzlehttp/guzzle": "^7.7",
-        "spipu/html2pdf": "^5.2",
-        "mpdf/mpdf": "^8.2"
+        "mpdf/mpdf": "^8.2",
+        "spipu/html2pdf": "^5.2"
     },
     "require-dev": {
         "drupal/core-dev": "^10.0"

@@ -20,7 +20,7 @@ sr_quotation.list:
     _controller: '\Drupal\sr_quotation\Controller\QuotationController::list'
     _title: 'Quotation List'
   requirements:
-    _permission: 'access content'
+    _permission: 'access quotation dashboard'
 
 sr_quotation.preview:
   path: '/quotation/preview/{id}'
@@ -52,10 +52,10 @@ sr_quotation.duplicate:
 
 # preview pdf html for test purpose
 sr_quotation.pdf_preview:
-  path: '/admin/pdf-preview/{id}'
+  path: '/quotation/{id}/preview-html'
   defaults:
     _controller: '\Drupal\sr_quotation\Controller\QuotationController::previewHtml'
-    _title: 'PDF HTML Preview'
+    _title: 'Quotation Preview'
   requirements:
     _permission: 'access content'
 
@@ -66,3 +66,30 @@ sr_quotation.delete:
     _title: 'Delete Quotation'
   requirements:
     _permission: 'access content'
+
+sr_quotation.export:
+  path: '/quotation/export'
+  defaults:
+    _controller: '\Drupal\sr_quotation\Controller\QuotationController::exportExcel'
+    _title: 'Export Quotations'
+  requirements:
+    _permission: 'access content'
+
+sr_quotation.dropzone_upload:
+  path: '/dropzonejs/upload'
+  defaults:
+    _controller: '\Drupal\dropzonejs\Controller\UploadController::handleUploads'
+  requirements:
+    _permission: 'access content'
+
+sr_quotation.preview_encrypted:
+  path: '/quotations/{token}'
+  defaults:
+    _controller: '\Drupal\sr_quotation\Controller\QuotationController::previewHtmlEncrypted'
+    _title: 'Quotation Preview'
+  requirements:
+    _permission: 'access content'
+    token: '[A-Za-z0-9\-_]+'
+  options:
+    no_cache: TRUE
+

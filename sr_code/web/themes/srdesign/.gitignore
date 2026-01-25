@@ -1,0 +1,43 @@
+# Ignore core and contrib directories (you manage these with Composer)
+web/core/
+vendor/
+web/modules/contrib/
+web/themes/contrib/
+web/profiles/
+web/sites/
+web/INSTALL.txt
+# web/libraries/
+web/autoload.php
+web/example.gitignore
+web/index.php
+web/modules/README.txt
+.editorconfig
+.gitattributes
+
+# Ignore Drupal files that shouldn't be tracked
+/sites/*/settings*.php
+/sites/*/services.yml
+/sites/*/files
+/sites/simpletest
+
+# Ignore environment or build artifacts
+*.log
+*.tmp
+*.cache
+*.gz
+*.zip
+
+# Ignore IDE and system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Ignore tests and test outputs
+phpunit.xml
+phpunit.result.cache
+
+# Ignore node_modules if you're using frontend build tools
+node_modules/

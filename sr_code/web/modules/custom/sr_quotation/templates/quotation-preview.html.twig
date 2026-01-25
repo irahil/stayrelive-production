@@ -1,0 +1,145 @@
+<div class="page-header page-title">
+   <div class="container">
+      <div class="row">
+         <div class="col-12">
+            <h3>Quotation</h3>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="container">
+   <div class="quote-hero mb-5">
+      <img src="https://static.plumcache.com/listings/d145409d-84c1-4e73-aabf-1d040aeb7059/59c76128-65de-407a-9d2f-2b91d0decef0..jpeg" alt="Stay Relive Hero image" class="property-hero">
+   </div>
+</div>
+<section class="why-we">
+   <div class="container">
+      <div class="row">
+         <div class="col-12">
+            <h2 class="text-center mb-5">Booking Details</h2>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-12 ">
+            <div class="quote-wrapper  mb-5">
+               <div class="row">
+                  <h4 class="icon-one">Booking Information</h4>
+                  <div class="col-12">
+                    <ul class="list-columns">
+                        <li><span>Booker Name:</span>  {{ data.booker_name|upper }}</li>
+                        <li><span>Travel Partner / Corporate:</span> {{ data.travel_partner }}</li>
+                        <li><span>Check-in Date:</span> {{ data.checkin_date }} </li>
+                        <li><span>Check-out Date:</span> {{ data.checkout_date }}</li>
+                        <li><span>Check-In Time:</span> {{ data.checkin_time}}</li>
+                        <li><span>Check-out Time:</span> {{ data.checkout_time }}</li>
+                        <li><span>Number of Nights:</span> {{ data.nights }}</li>
+                    </ul>
+                </div>
+                 
+               </div>
+            </div>
+         </div>
+         <div class="col-12 ">
+            <div class="quote-wrapper mb-5">
+               <h4 class="icon-two">Property Information</h4>
+               <div class="row">
+                  <div class="col-12">
+                  <ul class="list-columns">
+                        <li><span>Unit_type:</span> {{ data.unit_type }}</li>
+                        <li><span>Room Type:</span> {{ data.room_type }}</li>
+                        <li><span>Room Category:</span> {{ data.room_category }}</li>
+                        <li><span>No of bathrooms:</span> {{ data.bathrooms }}</li>
+                        <li><span>Apartment Size (sqm):</span> {{ data.apartment_size }}</li>
+                        <li><span>No. of Adults:</span> {{ data.adults }}</li>
+                        <li><span>No. of Kids:</span> {{ data.kids }}</li>
+                        <li><span>Location:</span> {{ data.location }}</li>
+                        <li><span>Distance (in km):</span> {{ data.distance }}</li>
+                        <li><span>Map Link:</span> {{ data.map_link }}</li>
+                        <li><span>Property Description:</span> {{ data.property_description }}</li>
+                    </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="col-12 ">
+            <div class="quote-wrapper mb-5">
+               <h4 class="icon-three">Pricing & Financials</h4>
+               <div class="row">
+                  <div class="col-12">
+                     <ul class="list-columns">
+                        <li><span>Quote:</span> {{ data.quote }}</li>
+                        <li><span>Taxes:</span> {{ data.taxes }}</li>
+                        <li><span>FX Rate:</span> {{ data.fx_rate }}</li>
+                        <li><span>Currency:</span> {{ data.currency }}</li>
+                        <li><span>Add on Prices:</span> {{ data.addon_prices ? data.addon_prices : 'N/A' }}</li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="col-12 ">
+            <div class="quote-wrapper icon-three mb-5">
+               <h4 class="icon-three">Amenities</h4>
+               <div class="row">
+                  <div class="col-12">
+                     {% if data.amenities %}
+                        {% set amenities_list = data.amenities|split(',') %}
+                        <div class="field field--name-field-amenities">
+                           <ul class="field__items property-details">
+                              {% for amenity in amenities_list %}
+                                 {% set amenity_trimmed = amenity|trim %}
+                                 {% if amenity_trimmed %}
+                                    {% set amenity_class = amenity_trimmed|lower|replace({' ': '-', '_': '-', '/': '-', '&': '', '(': '', ')': '', '.': ''})|replace({'--': '-'}) %}
+                                    <li class="field__item {{ amenity_class }}">{{ amenity_trimmed }}</li>
+                                 {% endif %}
+                              {% endfor %}
+                           </ul>
+                        </div>
+                     {% else %}
+                        <p>No amenities selected.</p>
+                     {% endif %}
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="col-12 ">
+            <div class="quote-wrapper mb-5">
+               <h4  class="icon-three">Policies</h4>
+               <div class="row">
+                  <div class="col-12">
+                     <ul>
+                        <li><span>Cancellation Policy:</span> {{ data.cancellation_policy }}</li>
+                        <li><span>Rules & Regulations:</span> {{ data.rules }}</li>
+                        <li><span>Note (Extra Details):</span> {{ data.note }}</li>
+                        <li><span>Supplier Reference:</span> {{ data.supplier_reference }}</li>
+                        <li><span>Confirmation Status:</span> {{ data.confirmation_status }}</li>
+                        {% if data.supplier_reference_text %}
+                        <li><span>Entered URL or Quoted Text:</span> {{ data.supplier_reference_text }}</li>
+                        {% endif %}
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+         {% if image_urls %}
+            <div class="col-12 ">
+               <div class="quote-wrapper  mb-5">
+                  <h4 class="icon-three">Property Images</h4>
+                  <div class="row">
+                     <div class="col-12">
+                        <div class="property-images">
+                           {% for image_url in image_urls %}
+                              <img src="{{ image_url }}" alt="Property Image" style="max-width: 300px; margin: 10px; display: inline-block;" />
+                           {% endfor %}
+                           {% for image_url in location_screenshot_urls %}
+                              <img src="{{ image_url }}" alt="Location Screenshot" style="max-width: 300px; margin: 10px; display: inline-block;" />
+                           {% endfor %}
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         {% endif %}
+      </div>
+   </div>
+</section>

@@ -3,110 +3,162 @@
 	<div class="dashboard-card">
 		<h2 class="dashboard-title">{{ 'Quotation Dashboard'|t }}</h2>
 		<div class="dashboard-card-header">
-			<div class="dashboard-actions">
-				<a href="{{ add_link }}" class="btn add-btn">
-					<i class="fas fa-plus"></i>
-					{{ 'Add Quotation'|t }}
+			<div class="quotation-filter-wrapper">
+
+				<form method="get" class="quotation-filter-form">
+
+					<div class="filter-grid">
+
+						<div class="filter-item">
+							<label>Quotation Serial</label>
+							<input type="text" name="serial" value="{{ app.request.get('serial') }}" placeholder="SR-001-2025">
+						</div>
+
+						<div class="filter-item">
+							<label>Booker ID/Name</label>
+							<input type="text" name="booker" value="{{ app.request.get('booker') }}" placeholder="Enter booker name">
+						</div>
+
+						<div class="filter-item">
+							<label>Travel Partner / Corporate</label>
+							<input type="text" name="partner" value="{{ app.request.get('partner') }}">
+						</div>
+
+						<div class="filter-item">
+							<label>Date From</label>
+							<input type="date" name="date_from" value="{{ app.request.get('date_from') }}">
+						</div>
+
+						<div class="filter-item">
+							<label>Date To</label>
+							<input type="date" name="date_to" value="{{ app.request.get('date_to') }}">
+						</div>
+
+					</div>
+
+					<div class="filter-actions">
+						<button class="search-btn">Search</button>
+
+						<a href="{{ path('sr_quotation.export') }}" class="excel-btn">
+							Download Excel
+						</a>
+						<a href="{{ path('sr_quotation.list') }}" class="reset-btn">
+							Reset Filter
+						</a>
+					</div>
+
+				</form>
+
+				<div class="quotation-top-actions">
+					<a href="{{ add_link }}" class="btn-add-quotation">
+						<i class="fas fa-plus"></i>
+						Add Quotation
+					</a>
+				</div>
+			</div>
+
+
+			{% if quotations is not empty %}
+				<div class="table-wrap">
+					<table class="quotation-table">
+						<thead>
+							<tr>
+								<th class="col-action">Action</th>
+								<th class="col-id">ID</th>
+								<th class="col-title">Title</th>
+								<th class="col-location">Location</th>
+								<th class="col-author">Author</th>
+								<th class="col-created">Created</th>
+								<th class="col-pdf">PDF</th>
+								{# 🆕 New column for preview/download #}
+							</tr>
+						</thead>
+
+						<tbody>
+							{% for item in quotations %}
+								<tr>
+
+									<td class="col-action">
+										<div class="dropdown action-dropdown">
+											<button class="dropdown-toggle">
+												<i class="fas fa-edit"></i>
+												{{ 'Edit'|t }}
+											</button>
+
+											<div class="dropdown-menu">
+												<a href="{{ path('sr_quotation.edit', {'id': item.id}) }}" class="dropdown-item">
+													<i class="fas fa-edit"></i>
+													{{ 'Edit'|t }}
+												</a>
+
+												<a href="{{ path('sr_quotation.duplicate', {'id': item.id}) }}" class="dropdown-item">
+													<i class="fas fa-copy"></i>
+													{{ 'Duplicate'|t }}
+												</a>
+
+												<a href="{{ path('sr_quotation.delete', {'id': item.id}) }}" class="dropdown-item delete-item" onclick="openDeleteModal('{{ path('sr_quotation.delete', {'id': item.id}) }}'); return false;">
+													<i class="fas fa-trash-alt"></i>
+													{{ 'Delete'|t }}
+												</a>
+											</div>
+										</div>
+									</td>
+
+									<!-- 👇 NEW FORMATTED ID -->
+									<td class="col-id">{{ item.formatted_id }}</td>
+
+									<td class="col-title">{{ item.title }}</td>
+									<td class="col-location">{{ item.location }}</td>
+
+									<!-- removed check-in / check-out -->
+
+									<td class="col-author">{{ item.author }}</td>
+									<td class="col-created">{{ item.created|date("d-m-Y") }}</td>
+
+									<td class="col-pdf">
+										<div class="pdf-actions">
+											<a href="{{ item.preview_url }}" class="btn-preview" target="_blank">
+												<i class="fas fa-eye"></i>
+												Preview
+											</a>
+
+											<a href="{{ path('sr_quotation.download', {'id': item.id}) }}" class="btn-download" target="_blank">
+												<i class="fas fa-file-download"></i>
+												{{ 'Download'|t }}
+											</a>
+										</div>
+									</td>
+
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			{% else %}
+				<div class="no-data">{{ 'No quotations available.'|t }}</div>
+			{% endif %}
+		</div>
+	</div>
+
+	<div id="deleteModal" class="delete-modal-overlay">
+		<div class="delete-modal">
+			<h3>{{ 'Confirm Delete'|t }}</h3>
+			<p>{{ 'Are you sure you want to delete this quotation?'|t }}</p>
+
+			<div class="delete-modal-actions">
+				<button class="btn-cancel" onclick="closeDeleteModal()">
+					{{ 'Cancel'|t }}
+				</button>
+
+				<a id="deleteConfirmBtn" href="#" class="btn-delete">
+					{{ 'Delete'|t }}
 				</a>
 			</div>
 		</div>
-
-		{% if quotations is not empty %}
-			<div class="table-wrap">
-				<table class="quotation-table">
-					<thead>
-						<tr>
-							<th class="col-action">Action</th>
-							<th class="col-title">Title</th>
-							<th class="col-location">Location</th>
-							<th class="col-checkin">Check-in</th>
-							<th class="col-checkout">Check-out</th>
-							<th class="col-created">Created</th>
-							<th class="col-pdf">PDF</th>
-							{# 🆕 New column for preview/download #}
-						</tr>
-					</thead>
-
-					<tbody>
-						{% for item in quotations %}
-							<tr>
-								<td class="col-action">
-									<div class="dropdown action-dropdown">
-										<button class="dropdown-toggle">
-											<i class="fas fa-edit"></i>
-											{{ 'Edit'|t }}
-											{# <i class="fas fa-caret-down dropdown-arrow"></i> #}
-										</button>
-										<div class="dropdown-menu">
-											<a href="{{ path('sr_quotation.edit', {'id': item.id}) }}" class="dropdown-item">
-												<i class="fas fa-edit"></i>
-												{{ 'Edit'|t }}
-											</a>
-
-											<a href="{{ path('sr_quotation.duplicate', {'id': item.id}) }}" class="dropdown-item">
-												<i class="fas fa-copy"></i>
-												{{ 'Duplicate'|t }}
-											</a>
-
-											<a href="{{ path('sr_quotation.delete', {'id': item.id}) }}"
-                        class="dropdown-item delete-item"
-                        onclick="openDeleteModal('{{ path('sr_quotation.delete', {'id': item.id}) }}'); return false;">
-                        <i class="fas fa-trash-alt"></i> {{ 'Delete'|t }}
-                      </a>
-										</div>
-									</div>
-								</td>
-
-								<td class="col-title">{{ item.title }}</td>
-								<td class="col-location">{{ item.location }}</td>
-								<td class="col-checkin">{{ item.checkin_date|date("d-m-Y") }}</td>
-								<td class="col-checkout">{{ item.checkout_date|date("d-m-Y") }}</td>
-								<td class="col-created">{{ item.created|date("d-m-Y") }}</td>
-
-								{# 🆕 New PDF Column #}
-								<td class="col-pdf">
-									<div class="pdf-actions">
-										<a href="{{ path('sr_quotation.preview', {'id': item.id}) }}" class="btn-preview" target="_blank">
-											<i class="fas fa-eye"></i>
-											{{ 'Preview'|t }}
-										</a>
-
-										<a href="{{ path('sr_quotation.download', {'id': item.id}) }}" class="btn-download" target="_blank">
-											<i class="fas fa-file-download"></i>
-											{{ 'Download'|t }}
-										</a>
-									</div>
-								</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-			</div>
-		{% else %}
-			<div class="no-data">{{ 'No quotations available.'|t }}</div>
-		{% endif %}
 	</div>
-</div>
 
-<div id="deleteModal" class="delete-modal-overlay">
-  <div class="delete-modal">
-    <h3>{{ 'Confirm Delete'|t }}</h3>
-    <p>{{ 'Are you sure you want to delete this quotation?'|t }}</p>
-
-    <div class="delete-modal-actions">
-      <button class="btn-cancel" onclick="closeDeleteModal()">
-        {{ 'Cancel'|t }}
-      </button>
-
-      <a id="deleteConfirmBtn" href="#" class="btn-delete">
-        {{ 'Delete'|t }}
-      </a>
-    </div>
-  </div>
-</div>
-
-<script>
-	document.addEventListener("click", function (e) {
+	<script>
+		document.addEventListener("click", function (e) {
 const toggle = e.target.closest(".dropdown-toggle");
 
 // Close all dropdowns when clicking outside
@@ -127,18 +179,17 @@ menu.style.display = "block";
 });
 
 function openDeleteModal(url) {
-  document.getElementById('deleteModal').style.display = 'flex';
-  document.getElementById('deleteConfirmBtn').setAttribute('href', url);
+document.getElementById('deleteModal').style.display = 'flex';
+document.getElementById('deleteConfirmBtn').setAttribute('href', url);
 }
 
 function closeDeleteModal() {
-  document.getElementById('deleteModal').style.display = 'none';
+document.getElementById('deleteModal').style.display = 'none';
 }
 
-document.addEventListener('click', function(e) {
-  // Close popup if clicking outside modal
-  if (e.target.classList.contains('delete-modal-overlay')) {
-    closeDeleteModal();
-  }
+document.addEventListener('click', function (e) { // Close popup if clicking outside modal
+if (e.target.classList.contains('delete-modal-overlay')) {
+closeDeleteModal();
+}
 });
-</script>
+	</script>

@@ -8,6 +8,9 @@
 			<div class="form-section">
 				<h3 class="section-title">Booking Information</h3>
 				<div class="form-grid two-cols">
+
+					{{ form.booking_info.booker_name }}
+					{{ form.booking_info.travel_partner }}
 					{{ form.booking_info.dates.check_in_date }}
 					{{ form.booking_info.dates.check_out_date }}
 					{{ form.booking_info.times.check_in_time }}
@@ -22,6 +25,7 @@
 				<div class="form-grid two-cols">
 					{{ form.property_info.unit_type }}
 					{{ form.property_info.room_details.room_type }}
+					{{ form.property_info.room_details.room_category }}
 					{{ form.property_info.room_details.bathrooms }}
 					{{ form.property_info.apartment_size }}
 					{{ form.property_info.occupancy.adults }}
@@ -30,6 +34,9 @@
 					{{ form.property_info.location_details.distance }}
 					{{ form.property_info.map_link }}
 					{{ form.property_info.description }}
+				</div>
+				<div class="form-grid one-col">
+					{{ form.property_info.location_screenshot }}
 				</div>
 			</div>
 
@@ -40,6 +47,16 @@
 					{{ form.financials.quote }}
 					{{ form.financials.taxes }}
 					{{ form.financials.fx_rate }}
+					{# ---- Currency Fields ---- #}
+					{{ form.financials.currency }}
+
+					{# AJAX wrapper for the 'Other' currency field #}
+					{{ form.financials.currency_other_wrapper }}
+				</div>
+				<div class="form-grid two-cols">
+					<div style="grid-column: span 2;">
+						{{ form.financials.addon_prices }}
+					</div>
 				</div>
 			</div>
 
@@ -49,7 +66,16 @@
 
 				<div class="form-grid one-col">
 					<div class="amenities-section">
-						{{ form.extras.amenities }}
+
+						<!-- Search box -->
+					 	<input
+						type="text" class="amenities-search" placeholder="Search amenities..." autocomplete="off"/>
+
+						<!-- Scrollable amenities list -->
+						<div class="amenities-scroll">
+							{{ form.extras.amenities }}
+						</div>
+
 					</div>
 
 					<div class="policies-section">
@@ -62,6 +88,18 @@
 
 					<div class="note-section">
 						{{ form.extras.note }}
+					</div>
+				</div>
+				{# ---------------- Supplier Reference (NEW FIELDS) ---------------- #}
+				<div class="form-grid two-cols">
+					<div class="supplier-reference-wrapper">
+						{{ form.extras.supplier_reference }}
+						{# AJAX generated field appears inside this wrapper #}
+						{{ form.extras.supplier_reference_wrapper }}
+					</div>
+				{# ---------------- Confirmation Status (NEW FIELD) ---------------- #}
+					<div class="confirmation-status">
+						{{ form.extras.confirmation_status }}
 					</div>
 				</div>
 			</div>

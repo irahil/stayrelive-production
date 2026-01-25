@@ -8,6 +8,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Template\TwigEnvironment;
+use Drupal\webform\WebformSubmissionInterface;
 
 /**
  * Implements hook_theme().
@@ -336,35 +337,6 @@ function sr_mail_alter(&$message)
         '@to' => $message['to'] ?? 'Not available',
         '@subject' => $message['subject'],
       ]);
-
-      // USER EMAIL (Auto-response)
-      $build_user = [
-        '#theme' => 'sr_email_contact_us_form_user',
-        '#first_name' => Html::escape($first_name),
-        '#last_name' => Html::escape($last_name),
-        '#email' => Html::escape($email),
-        '#booking_id' => Html::escape($booking_id),
-        '#message_text' => Html::escape($message_text),
-      ];
-
-      $user_html_body = \Drupal::service('renderer')->renderPlain($build_user);
-
-      $mailManager = \Drupal::service('plugin.manager.mail');
-      $module = 'sr';
-      $key = 'contact_user_ack'; 
-      $langcode = \Drupal::currentUser()->getPreferredLangcode();
-
-      $params = [
-        'subject' => "Confirmation: We've Received Your Query [# $booking_id ]",
-        'body' => $user_html_body,
-      ];
-
-      $mailManager->mail($module, $key, $email, $langcode, $params, NULL, TRUE);
-      // Log user email
-      \Drupal::logger('sr')->info('Auto-response email sent to user. To: @to, Subject: @subject', [
-        '@to' => $email,
-        '@subject' => $params['subject'],
-      ]);
     }
   }
 }
@@ -472,6 +444,25 @@ function sr_form_user_form_alter(&$form, FormStateInterface $form_state, $form_i
     if (isset($form['account']['mail'])) {
       $form['account']['mail']['#description'] = t('This email is linked with your Google account and cannot be changed.');
     }
+  }
+}
+
+/**
+ * Implements hook_webform_submission_insert().
+ */
+function sr_webform_submission_insert(WebformSubmissionInterface $submission) {
+
+  // Check only Contact webform
+  if ($submission->getWebform()->id() === 'contact') {
+
+    // Get submitted values
+    $data = $submission->getData();
+
+    // Log full submission data
+    \Drupal::logger('sr_contact')->notice(
+      'Contact form submitted. Data: <pre>@data</pre>',
+      ['@data' => print_r($data, TRUE)]
+    );
   }
 }
 

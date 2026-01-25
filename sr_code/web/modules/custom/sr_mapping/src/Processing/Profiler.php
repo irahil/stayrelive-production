@@ -29,6 +29,44 @@ class Profiler {
 
     public static function getProfile($property_name) {
         $profiles = [
+            'spacest' => [
+                'download' => [
+                    'type' => 'https',
+                    'endpoint' => 'https://roomless-file.s3.us-east-2.amazonaws.com/feed-partner/example_feed.json'
+                ],
+                'file_type' => 'json',
+                'load_days' => '180',
+                'to_process_directory' => 'property/spacest/to_process/',
+                'completed_process_directory' => 'property/spacest/completed/',
+                'error_process_directory' => 'property/spacest/error/',
+                'delete_process_directory' => 'property/spacest/delete/',
+                'field_mapping' => [
+                    'title' => ['direct' => ['name']],
+                    'field_reference_id' => ['direct' => ['listing_code']],
+                    'field_available_from' => ['direct' => ['first_availability']],
+                    'field_deposit' => ['level2' => ['surcharges:deposit']],
+                    'field_total_bathrooms' => ['level2' => ['house_informations:bathrooms']],
+                    'field_total_bedrooms' => ['level2' => ['house_informations:bedrooms']],
+                    'field_display_address' => ['level2' => ['location:address']],
+                    'field_description' => ['paragraph' => ['description']],
+                    'field_media' => ['serialize' => ['photos']],
+                    'field_location_postal_code' => ['level2' => ['location:addressZipCode']],
+                    'field_location_town' => ['level2' => ['location:city']],
+                    'field_price' => ['direct' => ['price']],
+                    'field_rental_term' => ['taxonomy' => [], 'machine_name' => 'rental_term', 'default' => ['short_term']],
+                    'field_status' => ['taxonomy' => [], 'machine_name' => 'availability_status', 'default' => ['under_offer']],
+                    'field_furnishing_status' => ['taxonomy' => [], 'machine_name' => 'furnished_status', 'default' => ['furnished']],
+                    'field_location_coords_latitude' => ['level3' => ['location:coordinates:latitude']],
+                    'field_location_coords_longitude' => ['level3' => ['location:coordinates:longitude']],
+                    'field_amenities' => ['taxonomy' => ['amenities'], 'machine_name' => 'amenities'],
+                    'field_category' => ['taxonomy' => ['category'], 'machine_name' => 'property_category'],
+                    'field_property_type' => ['taxonomy' => ['category'], 'machine_name' => 'property_type'],
+                    'field_currency_code' => ['taxonomy' => ['currency'], 'machine_name' => 'currency'],
+                    'field_pricing_frequency' => ['level2:taxonomy' => ['pricing:rent_frequency'], 'machine_name' => 'pricing_frequency' , 'default' => ['per_night']],
+                    'field_location_country_code' => ['level2:taxonomy' => ['location:country'], 'machine_name' => 'country'],
+                    'field_town_city' => ['level2:taxonomy' => ['location:city'], 'machine_name' => 'town_city'],
+                ],
+            ],
             'homelike' => [
                 'download' => [
                     'type' => 'https',
