@@ -1,0 +1,183 @@
+.property-hero {
+  @extend .bdr-radius;
+}
+
+.list-columns {
+  &.two-columns {
+    @include media-breakpoint-up(md) {
+      column-count: 2;
+      column-gap: 60px;
+    }
+  }
+
+  li {
+    display: inline-block;
+    width: 100%;
+    padding-bottom: 20px;
+    span {
+      color: $primary;
+      display: block;
+      font-weight: bold;
+    }
+  }
+}
+
+.quote-wrapper {
+  @extend .bdr-radius;
+  border: 2px solid $medium-grey;
+  color: $secondary;
+  position: relative;
+  padding: toRem(25);
+
+  @include media-breakpoint-down(xl) {
+    margin-bottom: toRem(20);
+  }
+
+  h4 {
+    padding: toRem(20) toRem(25) toRem(25) toRem(90);
+    font-size: toRem(36);
+
+    @include media-breakpoint-down(md) {
+      font-size: toRem(30);
+    }
+    &::before {
+      content: "";
+      display: block;
+      background-size: contain;
+      background-repeat: no-repeat;
+      position: absolute;
+      top: toRem(20);
+      left: toRem(20);
+      height: toRem(78);
+      width: toRem(78);
+    }
+
+    &.icon-one::before {
+      background-image: url("../images/home/icon-booking.png");
+    }
+
+    &.icon-two::before {
+      background-image: url("../images/home/icon-bespoke.png");
+    }
+
+    &.icon-three::before {
+      background-image: url("../images/home/icon-safety.png");
+    }
+    &.icon-four::before {
+      background-image: url("../images/home/icon-hospitality.png");
+    }
+  }
+
+  a {
+    text-decoration: underline;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+.property-images img {
+  height: 280px;
+  margin: 10px;
+  display: inline-block;
+  padding: 10px;
+  @extend .bdr-radius;
+  border: 2px solid $medium-grey;
+}
+
+.list-columns li.agent-detail,
+.booking-columns .agent-detail {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  .agent-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+
+  .agent-icon i {
+    color: #0b8d9f;
+    font-size: toRem(18);
+  }
+
+  .agent-icon.agent-logo-icon {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    flex: 0 0 22px;
+    background-image: url("../images/others/agent-logo.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 22px 22px;
+  }
+
+  .agent-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .agent-text .label {
+    color: $primary;
+    font-weight: bold;
+  }
+
+  .field-value {
+    display: block;
+    color: $secondary;
+    font-weight: normal;
+  }
+}
+.quotation-table td.col-location {
+  white-space: normal !important;
+}
+
+// Style labels in Policies section
+.quote-wrapper h4.icon-three {
+  & + .row ul li span {
+    color: #0b8d9f;
+  }
+}
+
+// Dropdown arrow spacing for quotation dashboard
+.filter-item select {
+  padding-right: 35px;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23747579' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+.path-sr-quotationpreview-encrypted {
+  .col-md-4,
+  .col-12 {
+    padding-left: 10px !important;
+  }
+}
+
+.quote-wrapper {
+  .row {
+    .col-12 {
+      padding-left: 0 !important;
+    }
+  }
+}
+
+@media (max-width: 991px) {
+  .icon-three {
+    .row {
+      .col-12 {
+        .property-images {
+          img {
+            height: auto !important;
+            margin: 10px 8px !important;
+          }
+        }
+      }
+    }
+  }
+}

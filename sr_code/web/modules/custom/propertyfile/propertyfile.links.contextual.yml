@@ -1,0 +1,10 @@
+entity.propertyfile.edit_form:
+  route_name: entity.propertyfile.edit_form
+  group: propertyfile
+  title: 'Edit'
+
+entity.propertyfile.delete_form:
+  route_name: entity.propertyfile.delete_form
+  group: propertyfile
+  title: 'Delete'
+  weight: 10

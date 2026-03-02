@@ -1,0 +1,46 @@
+{#
+  Template for Room Form
+#}
+
+<div class="room-form-wrapper">
+  <div class="back-link">
+    {{ form.back_link }}
+  </div>
+
+  <fieldset>
+    <legend><strong>{{ form.room_info['#title'] }}</strong></legend>
+    {% if form.room_info.title is defined %}
+      {{ form.room_info.published }}
+      {{ form.room_info.title }}
+    {% endif %}
+    {{ form.room_info.room_type }}
+    {{ form.room_info.number_of_units }}
+    {{ form.room_info.total_bedrooms }}
+    {{ form.room_info.total_bathrooms }}
+    {{ form.room_info.room_description }}
+    {{ form.room_info.room_amenities }}
+    {{ form.room_info.room_kitchen_amenities }}
+    {{ form.room_info.amenities_description }}
+  </fieldset>
+
+  <fieldset>
+    <legend><strong>{{ form.room_contact['#title'] }}</strong></legend>
+    {{ form.room_contact.room_name_number_wrapper}}
+    {{ form.room_contact.contact_mobile }}
+  </fieldset>
+
+  <fieldset>
+    <legend><strong>{{ form.room_price['#title'] }}</strong></legend>
+    {{ form.room_price.room_price_tax_wrapper}}
+    {{ form.room_price.tax_details }}
+  </fieldset>
+
+  <div class="form-actions">
+    {{ form.form_build_id }}
+    {{ form.form_token }}
+    {{ form.form_id }}
+    {{ form.pid }}
+    {{ form.actions.submit }}
+    {{ form.submit }}
+  </div>
+</div>

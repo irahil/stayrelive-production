@@ -1,0 +1,12 @@
+property_list:
+  version: 1.x
+  css:
+    theme:
+      css/property-list.css: {}
+  js:
+    js/property-list.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.dialog
+    - core/drupal.dialog.ajax

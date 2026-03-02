@@ -1,0 +1,11 @@
+entity.propertyvendor.settings:
+  title: 'Propertyvendor'
+  description: 'Configure a Propertyvendor entity type.'
+  route_name:  entity.propertyvendor.settings
+  parent: system.admin_structure
+
+entity.propertyvendor.collection:
+  title: 'Propertyvendors'
+  description: 'List of propertyvendors.'
+  route_name: entity.propertyvendor.collection
+  parent: system.admin_content

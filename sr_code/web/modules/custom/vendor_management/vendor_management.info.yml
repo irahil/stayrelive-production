@@ -1,0 +1,5 @@
+name: Vendor Management
+type: module
+description: Provides vendor management functionality with list and add vendor tabs.
+core_version_requirement: ^10
+package: Custom
