@@ -4,7 +4,6 @@
   padding: 40px 20px;
   min-height: 100vh;
   box-sizing: border-box;
-  font-family: "Helvetica Neue", Arial, sans-serif;
 }
 
 /* Card wrapper */
@@ -13,29 +12,23 @@
   margin: 0 auto;
   border-radius: 12px;
 }
-.quotation-dashboard-page .dashboard-card-header .dashboard-actions
-{
-    display: flex;
-    margin-bottom: 1.5rem;
-    justify-content: flex-end;
+.quotation-dashboard-page .dashboard-card-header .dashboard-actions {
+  display: flex;
+  margin-bottom: 1.5rem;
+  justify-content: flex-end;
 }
 
 /* Header */
-/* .dashboard-card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 28px;
-  background: transparent;
-} */
+
 .dashboard-title {
-  margin: 0;
-  font-size: 20px;
+  font-size: 25px;
   color: #0b6f6f;
   font-weight: 700;
+  text-align: center;
+  margin: 20px 0;
 }
 .dashboard-actions .btn {
-  color: #0b8d9f;;
+  color: #0b8d9f;
   margin-left: 12px;
   text-decoration: none;
   display: inline-flex;
@@ -58,25 +51,25 @@
 
 /* Table */
 .quotation-dashboard-page .quotation-table {
-    width: 100%;
-    border-collapse: separate !important; /* required */
-    border-spacing: 0; /* required */
-    background: #fff;
-    margin: 25px auto;
-    border-radius: 14px;
-    overflow: visible !important;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.04);
+  width: 100%;
+  border-collapse: separate !important; /* required */
+  border-spacing: 0; /* required */
+  background: #fff;
+  margin: 0 auto 25px auto;
+  border-radius: 14px;
+  overflow: visible !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
 }
 
 .quotation-table thead th:first-child {
-    border-top-left-radius: 14px;
+  border-top-left-radius: 14px;
 }
 
 .quotation-table thead th:last-child {
-    border-top-right-radius: 14px;
+  border-top-right-radius: 14px;
 }
 .quotation-table tr {
-    overflow: visible !important;
+  overflow: visible !important;
 }
 
 .quotation-table thead {
@@ -111,7 +104,7 @@
 }
 .quotation-table td.col-id,
 .quotation-table td.col-location,
-.quotation-table td.col-author{
+.quotation-table td.col-author {
   white-space: nowrap;
 }
 
@@ -133,7 +126,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 6px rgba(11,143,160,0.08);
+  box-shadow: 0 2px 6px rgba(11, 143, 160, 0.08);
 }
 .no-data {
   padding: 28px;
@@ -145,7 +138,7 @@
   .quotation-dashboard-page {
     padding: 20px 10px;
   }
-  .dashboard-card { 
+  .dashboard-card {
     margin: 10px;
   }
   .dashboard-title {
@@ -246,14 +239,14 @@
 }
 .quotation-dashboard-page .dropdown-menu .dropdown-item:hover,
 .quotation-dashboard-page .dropdown-menu .dropdown-item:focus {
-    color: #126f7f !important;
-    background: transparent !important;
+  color: #126f7f !important;
+  background: transparent !important;
 }
 
 .quotation-dashboard-page .dropdown-menu .dropdown-item.active,
 .quotation-dashboard-page .dropdown-menu .dropdown-item:active {
-    color: #126f7f !important;
-    background-color: transparent !important;
+  color: #126f7f !important;
+  background-color: transparent !important;
 }
 
 /* Icons inside menu */
@@ -261,7 +254,6 @@
   width: 16px;
   text-align: center;
 }
-
 
 .col-pdf .pdf-actions {
   display: flex;
@@ -299,14 +291,13 @@
   background-color: #218838;
 }
 
-
 /* delete alert modal styles start  */
 /* Overlay */
 .delete-modal-overlay {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(3px);
   justify-content: center;
   align-items: center;
@@ -319,14 +310,20 @@
   padding: 25px;
   width: 350px;
   border-radius: 10px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   animation: popupFade 0.25s ease-out;
   text-align: center;
 }
 
 @keyframes popupFade {
-  from { transform: scale(0.85); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .delete-modal h3 {
@@ -378,162 +375,158 @@
 }
 /* delete alert modal styles end  */
 
-
-
 /* Prevent wrapping */
 .quotation-table th.col-checkin,
 .quotation-table th.col-checkout,
 .quotation-table td.col-checkin,
 .quotation-table td.col-checkout,
 .quotation-table td.col-created {
-    white-space: nowrap;
+  white-space: nowrap;
 }
-
 
 /* quotation filter section styles */
 
 /* FILTER WRAPPER */
 .quotation-filter-wrapper {
-    background: #eaf7f8;
-    padding: 45px 0 10px 0;
-    border-radius: 12px;
-    margin-bottom: 15px;
+  background: #eaf7f8;
+  padding: 45px 0 10px 0;
+  border-radius: 12px;
 }
 
 /* GRID LAYOUT */
 .filter-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 22px;
-    padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  padding: 0 20px;
 }
 
 /* FILTER FIELDS */
 .filter-item label {
-    display: block;
-    font-weight: 600;
-    font-size: 14px;
-    margin-bottom: 6px;
-    color: #075b60;
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: #075b60;
 }
 
 .filter-item input,
 .filter-item select {
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #d8e7e9;
-    background: #fff;
-    font-size: 14px;
-    color: #333;
-    outline: none;
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #d8e7e9;
+  background: #fff;
+  font-size: 14px;
+  color: #333;
+  outline: none;
 }
 
 .filter-item input:focus,
 .filter-item select:focus {
-    border-color: #0b8fa0;
+  border-color: #0b8fa0;
 }
 
 /* SEARCH BUTTON BAR */
 .filter-actions {
-    text-align: center;
-    margin-top: 18px;
+  text-align: center;
+  margin-top: 18px;
 }
 
 /* SEARCH BUTTON */
 .search-btn {
-    background: #0b8fa0;
-    color: #fff;
-    padding: 10px 40px;
-    font-size: 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    border: none;
-    font-weight: 600;
-    transition: 0.2s ease;
+  background: #0b8fa0;
+  color: #fff;
+  padding: 10px 40px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  font-weight: 600;
+  transition: 0.2s ease;
 }
 
 .search-btn:hover {
-    background: #0a7b8a;
+  background: #0a7b8a;
 }
 
 /* EXPORT BUTTON */
 .excel-btn {
-    margin-left: 20px;
-    background: #ffffff;
-    color: #0b8fa0;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 600;
-    border: 1px solid #0b8fa0;
-    text-decoration: none;
+  margin-left: 20px;
+  background: #ffffff;
+  color: #0b8fa0;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: 1px solid #0b8fa0;
+  text-decoration: none;
 }
 
 .excel-btn:hover {
-    background: #e6f7f7;
+  background: #e6f7f7;
 }
 
 /* ADD QUOTATION BUTTON ON RIGHT */
 .quotation-top-actions {
-    display: flex;
-    justify-content: flex-end;
-    padding: 0 20px 10px 20px;
-    @media (max-width: 600px) {
-        justify-content: center;
-        margin-top: 30px;
-    }
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 20px 10px 20px;
+  @media (max-width: 600px) {
+    justify-content: center;
+    margin-top: 30px;
+  }
 }
 
 .btn-add-quotation {
-    background: #ffffff;
-    color: #0b8fa0;
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-weight: 600;
-    border: 1px solid #0b8fa0;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+  background: #ffffff;
+  color: #0b8fa0;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: 1px solid #0b8fa0;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .btn-add-quotation:hover {
-    background: #e6f7f7;
+  background: #e6f7f7;
 }
 
 /* RESET BUTTON */
 .reset-btn {
-    margin-left: 15px;
-    color: #0b8fa0;
-    font-weight: 600;
-    text-decoration: none;
-    font-size: 15px;
-    cursor: pointer;
+  margin-left: 15px;
+  color: #0b8fa0;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 15px;
+  cursor: pointer;
 }
 
 .reset-btn:hover {
-    color: #075b60;
+  color: #075b60;
 }
 
 /* RESPONSIVE */
 @media (max-width: 900px) {
-    .filter-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+  .filter-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 600px) {
-    .filter-grid {
-        grid-template-columns: 1fr;
-    }
-    .filter-actions {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        padding-left: 20px;
-        padding-right: 20px;
-    }
-    .excel-btn {
-        margin-left: 0;
-    }
+  .filter-grid {
+    grid-template-columns: 1fr;
+  }
+  .filter-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .excel-btn {
+    margin-left: 0;
+  }
 }

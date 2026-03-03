@@ -11,11 +11,15 @@
 
 					{{ form.booking_info.booker_name }}
 					{{ form.booking_info.travel_partner }}
-					{{ form.booking_info.dates.check_in_date }}
-					{{ form.booking_info.dates.check_out_date }}
-					{{ form.booking_info.times.check_in_time }}
-					{{ form.booking_info.times.check_out_time }}
-					{{ form.booking_info.nights }}
+                    {{ form.booking_info.dates.check_in_date }}
+                    {{ form.booking_info.dates.check_out_date }}
+                    {{ form.booking_info.times.check_in_time }}
+                    {{ form.booking_info.times.check_out_time }}
+                    {{ form.booking_info.nights }}
+                    {{ form.booking_info.enquired_location }}
+                    {{ form.booking_info.agent_name }}
+                    {{ form.booking_info.agent_phone }}
+                    {{ form.booking_info.agent_email }}
 				</div>
 			</div>
 
@@ -35,6 +39,9 @@
 					{{ form.property_info.map_link }}
 					{{ form.property_info.description }}
 				</div>
+				<div class="form-section">
+					{{ form.images.apartment_images }}
+				</div>
 				<div class="form-grid one-col">
 					{{ form.property_info.location_screenshot }}
 				</div>
@@ -46,9 +53,16 @@
 				<div class="form-grid three-cols">
 					{{ form.financials.quote }}
 					{{ form.financials.taxes }}
-					{{ form.financials.fx_rate }}
-					{# ---- Currency Fields ---- #}
 					{{ form.financials.currency }}
+					{{ form.financials.avg_nightly_rate }}
+					{{ form.financials.extras_tax }}
+					{{ form.financials.total_outlay }}
+					{{ form.financials.markup_client_percentage }}
+					{{ form.financials.markup_client_value }}
+					{{ form.financials.total_profit }}
+					{{ form.financials.commission_sr_percentage }}
+					{{ form.financials.commission_sr_value }}
+					{{ form.financials.fx_rate }}
 
 					{# AJAX wrapper for the 'Other' currency field #}
 					{{ form.financials.currency_other_wrapper }}
@@ -58,6 +72,7 @@
 						{{ form.financials.addon_prices }}
 					</div>
 				</div>
+				
 			</div>
 
 			{# ---------------- Amenities & Policies ---------------- #}
@@ -102,12 +117,6 @@
 						{{ form.extras.confirmation_status }}
 					</div>
 				</div>
-			</div>
-
-			{# ---------------- Images ---------------- #}
-			<div class="form-section">
-				<h3 class="section-title">Property Images</h3>
-				{{ form.images.apartment_images }}
 			</div>
 
 			{# ---------------- Hidden Fields & Submit ---------------- #}

@@ -1,3 +1,4 @@
+/* Replace words on Product Detailed Page */
 const config = {
   "&lt;b&gt;": "",
   "&lt;/b&gt;": "",
@@ -9,6 +10,7 @@ const className = "field--type-entity-reference-revisions";
 const selectCityButtonId = "autocomplete_town_city";
 const MD_SIZE_IN_PIXEL = 768;
 const HOME_SLIDER_FADE_IN_AN_OUT_DELAY_IN_SECS = 2.85;
+
 
 function replaceWords(config) {
   try {
@@ -73,7 +75,7 @@ const searchComponent = document.getElementById('searchComponent');
           }
         }
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     });
   } catch (error) {
@@ -473,39 +475,6 @@ if (document.readyState === 'loading') {
   openSearchDiv();
 }
 
-function animateHomePage() {
-  try {
-    const overlay = document.querySelector(".overlay");
-    const animationDuration = HOME_SCREEN_ANIMATION_DURATION_IN_SECONDS * 1000;
-
-    const currentPath = window.location.pathname;
-
-    const homePagePath = "/";
-
-    const isHomePage =
-      currentPath === homePagePath || currentPath === "/new/web/";
-
-    console.log(currentPath, homePagePath, isHomePage);
-
-    if (isHomePage) {
-      overlay.style.transition = `height ${
-        animationDuration / 1000
-      }s ease-in-out`;
-      overlay.style.height = "0";
-
-      // Use setTimeout to hide the overlay after the animation duration
-      setTimeout(() => {
-        console.log("Home Animation completed");
-        overlay.style.display = "none";
-      }, animationDuration);
-    } else {
-      overlay.style.display = "none";
-    }
-  } catch (error) {
-    console.log("Error creating animation on HomePage - ", error);
-  }
-}
-
 // Attach click event listener to each header
 accordionHeaders.forEach(function (header, index) {
   header.addEventListener("click", function () {
@@ -739,61 +708,6 @@ function controlNavigationSearchComponentStickyBehaviour(){
 
 controlNavigationSearchComponentStickyBehaviour();
 window.addEventListener("scroll", controlNavigationSearchComponentStickyBehaviour);
-
-// corporate page slider
-jQuery(document).ready(function () {
-  jQuery('.corporate-carousel').slick({
-    slidesToShow: 1.5,
-    slidesToScroll: 1,
-    infinite: true,
-    arrows: true,
-    responsive: [
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1
-        }
-      }
-    ]
-  });
-
-  jQuery('.track').slick({
-    slidesToShow: 7,
-    slidesToScroll: 1,
-    infinite: true,
-    arrows: false,
-    autoplay: true,
-    autoplaySpeed: 1000,
-    cssEase: 'linear',
-    pauseOnHover: false,
-    pauseOnFocus: false,
-    responsive: [
-      {
-        breakpoint: 1200,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1
-        }
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1
-        }
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1
-        }
-      }
-    ]
-  });
-
-});
 
 /* Amenity icons */
 document.addEventListener('DOMContentLoaded', function () {

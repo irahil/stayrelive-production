@@ -6,18 +6,15 @@ srdesign:
       assets/css/slick.css: {}
       assets/vendor/font-awesome/css/all.min.css: {}
       assets/vendor/bootstrap-icons/bootstrap-icons.css: {}
-      assets/vendor/tiny-slider/tiny-slider.css: {}
       assets/vendor/glightbox/css/glightbox.css: {}
       assets/vendor/flatpickr/css/flatpickr.min.css: {}
       assets/vendor/choices/css/choices.min.css: {}
   js:
     assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js: {}
-    assets/vendor/tiny-slider/tiny-slider.js: {}
     assets/vendor/glightbox/js/glightbox.js: {}
     assets/vendor/flatpickr/js/flatpickr.min.js: {}
     assets/vendor/choices/js/choices.min.js: {}
     assets/js/functions.js: {}
-    assets/js/aos.js: {}
     assets/js/lib.js: {}
     assets/js/home.js: {}
     assets/js/slick.min.js: {}

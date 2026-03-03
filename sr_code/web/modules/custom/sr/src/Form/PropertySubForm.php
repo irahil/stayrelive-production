@@ -100,10 +100,6 @@ class PropertySubForm extends FormBase {
 
 
       $arr_api_result = \Drupal::service('sr.services')->getRHPrice($arr_api_param);
-
-      \Drupal::logger('sr')->error('API Request ' . print_r($arr_api_param, true));
-
-      \Drupal::logger('sr')->error('API response ' . print_r($arr_api_result, true));
 */
 
       $form['sub_property_result'] = array(

@@ -1,0 +1,3 @@
+administer propertyfile:
+  title: 'Administer propertyfiles'
+  restrict access: true

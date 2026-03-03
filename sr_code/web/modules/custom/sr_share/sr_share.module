@@ -1,6 +1,8 @@
 <?php
 
 use Drupal\user\UserInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Url;
 
 function sr_share_preprocess_block(&$variables) {
   if ($variables['elements']['#plugin_id'] == 'share_button_block') {
@@ -88,8 +90,8 @@ function sr_share_user_login(UserInterface $account) {
     
     // Check if this is a valid path
     try {
-      $url = \Drupal\Core\Url::fromUserInput('/' . $destination);
-      $response = new \Symfony\Component\HttpFoundation\RedirectResponse($url->toString());
+      $url = Url::fromUserInput('/' . $destination);
+      $response = new RedirectResponse($url->toString());
       $response->send();
       exit;
     } catch (\Exception $e) {
@@ -100,16 +102,16 @@ function sr_share_user_login(UserInterface $account) {
   // Fallback to the referer if destination wasn't set
   $referer = $request->server->get('HTTP_REFERER');
   if ($referer) {
-    $referer_url = \Drupal\Core\Url::fromUri($referer);
+    $referer_url = Url::fromUri($referer);
     if ($referer_url->isRouted()) {
-      $response = new \Symfony\Component\HttpFoundation\RedirectResponse($referer_url->toString());
+      $response = new RedirectResponse($referer_url->toString());
       $response->send();
       exit;
     }
   }
   
   // Final fallback: If no destination, redirect to home
-  $response = new \Symfony\Component\HttpFoundation\RedirectResponse('/');
+  $response = new RedirectResponse('/');
   $response->send();
   exit;
 }

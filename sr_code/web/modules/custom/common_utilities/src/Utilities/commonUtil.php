@@ -9,6 +9,55 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\views\Views;
 
 class commonUtil {
+    public static function getCountryList() {
+        $arr_country = [];
+        $arr_country_term = commonUtil::get_term_list('country');
+        $arr_country_term = array_flip($arr_country_term);
+
+        $countries = \Drupal::service('country_manager')->getList();
+
+        foreach ($countries as $key => $val) {
+            if (isset($arr_country_term[$key])) {
+                $arr_country[$arr_country_term[$key]] = $val;
+            }
+        }
+        return $arr_country;
+    }
+
+    public static function getPropertyAmenities() {
+        $arr_main_amenities = array("Guaranteed parking","Fitness","Gym Access","Swimming Pool");
+        $arr_property_amenities = commonUtil::get_term_list('amenities');
+        foreach ($arr_property_amenities as $key => $val) {
+            if (!in_array($val, $arr_main_amenities)) {
+                unset($arr_property_amenities[$key]);
+            }
+        }
+        return $arr_property_amenities;
+    }
+
+    public static function getRoomAmenities() {
+        $arr_main_amenities = array("Flatscreen TV","Hair dryer","Iron","Toiletries","Washing machine","Dishwasher","Oven","Toaster","Capsule coffee machine","Cleaning",
+        "Microwave","Air conditioning","Filter coffee machine","CRT TV");
+        $arr_property_amenities = commonUtil::get_term_list('amenities');
+        foreach ($arr_property_amenities as $key => $val) {
+            if (!in_array($val, $arr_main_amenities)) {
+                unset($arr_property_amenities[$key]);
+            }
+        }
+        return $arr_property_amenities;
+    }
+
+
+    public static function isSiteAdmin() {
+        $arr_admin_roles = ['site_admin', 'administrator'];
+        $user = User::load(\Drupal::currentUser()->id());
+        $roles = $user->getRoles();
+        if (array_intersect($roles, $arr_admin_roles)) {
+            return true;
+        }
+        return false;
+    }
+
     public static function formatCurrency($price) {
         $formatted_price = 0;
         if ($price > 0) {
@@ -601,4 +650,183 @@ class commonUtil {
 
         return $arr_output;
     }
+
+    public static function generate_property_id($property_name, $latitude, $longitude) {
+        return hash('sha256', $property_name . '|' . $latitude . '|' . $longitude); 
+    }
+
+    /**
+     * Helper to get a taxonomy term ID by name.
+     *
+     * @param string $term_name
+     *   The term name you are looking for.
+     * @param string $vocabulary
+     *   The machine name of the vocabulary.
+     *
+     * @return int|null
+     *   The first matching term ID, or NULL if not found.
+     */
+    public static function getTermIdByName(string $term_name, string $vocabulary): ?int {
+        if (empty(trim($term_name)) || empty(trim($vocabulary))) {
+            return NULL; // Invalid input.
+        }
+        // Use an entity query for speed if you just need the ID.
+        $query = \Drupal::entityQuery('taxonomy_term')
+            ->condition('vid', $vocabulary)
+            ->condition('name', $term_name)
+            ->accessCheck(FALSE);
+
+        $tids = $query->execute();
+
+        if (!empty($tids)) {
+            return (int) reset($tids); // Return the first matching ID.
+        }
+        return NULL; // No matching term found.
+    }
+
+    /**
+     * Get ISO-2 country code by country name (case-insensitive).
+     *
+     * @param string $countryName
+     *   Country name (any case).
+     *
+     * @return string|null
+     *   ISO-2 country code or NULL if not found.
+     */
+    public static function getCountryIso2Code(string $countryName): ?string {
+    if (empty(trim($countryName))) {
+        return NULL; // Invalid input.
+    }
+    $countries = [
+        'afghanistan' => 'AF',
+        'albania' => 'AL',
+        'algeria' => 'DZ',
+        'andorra' => 'AD',
+        'angola' => 'AO',
+        'antigua and barbuda' => 'AG',
+        'argentina' => 'AR',
+        'armenia' => 'AM',
+        'australia' => 'AU',
+        'austria' => 'AT',
+        'azerbaijan' => 'AZ',
+        'bahamas' => 'BS',
+        'bahrain' => 'BH',
+        'bangladesh' => 'BD',
+        'barbados' => 'BB',
+        'belarus' => 'BY',
+        'belgium' => 'BE',
+        'belize' => 'BZ',
+        'benin' => 'BJ',
+        'bhutan' => 'BT',
+        'bolivia' => 'BO',
+        'bosnia and herzegovina' => 'BA',
+        'botswana' => 'BW',
+        'brazil' => 'BR',
+        'brunei' => 'BN',
+        'bulgaria' => 'BG',
+        'burkina faso' => 'BF',
+        'burundi' => 'BI',
+        'cambodia' => 'KH',
+        'cameroon' => 'CM',
+        'canada' => 'CA',
+        'cape verde' => 'CV',
+        'central african republic' => 'CF',
+        'chad' => 'TD',
+        'chile' => 'CL',
+        'china' => 'CN',
+        'colombia' => 'CO',
+        'comoros' => 'KM',
+        'congo' => 'CG',
+        'costa rica' => 'CR',
+        'croatia' => 'HR',
+        'cuba' => 'CU',
+        'cyprus' => 'CY',
+        'czech republic' => 'CZ',
+        'denmark' => 'DK',
+        'djibouti' => 'DJ',
+        'dominica' => 'DM',
+        'dominican republic' => 'DO',
+        'ecuador' => 'EC',
+        'egypt' => 'EG',
+        'el salvador' => 'SV',
+        'equatorial guinea' => 'GQ',
+        'eritrea' => 'ER',
+        'estonia' => 'EE',
+        'eswatini' => 'SZ',
+        'ethiopia' => 'ET',
+        'finland' => 'FI',
+        'france' => 'FR',
+        'gabon' => 'GA',
+        'gambia' => 'GM',
+        'georgia' => 'GE',
+        'germany' => 'DE',
+        'ghana' => 'GH',
+        'greece' => 'GR',
+        'hungary' => 'HU',
+        'iceland' => 'IS',
+        'india' => 'IN',
+        'indonesia' => 'ID',
+        'iran' => 'IR',
+        'iraq' => 'IQ',
+        'ireland' => 'IE',
+        'israel' => 'IL',
+        'italy' => 'IT',
+        'japan' => 'JP',
+        'jordan' => 'JO',
+        'kenya' => 'KE',
+        'kuwait' => 'KW',
+        'latvia' => 'LV',
+        'lebanon' => 'LB',
+        'lithuania' => 'LT',
+        'luxembourg' => 'LU',
+        'malaysia' => 'MY',
+        'maldives' => 'MV',
+        'mexico' => 'MX',
+        'netherlands' => 'NL',
+        'new zealand' => 'NZ',
+        'norway' => 'NO',
+        'pakistan' => 'PK',
+        'philippines' => 'PH',
+        'poland' => 'PL',
+        'portugal' => 'PT',
+        'qatar' => 'QA',
+        'romania' => 'RO',
+        'russia' => 'RU',
+        'saudi arabia' => 'SA',
+        'singapore' => 'SG',
+        'south africa' => 'ZA',
+        'south korea' => 'KR',
+        'spain' => 'ES',
+        'sri lanka' => 'LK',
+        'sweden' => 'SE',
+        'switzerland' => 'CH',
+        'thailand' => 'TH',
+        'turkey' => 'TR',
+        'ukraine' => 'UA',
+        'united arab emirates' => 'AE',
+        'united kingdom' => 'GB',
+        'united states' => 'US',
+        'vietnam' => 'VN',
+    ];
+
+    $key = strtolower(trim($countryName));
+
+    return $countries[$key] ?? null;
+    }
+
+    public static function getVendorNameById($vendor_id) {
+        $vendor_name = 'stayrelive';
+        if ($vendor_id > 0) {
+            $entity_vendor = \Drupal::entityTypeManager()
+            ->getStorage('propertyvendor')
+            ->load($vendor_id);
+            
+            if ($entity_vendor) {
+                // Access fields
+                $vendor_name = strtolower($entity_vendor->get('name')->value);
+            }
+        }
+        return $vendor_name;
+    }
+
 }

@@ -1,0 +1,5 @@
+propertyfile.add_form:
+  title: 'Add propertyfile'
+  route_name: entity.propertyfile.add_form
+  appears_on:
+    - entity.propertyfile.collection

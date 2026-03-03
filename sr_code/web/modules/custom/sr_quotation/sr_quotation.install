@@ -25,13 +25,14 @@ function sr_quotation_schema() {
       'checkin_time' => ['type' => 'varchar', 'length' => 50],
       'checkout_time' => ['type' => 'varchar', 'length' => 50],
       'nights' => ['type' => 'varchar', 'length' => 10],
+      'enquired_location' => ['type' => 'varchar', 'length' => 255],
       'unit_type' => ['type' => 'varchar', 'length' => 100],
       'apartment_size' => ['type' => 'varchar', 'length' => 50],
       'room_type' => ['type' => 'varchar', 'length' => 100],
       'room_category' => ['type' => 'varchar', 'length' => 255],
       'bathrooms' => ['type' => 'varchar', 'length' => 10],
       'adults' => ['type' => 'varchar', 'length' => 10],
-      'kids' => ['type' => 'varchar', 'length' => 10],
+      'kids' => ['type' => 'text', 'size' => 'big'],
       'location' => ['type' => 'varchar', 'length' => 255],
       'distance' => ['type' => 'varchar', 'length' => 255],
       'map_link' => ['type' => 'varchar', 'length' => 255],
@@ -40,15 +41,23 @@ function sr_quotation_schema() {
       'currency' => ['type' => 'varchar', 'length' => 10],
       'quote' => ['type' => 'varchar', 'length' => 255],
       'taxes' => ['type' => 'varchar', 'length' => 100],
-      'fx_rate' => ['type' => 'varchar', 'length' => 100],
+      'fx_rate' => ['type' => 'varchar', 'length' => 255],
       'addon_prices' => ['type' => 'varchar', 'length' => 300],
       'amenities' => ['type' => 'text', 'size' => 'big'],
       'cancellation_policy' => ['type' => 'text', 'size' => 'big'],
       'images' => ['type' => 'text', 'size' => 'big'],
       'rules' => ['type' => 'text', 'size' => 'big'],
       'note' => ['type' => 'text', 'size' => 'big'],
-      'supplier_reference' => ['type' => 'varchar','length' => 100],
+      'supplier_reference' => ['type' => 'text','size' => 'big','not null' => FALSE],
       'confirmation_status' => ['type' => 'varchar','length' => 50],
+      'avg_nightly_rate' => ['type' => 'varchar', 'length' => 255],
+      'extras_tax' => ['type' => 'varchar', 'length' => 255],
+      'total_outlay' => ['type' => 'varchar', 'length' => 255],
+      'markup_client_percentage' => ['type' => 'varchar', 'length' => 255],
+      'markup_client_value' => ['type' => 'varchar', 'length' => 255],
+      'total_profit' => ['type' => 'varchar', 'length' => 255],
+      'commission_sr_percentage' => ['type' => 'varchar', 'length' => 255],
+      'commission_sr_value' => ['type' => 'varchar', 'length' => 255],
       'created' => [
         'type' => 'int',
         'not null' => TRUE,
@@ -59,4 +68,85 @@ function sr_quotation_schema() {
   ];
 
   return $schema;
+}
+
+/**
+ * Increase length of supplier_reference field.
+ */
+function sr_quotation_update_9001() {
+  $schema = \Drupal::database()->schema();
+
+  // Check if column exists.
+  if ($schema->fieldExists('sr_quotation', 'supplier_reference')) {
+
+    // Change column type safely.
+    $schema->changeField(
+      'sr_quotation',
+      'supplier_reference',
+      'supplier_reference',
+      [
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+      ]
+    );
+  }
+}
+
+/**
+ * Change kids column from varchar(10) to text (big) for textarea content.
+ */
+function sr_quotation_update_9002() {
+  $schema = \Drupal::database()->schema();
+
+  if ($schema->fieldExists('sr_quotation', 'kids')) {
+    $schema->changeField(
+      'sr_quotation',
+      'kids',
+      'kids',
+      [
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+      ]
+    );
+  }
+}
+
+/**
+ * Add financial calculation fields.
+ */
+function sr_quotation_update_9003() {
+  $schema = \Drupal::database()->schema();
+  
+  $financial_fields = [
+    'avg_nightly_rate' => ['type' => 'varchar', 'length' => 255],
+    'extras_tax' => ['type' => 'varchar', 'length' => 255],
+    'total_outlay' => ['type' => 'varchar', 'length' => 255],
+    'markup_client_percentage' => ['type' => 'varchar', 'length' => 255],
+    'markup_client_value' => ['type' => 'varchar', 'length' => 255],
+    'total_profit' => ['type' => 'varchar', 'length' => 255],
+    'commission_sr_percentage' => ['type' => 'varchar', 'length' => 255],
+    'commission_sr_value' => ['type' => 'varchar', 'length' => 255],
+  ];
+
+  foreach ($financial_fields as $field_name => $spec) {
+    if (!$schema->fieldExists('sr_quotation', $field_name)) {
+      $schema->addField('sr_quotation', $field_name, $spec);
+    }
+  }
+}
+
+/**
+ * Increase FX Rate field length from 100 to 255 characters.
+ */
+function sr_quotation_update_9004() {
+  $schema = \Drupal::database()->schema();
+  
+  if ($schema->fieldExists('sr_quotation', 'fx_rate')) {
+    $schema->changeField('sr_quotation', 'fx_rate', 'fx_rate', [
+      'type' => 'varchar',
+      'length' => 255,
+    ]);
+  }
 }

@@ -5,9 +5,7 @@
 		<title>Quotation</title>
 
 		<style>
-			/* =========================
-   PDF SAFE BASE
-========================= */
+
 			body {
 				margin: 0;
 				padding: 0;
@@ -40,35 +38,17 @@
 				text-align: center;
 			}
 
-
-			.title-container {
-				width: 100%;
-				background: #0b8d9f;
-				display: table;
-				padding: 0;
-				margin: 0 0 20px;
-			}
-			
-			/* =========================
-   BORDER RADIUS
-========================= */
 			.quote-wrapper,
 			.property-hero {
 				border-radius: 16px;
 			}
 
-			/* =========================
-   HERO IMAGE
-========================= */
 			.property-hero {
 				width: 100%;
 				height: auto;
 				display: block;
 			}
 
-			/* =========================
-   QUOTE CARD
-========================= */
 			.quote-wrapper {
 				border: 2px solid #babecb;
 				background: #ffffff;
@@ -78,32 +58,6 @@
 				color: #192452;
 				page-break-inside: avoid;
 			}
-
-			/* =========================
-   SECTION HEADING + ICON
-========================= */
-			/*.quote-wrapper h4 {
-				font-family: "Merriweather", serif;
-        font-size: 2.25rem;
-
-
-        margin: 0;
-        padding: 0;
-        min-height: 60px;
-        line-height: 60px;
-
-        position: relative;
-			}
-
-			.quote-wrapper h4 img.h4-icon {
-				position: absolute;
-        left: 0;
-        top: 0;
-        width: 60px;
-        height: 60px;
-				-webkit-print-color-adjust: exact;
-				print-color-adjust: exact;
-			}*/
 
 			.quote-wrapper h2 .section-title {
 				position: relative;
@@ -129,7 +83,6 @@
 				margin-bottom: 30px;
 			}
 
-			/* ===== PDF SAFE TWO COLUMN LAYOUT ===== */
 			.pdf-table {
 				width: 100%;
 				border-collapse: collapse;
@@ -154,9 +107,6 @@
 				color: #192452;
 			}
 
-			/* =========================
-   LIST COLUMNS (PDF SAFE)
-========================= */
 			.list-columns {
 				column-count: 2;
 				column-gap: 40px;
@@ -176,42 +126,44 @@
 				min-width: 160px;
 			}
 
-			/* =========================
-   PROPERTY IMAGES
-========================= */
-			.property-images img {
-				width: 30%;
-				margin: 10px;
-				display: inline-block;
-				vertical-align: top;
-				border-radius: 10px;
+			.image-box {
+				width: 300px;
+				height: 169px;
+				border-radius: 16px;
+				border: 1px solid #cf0b2b;
+				padding: 10px;
+				overflow: hidden;
+				box-sizing: border-box;
+			}
+
+			.image-box img {
+				width: 100%;
+				height: 100%;
+				aspect-ratio: 16 / 9;
+				border-radius: 8px;
+				display: block;
+				object-fit: cover;
 			}
 		</style>
 	</head>
 
 	<body>
 
-		<div class="container">
-			<div class="title-container">
-				<h2 class="main-title">Quotation</h2>
-			</div>
+		{# <div class="container">
+					
+					<img src="https://stayrelive.com/sites/default/files/inline-images/pdf-hero-img.png" class="property-hero" alt="Hero Image">
+				</div> #}
 
-			<img src="https://static.plumcache.com/listings/d145409d-84c1-4e73-aabf-1d040aeb7059/59c76128-65de-407a-9d2f-2b91d0decef0..jpeg" class="property-hero" alt="Hero Image">
-		</div>
+   <div class="container">
+      <div class="row">
+         <div class="col-12">
+					<h2 class="main-title" style="font-weight: normal; color: #192452; padding: 10px 20px; margin: 0; font-family: 'Merriweather', serif; font-size: 45px; text-align: center;">Booking Details</h2>
+         </div>
+      </div>
 
-		<div class="container">
-			<div class="row">
-				<div class="col-12">
-					<h2 class="main-title" style="background: #0b8d9f; font-weight: normal; color: #192452; padding: 30px 20px; margin: 0; font-family: 'Merriweather', serif; font-size: 45px; text-align: center;">Booking Details</h2>
-				</div>
-			</div>
 			<!-- BOOKING DETAILS -->
-			<div
-				class="quote-wrapper">
-				{# <h2 class="section-title">
-													<img class="h4-icon" src="https://uat.stayrelive.com/sites/default/files/inline-images/icon-booking.png">
-													<span class="title-text">Booking Information</span>
-												</h2> #}
+			<div class="quote-wrapper">
+
 
 				<table class="title-table">
 
@@ -254,17 +206,17 @@
 							<span class="pdf-value">{{ data.booker_name|upper }}</span>
 						</td>
 						<td>
-							<span class="pdf-label">Check-in Time:</span>
+							<span class="pdf-label">Travel Partner / Corporate:</span>
 							<br>
-							<span class="pdf-value">{{ data.checkin_time }}</span>
+							<span class="pdf-value">{{ data.travel_partner }}</span>
 						</td>
 					</tr>
 
 					<tr>
 						<td>
-							<span class="pdf-label">Travel Partner / Corporate:</span>
+							<span class="pdf-label">Check-in Time:</span>
 							<br>
-							<span class="pdf-value">{{ data.travel_partner }}</span>
+							<span class="pdf-value">{{ data.checkin_time }}</span>
 						</td>
 						<td>
 							<span class="pdf-label">Check-out Time:</span>
@@ -280,33 +232,42 @@
 							<span class="pdf-value">{{ data.checkin_date }}</span>
 						</td>
 						<td>
-							<span class="pdf-label">Number of Nights:</span>
-							<br>
-							<span class="pdf-value">{{ data.nights }}</span>
-						</td>
-					</tr>
-
-					<tr>
-						<td>
 							<span class="pdf-label">Check-out Date:</span>
 							<br>
 							<span class="pdf-value">{{ data.checkout_date }}</span>
 						</td>
-						<td></td>
+
+					</tr>
+
+					<tr>
+						<td>
+							<span class="pdf-label">Number of Nights:</span>
+							<br>
+							<span class="pdf-value">{{ data.nights }}</span>
+						</td>
+						<td>
+							<span class="pdf-label">StayRelive Agent Name:</span>
+							<br>
+							<span class="pdf-value">{{ data.agent_name }}</span>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<span class="pdf-label">StayRelive Agent Contact Num:</span>
+							<br>
+							<span class="pdf-value">{{ data.agent_phone }}</span>
+						</td>
+						<td>
+							<span class="pdf-label">StayRelive Agent Email:</span>
+							<br>
+							<span class="pdf-value">{{ data.agent_email }}</span>
+						</td>
 					</tr>
 				</table>
-			</div>
-
+                </div>
+                
 			<!-- PROPERTY INFORMATION -->
-			<div
-				class="quote-wrapper">
-				{# <h4>
-																	<img class="h4-icon" src="https://uat.stayrelive.com/sites/default/files/inline-images/icon-bespoke.png">
-																	<span class="testing">
-																		<span class="title-text">Property Information</span>
-																		<span class="">cskbjclashb</span>
-																	</span>
-																</h4> #}
+			<div class="quote-wrapper">
 
 				<table class="title-table">
 
@@ -402,18 +363,13 @@
 						</td>
 					</tr>
 				</table>
-			</div>
+                  </div>
+                  
+               </div>
 
-		</div>
 
 		<!-- PRICING -->
-		<div
-			class="quote-wrapper">
-			{# <h4>
-										<img class="h4-icon" src="https://uat.stayrelive.com/sites/default/files/inline-images/icon-safety.png">
-										<span class="title-text">Pricing & Financials</span>
-						
-									</h4> #}
+		<div class="quote-wrapper">
 
 			<table class="title-table">
 
@@ -479,17 +435,74 @@
 					<td></td>
 				</tr>
 			</table>
-		</div>
+            </div>
 
-		<!-- POLICIES -->
 		<div
 			class="quote-wrapper">
-			{# <h4>
-										<img class="h4-icon" src="https://uat.stayrelive.com/sites/default/files/inline-images/icon-hospitality.png">
-						
-										<span class="title-text">Policies</span>
-						
-									</h4> #}
+
+			<!-- ===== Amenities Title ===== -->
+			<table class="title-table">
+				<tr>
+					<td rowspan="3">
+						<img class="h4-icon" src="https://uat.stayrelive.com/sites/default/files/inline-images/icon-bespoke.png">
+					</td>
+					<td></td>
+					<td></td>
+				</tr>
+
+				<tr>
+					<td rowspan="3">
+						<h6 class="title-text" style="font-size: 25px; color: #192452; font-family: 'Merriweather', serif; font-weight: normal;">
+							Amenities
+						</h6>
+					</td>
+					<td></td>
+				</tr>
+
+				<tr>
+					<td rowspan="3"></td>
+					<td></td>
+				</tr>
+			</table>
+
+			<!-- ===== Amenities List (PDF SAFE) ===== -->
+			{% if data.amenities %}
+                        {% set amenities_list = data.amenities|split(',') %}
+
+				<table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 10px;">
+                           {% for amenity in amenities_list %}
+                              {% set amenity_trimmed = amenity|trim %}
+                              {% if amenity_trimmed %}
+
+							{% if loop.index0 is even %}
+								<tr>
+								{% endif %}
+
+								<td width="50%" style="padding-bottom: 10px; vertical-align: top;">
+									<span style="color:#0B8D9F; font-weight:bold;">✔</span>
+									<span style="color:#192452; font-size:14px;">
+										{{ amenity_trimmed }}
+									</span>
+								</td>
+
+								{% if loop.index0 is odd or loop.last %}
+								</tr>
+							{% endif %}
+
+                              {% endif %}
+                           {% endfor %}
+				</table>
+
+                     {% else %}
+				<p style="color:#999;">No amenities selected.</p>
+                     {% endif %}
+
+                  </div>
+
+
+		<!-- POLICIES -->
+		<div class="quote-wrapper">
+
 
 			<table class="title-table">
 
@@ -525,12 +538,8 @@
 					<td>
 						<span class="pdf-label">Cancellation Policy:</span>
 						<br>
-						<span class="pdf-value">{{ data.cancellation_policy }}</span>
-					</td>
-					<td>
-						<span class="pdf-label">Status:</span>
-						<br>
-						<span class="pdf-value">{{ data.confirmation_status }}</span>
+
+						<span class="pdf-value">{{ data.cancellation_policy|raw }}</span>
 					</td>
 				</tr>
 
@@ -538,12 +547,8 @@
 					<td>
 						<span class="pdf-label">Rules:</span>
 						<br>
-						<span class="pdf-value">{{ data.rules }}</span>
-					</td>
-					<td>
-						<span class="pdf-label">Supplier Reference:</span>
-						<br>
-						<span class="pdf-value">{{ data.supplier_reference }}</span>
+						<span class="pdf-value">{{ data.rules|raw }}</span>
+
 					</td>
 				</tr>
 
@@ -551,29 +556,72 @@
 					<td colspan="2">
 						<span class="pdf-label">Notes:</span>
 						<br>
-						<span class="pdf-value">{{ data.note }}</span>
+						<span class="pdf-value">{{ data.note|raw }}</span>
 					</td>
 				</tr>
 			</table>
-		</div>
+               </div>
 
 		<!-- PROPERTY IMAGES -->
-		{% if image_urls %}
+         {% if image_urls %}
 			<div class="quote-wrapper">
-				<h4>
-					<img class="h4-icon" src="https://uat.stayrelive.com/sites/default/files/inline-images/icon-hospitality.png">
-					Property Images
-				</h4>
 
-				<div class="property-images">
-					{% for image_url in image_urls %}
-						<img src="{{ image_url }}">
-					{% endfor %}
-					{% for image_url in location_screenshot_urls %}
-						<img src="{{ image_url }}">
-					{% endfor %}
-				</div>
-			</div>
-		{% endif %}
+				<table class="title-table">
+
+					<tr>
+						<td rowspan="3">
+							<img class="h4-icon" src="https://uat.stayrelive.com/sites/default/files/inline-images/icon-safety.png">
+
+						</td>
+						<td></td>
+						<td></td>
+					</tr>
+
+					<tr>
+						<td rowspan="3">
+
+							<h6 class="title-text" style="font-size: 25px; color: #192452; font-family: 'Merriweather', serif; font-weight: normal;">Property Images</h6>
+
+						</td>
+						<td></td>
+					</tr>
+
+					<tr>
+						<td rowspan="3"></td>
+						<td></td>
+						<td></td>
+						<td></td>
+
+					</tr>
+
+
+				</table>
+
+				<div style="padding-top: 30px;">
+					<table width="100%" cellpadding="10" cellspacing="0">
+						{% set all_images = image_urls|merge(location_screenshot_urls) %}
+
+						{% for image in all_images %}
+							{% if loop.index0 is even %}
+								<tr>
+								{% endif %}
+
+								<td width="50%" valign="top" style="padding: 10px;">
+									<table cellpadding="10" cellspacing="0" style="border: 2px solid #babecb; border-radius: 16px; overflow: hidden;">
+										<tr style="border-radius: 10px;">
+											<td style="border-radius: 10px;">
+												<img src="{{ image }}" style="width: 260px; height: 146px; border-radius: 8px; display: block;">
+											</td>
+										</tr>
+									</table>
+								</td>
+								{% if loop.index0 is odd or loop.last %}
+								</tr>
+         {% endif %}
+                           {% endfor %}
+					</table>
+               </div>
+            </div>
+         {% endif %}
 	</body>
 </html></div></body></html>

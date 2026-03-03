@@ -1,0 +1,23 @@
+{#
+  Twig template for the Property Upload Form
+#}
+
+<div class="property-upload-form">
+
+  <div class="form-back-link">
+    {{ form.back_link }}
+  </div>
+
+  <div class="form-upload-file">
+    {{ form.upload_file }}
+  </div>
+
+  <div class="form-actions">
+    {{ form.form_build_id }}
+    {{ form.form_token }}
+    {{ form.form_id }}
+    {{ form.actions.submit }}
+    {{ form.submit }}
+  </div>
+
+</div>

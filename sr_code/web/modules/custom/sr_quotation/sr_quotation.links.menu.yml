@@ -4,3 +4,12 @@ sr_quotation.admin:
   route_name: sr_quotation.list
   parent: system.admin_content
   weight: 100
+
+sr_quotation.add:
+  title: 'Add Quotation'
+  description: 'Add new property quotation'
+  route_name: sr_quotation.form
+  parent: system.admin_content
+  weight: 101
+  requirements:
+    _permission: 'administer site configuration'

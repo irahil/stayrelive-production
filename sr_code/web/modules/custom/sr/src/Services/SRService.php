@@ -39,19 +39,16 @@ class SRService {
       $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($currency_code_tid);
       $field_currency_code = $term->label();
       $field_property_source = $node->get('field_property_source')->getString();
-//\Drupal::logger('my_module')->info('Price Field : ' . $field_price);
 
-      // Since homelike price is of 30 days. so getting per night price.
+      // Since spacest price is of 30 days. so getting per night price.
       if ($field_property_source == 'spacest' && $field_price > 0) {
         $field_price = ($field_price/31);
       }
-// \Drupal::logger('my_module')->info('1 day Price : ' . $field_price);
 
       // Convert currency price
       $result = \Drupal::service('currency_layer_integration.services')->CFConvertUserCurrency($field_currency_code, $field_price);
       // Convert currency deposit
       $result_deposit = \Drupal::service('currency_layer_integration.services')->CFConvertUserCurrency($field_currency_code, $field_deposit);
-// \Drupal::logger('my_module')->info(' Cunvert Price : ' . print_r($result, true));
 
       // Set Dates
       list($from_date, $to_date) = $this->convertDateRange($param['date_range']);
@@ -184,7 +181,7 @@ class SRService {
     $state_lat_long = \Drupal::state()->get($latlong);
     if ($state_lat_long != '') {
       $arr_return_address = unserialize($state_lat_long);
-      //\Drupal::logger('sr_mapping')->notice('Reading from state api for '.$latlong);
+
     } else {
       \Drupal::logger('sr_mapping')->notice('WONT CALL GOOGLE for '.$latlong);
       return array();
@@ -209,12 +206,12 @@ class SRService {
         }
       }
       \Drupal::state()->set($latlong, serialize($arr_return_address));
-      //\Drupal::logger('sr_mapping')->notice('Write to state api for '.$latlong);
     }
     return $arr_return_address;
   }
 
-  public function emailBooking($booking_id, $email_type = null) {
+  public function emailBooking($booking_id, $email_type = null)
+  {
 
     if ($booking_id > 0) {
       # Load from node id
@@ -263,7 +260,7 @@ class SRService {
         'email' => $node_booking->get('field_email')->getString(),
         'currency_code' => $selected_currency,
         'price' => $final_price,
-        'status' => ucwords(str_replace("_", " ", $booking_status)),
+        'status' => ucwords(str_replace(" ", "_", $booking_status)),
         'property_title' => $property_title,
         'booking_id' => $booking_id,
         'town_city' => $property_id,
@@ -272,54 +269,66 @@ class SRService {
         'additional_information' => $node_booking->get('field_remarks')->getString(),
         'phone_number' => $node_booking->get('field_phone_number')->getString(),
       ];
+      \Drupal::logger('booking-data')->warning('<pre><code>' . print_r($arr_content['status'], TRUE) . '</code></pre>');
 
-      switch($booking_status) {
-        case 'pending_booking':
-          // Send to user
+
+      switch ($arr_content['status']) {
+
+        case 'Pending_booking':
+
           $user_params = [
             'module' => 'sr',
             'key' => 'booking',
             'to' => $arr_content['email'],
             'subject' => "Your Booking Request for {$property_title} [#{$booking_id}]",
-            'template' => 'emails/sr-email-booking-request-user',
             'message' => $this->bookingEmailBody($arr_content, 'emails/sr-email-booking-request-user'),
           ];
           $this->sendEmail($user_params);
 
-          //Send to internal
           $internal_params = [
             'module' => 'sr',
             'key' => 'booking',
-            'to' => 'book@stayrelive.com',
+            'to' => 'vs2542000@gmail.com',
             'subject' => "New Booking Request Received [#{$booking_id}] - Action Required",
-            'template' => 'emails/sr-email-booking-request-internal',
             'message' => $this->bookingEmailBody($arr_content, 'emails/sr-email-booking-request-internal'),
           ];
           $this->sendEmail($internal_params);
+
         break;
-        case 'confirmed':
-          $arr_param['subject'] = "Booking Confirmed : " . $node_property->getTitle();
-          $arr_content['message'] = 'confirmed';
+
+        case 'Confirmed':
+
+          $confirmation_params = [
+            'module' => 'sr',
+            'key' => 'booking_confirm',
+            'to' => $arr_content['email'],
+            'subject' => "Booking Confirmed : " . $node_property->getTitle(),
+            'message' => $this->bookingEmailBody($arr_content, 'emails/sr-email-booking-confirmation'),
+          ];
+          $this->sendEmail($confirmation_params);
+
         break;
-        case 'canceled_booking':
-          $arr_param['subject'] = "Booking Canceled : " . $node_property->getTitle();
-          $arr_content['message'] = 'canceled';
+
+        case 'Canceled_booking':
+
+          $canceled_params = [
+            'module' => 'sr',
+            'key' => 'dlp_alert',
+            'to' => $arr_content['email'],
+            'subject' => "Booking Canceled : " . $node_property->getTitle(),
+            'message' => $this->bookingEmailBody($arr_content, 'emails/sr-email-booking-canceled'),
+          ];
+          $this->sendEmail($canceled_params);
+
         break;
+
         default:
+
+          \Drupal::logger('BOOKING SWITCH DEBUG')
+            ->error('Default hit with status: ' . $arr_content['status']);
+
         break;
       }
-    //print_r($arr_content);exit;
-
-      // $arr_param['message'] = $this->bookingEmailBody($arr_content);
-
-      // $email_to = $node_booking->get('field_email')->getString();
-      // $email_to.= ",book@stayrelive.com";
-
-      // $arr_param['to'] = $email_to;
-      // $arr_param['Cc'] = "book@stayrelive.com";
-      // $arr_param['module'] = 'sr';
-      // $arr_param['key'] = 'booking';
-      // $this->sendEmail($arr_param);
     }
   }
 
@@ -409,7 +418,6 @@ class SRService {
                 $is_agent = $user->get('field_is_agent')->value;
             }
         }
-        //\Drupal::logger('is_agent')->notice($is_agent);
 
         // Determine the commission key based on the user's agent status
         if ($is_agent == 1) {
@@ -448,7 +456,6 @@ class SRService {
 
       if ($result->getStatusCode() == 200) {
         $data = json_decode($result->getBody());
-        //\Drupal::logger('sr')->notice('getPlumGuideAPI : Data for ' . $property_id . ' : ' . print_r($data));
       }
       else {
         \Drupal::logger('sr')->error('authPlumGuideAPI : Token did not get 200 response');
@@ -474,7 +481,6 @@ class SRService {
     $token = $kv_store->get('token', null);
 
     if (isset($token) && $token != null) {
-      //\Drupal::logger('sr_mapping')->notice('authPlumGuideAPI : Reading from cache token : ' . $token);
       return $token;
     }
 
@@ -501,7 +507,6 @@ class SRService {
         // If no value, set the value
         if ($token != '') {
           $kv_store->setWithExpire('token', $token, $expiresIn);
-          //\Drupal::logger('sr_mapping')->notice('authPlumGuideAPI : Adding to cache token : ' . $token);
         } else {
           \Drupal::logger('sr_mapping')->error('authPlumGuideAPI : Token empty');
         }
@@ -537,7 +542,6 @@ class SRService {
       'hids' => $arr_hid,
       'currency' => 'EUR',
     ]);
-//    \Drupal::logger('sr')->error('API Request ' . print_r($body, true));
 
     try {
       $response = \Drupal::httpClient()->post($url, [

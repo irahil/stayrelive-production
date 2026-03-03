@@ -41,8 +41,6 @@ class SrAgentLoginDisplay implements EventSubscriberInterface {
       $geo_info = json_decode($geolocation_data, TRUE);
       $country_code = isset($geo_info['countryCode']) ? strtolower($geo_info['countryCode']) : 'testing';
       $session->set('country_code', $country_code);
-
-      \Drupal::logger('sr')->notice('Country code set in session: ' . $country_code);
     }
     catch (\Exception $e) {
       \Drupal::logger('sr')->error('Failed to fetch country code: ' . $e->getMessage());

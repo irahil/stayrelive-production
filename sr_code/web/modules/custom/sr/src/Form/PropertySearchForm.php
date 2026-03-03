@@ -350,8 +350,8 @@ class PropertySearchForm extends FormBase {
 
     $search_perm['query']['property_source'] = array('plumguide', 'ratehawk', 'interhome', 'spacest');
 
-    if ($booking_days >= 30) {
-      array_push($search_perm['query']['property_source'], 'homelike');
+    if ($booking_days >= 31) {
+      array_push($search_perm['query']['property_source'], 'spacest');
     }
 
     $arr_bedroom = array();
@@ -438,17 +438,36 @@ class PropertySearchForm extends FormBase {
         $calculated_currency_code = 'NA';
 
         if ($val_result['field_currency_code'] > 0 && $val_result['field_price'] > 0) {
-          $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($val_result['field_currency_code']);
+
+          $term = \Drupal::entityTypeManager()
+            ->getStorage('taxonomy_term')
+            ->load($val_result['field_currency_code']);
+
           $field_currency_code = $term->label();
 
-          // Convert currency price
-          $result = \Drupal::service('currency_layer_integration.services')->CFConvertUserCurrency($field_currency_code, $val_result['field_price']);
+          $actual_price = $val_result['field_price'];
+
+          // ✅ CONDITION ONLY FOR SPACEST
+          if ($val_result['field_property_source'] == 'spacest' && $booking_days > 0) {
+
+            // spacest stores MONTHLY price so convert to PER NIGHT
+            $actual_price = $actual_price / 31;
+          }
+
+          // Convert currency
+          $result = \Drupal::service('currency_layer_integration.services')
+            ->CFConvertUserCurrency($field_currency_code, $actual_price);
 
           $calculated_price = $result['value'];
           $calculated_currency_code = $result['to'];
 
-          // Calculate commission
-          $calculated_price = \Drupal::service('sr.services')->calculateCommission($val_result['field_property_source'], $calculated_price);
+          // Commission calculation
+          $calculated_price = \Drupal::service('sr.services')
+            ->calculateCommission(
+              $val_result['field_property_source'],
+              $calculated_price
+            );
+
           $calculated_price = commonUtil::formatCurrency($calculated_price);
         }
 

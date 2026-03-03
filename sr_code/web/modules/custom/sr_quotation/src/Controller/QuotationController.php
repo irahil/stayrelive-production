@@ -45,10 +45,6 @@ class QuotationController extends ControllerBase
    */
   public function list()
   {
-    $query = $this->db->select('sr_quotation', 'q')
-      ->fields('q')
-      ->orderBy('created', 'DESC');
-
     $request = \Drupal::request();
     $filters = [
       'serial' => $request->query->get('serial'),
@@ -61,6 +57,8 @@ class QuotationController extends ControllerBase
     $query = $this->db->select('sr_quotation', 'q')
       ->fields('q')
       ->orderBy('created', 'DESC');
+
+    // All users with access (content editors and admins) see all quotations.
 
     /** 1. Filter by Serial Number */
     if (!empty($filters['serial'])) {
@@ -86,7 +84,8 @@ class QuotationController extends ControllerBase
 
     /** 3. Filter by Travel Partner / Corporate */
     if (!empty($filters['partner'])) {
-      $query->condition('travel_partner', '%' . $filters['partner'] . '%', 'LIKE');
+      // Exact match for dropdown selection
+      $query->condition('travel_partner', $filters['partner']);
     }
 
     /** 4. Filter by Date Range */
@@ -128,15 +127,14 @@ class QuotationController extends ControllerBase
           ['token' => $encrypted_id]
         )->toString(),
         'title' => $record->unit_type . ' - ' . $record->room_type,
-        'location' => $record->location,
-        'created' => date('Y-m-d', $record->created),
-        'author' => $author_name,
+        'location_details' => $record->location . '<br><small><strong>Author:</strong> ' . $author_name . '<br><strong>Created:</strong> ' . date('d-m-Y', $record->created) . '</small>',
       ];
     }
 
     return [
       '#theme' => 'quotation_dashboard',
       '#quotations' => $rows,
+      '#filters' => $filters,
       '#add_link' => Url::fromRoute('sr_quotation.form')->toString(),
       '#attached' => ['library' => ['sr_quotation/quotation-dashboard-style']],
       '#cache' => ['max-age' => 0],
@@ -181,6 +179,16 @@ class QuotationController extends ControllerBase
   public function download($id)
   {
     $html = $this->buildPdfHtml($id);
+    $header_html = '
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td align="center">
+            <img src="' . DRUPAL_ROOT . '/sites/default/files/sr-logo.png" style="height:40px;">
+          </td>
+        </tr>
+      </table>
+      ';
+      
 
     $mpdf = new Mpdf([
       'default_font_size' => 10,
@@ -202,6 +210,15 @@ class QuotationController extends ControllerBase
   public function preview($id)
   {
     $html = $this->buildPdfHtml($id);
+    $header_html = '
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td align="center">
+            <img src="' . DRUPAL_ROOT . '/sites/default/files/sr-logo.png" style="height:40px;">
+          </td>
+        </tr>
+      </table>
+      ';
 
     $mpdf = new Mpdf([
       'default_font_size' => 10,
@@ -209,7 +226,7 @@ class QuotationController extends ControllerBase
       'margin_left' => 5,
       'margin_right' => 5,
     ]);
-
+    $mpdf->SetHTMLHeader($header_html);
     $mpdf->WriteHTML($html);
 
     return new Response(
@@ -259,19 +276,12 @@ class QuotationController extends ControllerBase
     $location_screenshot_urls = [];
     $location_screenshot_value = isset($record->location_screenshot) ? $record->location_screenshot : '';
     if (!empty($location_screenshot_value)) {
-      \Drupal::logger('sr_quotation')->debug('Loading location screenshots. Raw value: @value', [
-        '@value' => $location_screenshot_value
-      ]);
       $fids = array_filter(array_map('trim', explode(',', $location_screenshot_value)));
-      \Drupal::logger('sr_quotation')->debug('Location screenshot FIDs: @fids', [
-        '@fids' => print_r($fids, TRUE)
-      ]);
       foreach ($fids as $fid) {
         if (is_numeric($fid) && $file = File::load($fid)) {
           $url = \Drupal::service('file_url_generator')
             ->generateAbsoluteString($file->getFileUri());
           $location_screenshot_urls[] = $url;
-          \Drupal::logger('sr_quotation')->debug('Loaded location screenshot: @url', ['@url' => $url]);
         } else {
           \Drupal::logger('sr_quotation')->warning('Failed to load location screenshot FID: @fid', ['@fid' => $fid]);
         }
@@ -359,8 +369,9 @@ class QuotationController extends ControllerBase
    */
   private function prepareQuotationData($record)
   {
-    /* SilverDoor Reference */
-    $quotation_id = 'E-' . $record->id;
+    /* Format quotation ID as SR-006-2026 */
+    $year = date('Y', $record->created);
+    $quotation_id = 'SR-' . str_pad($record->id, 3, '0', STR_PAD_LEFT) . '-' . $year;
 
     /* Dates */
     $checkin_date = !empty($record->checkin_date)
@@ -401,6 +412,32 @@ class QuotationController extends ControllerBase
       }
     }
 
+    /* Customer Information - Load from user who created the quotation */
+    $agent_name = '';
+    $agent_email = '';
+    $agent_phone = '';
+    if (!empty($record->uid)) {
+      $user = User::load($record->uid);
+      if ($user) {
+        $first_name = $user->hasField('field_first_name') ? $user->get('field_first_name')->value : '';
+        $last_name = $user->hasField('field_last_name') ? $user->get('field_last_name')->value : '';
+        $agent_name = trim($first_name . ' ' . $last_name);
+        if ($agent_name === '') {
+          $agent_name = $user->getDisplayName();
+        }
+
+        $agent_email = $user->getEmail();
+
+        if ($user->hasField('field_phone_number') && !$user->get('field_phone_number')->isEmpty()) {
+          $agent_phone = $user->get('field_phone_number')->value;
+        } elseif ($user->hasField('field_contact_number') && !$user->get('field_contact_number')->isEmpty()) {
+          $agent_phone = $user->get('field_contact_number')->value;
+        } elseif ($user->hasField('field_agent_contact_number') && !$user->get('field_agent_contact_number')->isEmpty()) {
+          $agent_phone = $user->get('field_agent_contact_number')->value;
+        }
+      }
+    }
+
     return [
       'booker_name' => $record->booker_name,
       'travel_partner' => $record->travel_partner,
@@ -410,6 +447,7 @@ class QuotationController extends ControllerBase
       'checkin_time' => $checkin_time,
       'checkout_time' => $checkout_time,
       'nights' => $nights,
+      'enquired_location' => $record->enquired_location ?? '',
 
       'room_type' => $record->room_type,
       'room_category' => $record->room_category ?? '',
@@ -428,6 +466,14 @@ class QuotationController extends ControllerBase
       'taxes' => $record->taxes,
       'fx_rate' => $record->fx_rate,
       'addon_prices' => $record->addon_prices ?? '',
+      'avg_nightly_rate' => $record->avg_nightly_rate ?? '',
+      'extras_tax' => $record->extras_tax ?? '',
+      'total_outlay' => $record->total_outlay ?? '',
+      'markup_client_percentage' => $record->markup_client_percentage ?? '',
+      'markup_client_value' => $record->markup_client_value ?? '',
+      'total_profit' => $record->total_profit ?? '',
+      'commission_sr_percentage' => $record->commission_sr_percentage ?? '',
+      'commission_sr_value' => $record->commission_sr_value ?? '',
 
       'cancellation_policy' => $record->cancellation_policy,
       'Housekeeping' => $record->rules,
@@ -438,6 +484,9 @@ class QuotationController extends ControllerBase
       'supplier_reference' => $supplier_reference,
       'supplier_reference_text' => $supplier_reference_text,
       'confirmation_status' => $record->confirmation_status ?? '',
+      'agent_name' => $agent_name,
+      'agent_email' => $agent_email,
+      'agent_phone' => $agent_phone,
     ];
   }
 
@@ -472,30 +521,48 @@ class QuotationController extends ControllerBase
    */
   public function exportExcel()
   {
-
-    $rows = $this->db->select('sr_quotation', 'q')
+    $query = $this->db->select('sr_quotation', 'q')
       ->fields('q')
-      ->orderBy('created', 'DESC')
-      ->execute()
-      ->fetchAll();
+      ->orderBy('created', 'DESC');
+
+    $rows = $query->execute()->fetchAll();
 
     $filename = 'quotation-export-' . date('Ymd') . '.csv';
+
     $header = [
-      "ID",
-      "Serial No",
-      "Title",
-      "Location",
-      "Booker",
-      "Corporate",
-      "Created",
+      "Sr.No",
+      "Quotation ID",
+      "Date",
+      "SR Booker",
+      "Enquired by",
+      "Check In Date",
+      "Check Out Date",
+      "Total Stay (Nights)",
+      "Apartment/Hotel Proposed By",
+      "City",
+      "Currency",
+      "Room Type",
+      "Avg. Nightly Rate",
+      "Extras (Tax)",
+      "Total Outlay",
+      "Mark-up to Client (%)",
+      "Mark-up to Client (Value)",
+      "Total Profit",
+      "Commission to SR (%)",
+      "Commission to SR (Value)",
+      "Confirmed / Not Confirmed",
+      "Supplier Reference",
     ];
 
     $output = fopen('php://memory', 'w');
     fputcsv($output, $header);
 
+    $sr_no = 1;
+
     foreach ($rows as $r) {
+
       $year = date('Y', $r->created);
-      $serial = 'SR-' . str_pad($r->id, 3, '0', STR_PAD_LEFT) . '-' . $year;
+      $quotation_id = 'SR-' . str_pad($r->id, 3, '0', STR_PAD_LEFT) . '-' . $year;
 
       $author = "Unknown";
       if ($u = User::load($r->uid)) {
@@ -503,17 +570,33 @@ class QuotationController extends ControllerBase
       }
 
       fputcsv($output, [
-        $r->id,
-        $serial,
-        $r->unit_type . ' - ' . $r->room_type,
-        $r->location,
-        $author,
-        $r->corporate_name,
-        date('Y-m-d', $r->created),
+        $sr_no++,                               // Sr.No
+        $quotation_id,                          // Quotation ID
+        date('d-m-Y', $r->created),              // Date
+        $r->booker_name ?? '',                   // SR Booker
+        $r->travel_partner ?? '',                // Enquired by
+        $r->checkin_date ?? '',                  // Check In
+        $r->checkout_date ?? '',                 // Check Out
+        $r->nights ?? '',                        // Nights
+        $r->unit_type ?? '',                     // Apartment Proposed By
+        $r->enquired_location ?? '',             // City
+        $r->currency ?? '',                      // Currency
+        $r->room_type ?? '',                     // Room Type
+        $r->avg_nightly_rate ?? '',              // Avg Nightly
+        $r->extras_tax ?? '',                    // Extras Tax
+        $r->total_outlay ?? '',                  // Total Outlay
+        $r->markup_client_percentage ?? '',      // Markup %
+        $r->markup_client_value ?? '',           // Markup Value
+        $r->total_profit ?? '',                  // Profit
+        $r->commission_sr_percentage ?? '',      // Commission %
+        $r->commission_sr_value ?? '',           // Commission Value
+        $r->confirmation_status ?? '',           // Confirmed Status
+        $r->supplier_reference ?? '',            // Supplier Ref
       ]);
     }
 
     fseek($output, 0);
+
     return new Response(
       stream_get_contents($output),
       200,

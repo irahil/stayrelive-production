@@ -57,7 +57,6 @@ class ImportProperty implements ContainerInjectionInterface {
     public function processProperty($property_name) {
         $arr_property = Profiler::getProfile($property_name);
         if (empty($arr_property)) {
-            \Drupal::logger('Sr_Download')->error('Unable to get the property details for provider : ' . $property_name);
             return FALSE;
         }
         switch ($property_name) {
@@ -85,7 +84,6 @@ class ImportProperty implements ContainerInjectionInterface {
         $arr_property = Profiler::getProfile($property_name);
         if (empty($arr_property)) {
             echo "\nUnable to get the property details for provider : " . $property_name;
-            \Drupal::logger('Sr_Download')->error('Unable to get the property details for provider : ' . $property_name);
             return FALSE;
         }
 
@@ -121,10 +119,8 @@ class ImportProperty implements ContainerInjectionInterface {
                     if (isset($result['message']) && $result['message'] != '') {
                         // Move file to error directory.
                         rename($private_path_to_process.'/'.$file_name, $private_path_error_process.'/'.$file_name);
-                        \Drupal::logger('Sr_Download')->error('Error : File Download for provider : ' . $property_name . ' --- File Name : '.$file_name.' ---- Error Message : ' . $result['message']);
                         echo "\nError : File Download for provider : " . $property_name . " --- File Name : ".$file_name." ---- Error Message : " . $result['message'];
                     } else {
-                        //\Drupal::logger('Sr_Download')->error('Successful : File Download for provider : ' . $property_name . ' --- File Name : '.$file_name);
                         echo "\nSuccessful : File Download for provider : " . $property_name . " --- File Name : ".$file_name;
                     }
                 }
@@ -151,10 +147,8 @@ class ImportProperty implements ContainerInjectionInterface {
                     if (!$return_value) {
                         // Move file to error directory.
                         rename($private_path_to_process.'/'.$file_name, $private_path_error_process.'/'.$file_name);
-                        \Drupal::logger('Sr_Download')->error('Error : file download from provider : ' . $property_name . ' --- File Name : '.$file_name);
                         echo "\nError : file download from provider : " . $property_name . " --- File Name : ".$file_name;
                     } else {
-                        //\Drupal::logger('Sr_Download')->error('Successful : file download from provider : ' . $property_name . ' --- File Name : '.$file_name);
                         echo "\nSuccessful : file download from provider : " . $property_name . " --- File Name : ".$file_name;
                     }
                 }
@@ -204,7 +198,6 @@ class ImportProperty implements ContainerInjectionInterface {
                                 \Drupal::logger('Sr_Download')->error('Error : file download from provider : ' . $property_name . ' --- File Name : '.$file_name);
                                 echo "\nError : file download from provider : " . $property_name . " --- File Name : ".$file_name_zst;
                             } else {
-                                //\Drupal::logger('Sr_Download')->error('Successful : file download from provider : ' . $property_name . ' --- File Name : '.$file_name);
                                 echo "\nSuccessful : file download from provider : " . $property_name . " --- File Name : ".$file_name_zst;
                                 # unzstd $file_name
                                 $command = "unzstd ".$private_path_to_process.$file_name_zst;

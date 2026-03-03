@@ -1,6 +1,6 @@
 name: SR
 type: module
-description: 'SR Custom Drupal Module.'
+description: 'SR Custom Drupal Module'
 package: Custom
 version: 1.0
 core_version_requirement: ^8 || ^9 || ^10

@@ -1,0 +1,5 @@
+propertyvendor.add_form:
+  title: 'Add propertyvendor'
+  route_name: entity.propertyvendor.add_form
+  appears_on:
+    - entity.propertyvendor.collection

@@ -32,7 +32,7 @@ class Profiler {
             'spacest' => [
                 'download' => [
                     'type' => 'https',
-                    'endpoint' => 'https://roomless-file.s3.us-east-2.amazonaws.com/feed-partner/example_feed.json'
+                    'endpoint' => 'https://roomless-file.s3.us-east-2.amazonaws.com/feed-partner/stay_relive.json'
                 ],
                 'file_type' => 'json',
                 'load_days' => '180',

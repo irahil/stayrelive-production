@@ -11,27 +11,31 @@
 
 						<div class="filter-item">
 							<label>Quotation Serial</label>
-							<input type="text" name="serial" value="{{ app.request.get('serial') }}" placeholder="SR-001-2025">
+							<input type="text" name="serial" value="{{ filters.serial }}" placeholder="SR-001-2025">
 						</div>
 
 						<div class="filter-item">
 							<label>Booker ID/Name</label>
-							<input type="text" name="booker" value="{{ app.request.get('booker') }}" placeholder="Enter booker name">
+							<input type="text" name="booker" value="{{ filters.booker }}" placeholder="Enter booker name">
 						</div>
 
-						<div class="filter-item">
-							<label>Travel Partner / Corporate</label>
-							<input type="text" name="partner" value="{{ app.request.get('partner') }}">
-						</div>
+					<div class="filter-item">
+						<label>Enquired by</label>
+						<select name="partner">
+							<option value="">- Select -</option>
+							<option value="Travel Partner" {% if filters.partner == 'Travel Partner' %}selected{% endif %}>Travel Partner</option>
+							<option value="Corporate" {% if filters.partner == 'Corporate' %}selected{% endif %}>Corporate</option>
+						</select>
+					</div>
 
 						<div class="filter-item">
 							<label>Date From</label>
-							<input type="date" name="date_from" value="{{ app.request.get('date_from') }}">
+							<input type="date" name="date_from" value="{{ filters.date_from }}">
 						</div>
 
 						<div class="filter-item">
 							<label>Date To</label>
-							<input type="date" name="date_to" value="{{ app.request.get('date_to') }}">
+							<input type="date" name="date_to" value="{{ filters.date_to }}">
 						</div>
 
 					</div>
@@ -66,10 +70,8 @@
 								<th class="col-action">Action</th>
 								<th class="col-id">ID</th>
 								<th class="col-title">Title</th>
-								<th class="col-location">Location</th>
-								<th class="col-author">Author</th>
-								<th class="col-created">Created</th>
-								<th class="col-pdf">PDF</th>
+								<th class="col-location">Location / Details</th>
+								<th class="col-pdf">Preview</th>
 								{# 🆕 New column for preview/download #}
 							</tr>
 						</thead>
@@ -108,23 +110,13 @@
 									<td class="col-id">{{ item.formatted_id }}</td>
 
 									<td class="col-title">{{ item.title }}</td>
-									<td class="col-location">{{ item.location }}</td>
-
-									<!-- removed check-in / check-out -->
-
-									<td class="col-author">{{ item.author }}</td>
-									<td class="col-created">{{ item.created|date("d-m-Y") }}</td>
+									<td class="col-location">{{ item.location_details|raw }}</td>
 
 									<td class="col-pdf">
 										<div class="pdf-actions">
 											<a href="{{ item.preview_url }}" class="btn-preview" target="_blank">
 												<i class="fas fa-eye"></i>
 												Preview
-											</a>
-
-											<a href="{{ path('sr_quotation.download', {'id': item.id}) }}" class="btn-download" target="_blank">
-												<i class="fas fa-file-download"></i>
-												{{ 'Download'|t }}
 											</a>
 										</div>
 									</td>

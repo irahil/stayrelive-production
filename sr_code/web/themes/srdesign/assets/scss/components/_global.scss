@@ -2,8 +2,7 @@
 
 // mixin for px to rem
 @function toRem($value) {
-  $remValue: calc($value / 16) + rem;
-  @return $remValue;
+  @return ($value / 16) * 1rem;
 }
 
 html {
@@ -58,14 +57,21 @@ h6 {
 }
 
 a {
-  color: $blue;
+  color: $secondary;
   text-decoration: none;
+  &:hover {
+    color: $primary !important;
+  }
 }
 
 ul,
 ol {
   padding: 0;
   margin: 0;
+}
+
+li {
+  list-style: none !important;
 }
 
 ul.list-style {
@@ -82,12 +88,8 @@ ul.list-style {
 
 a {
   &:hover {
-    transition: $transition-base;
+    transition: $transition-base !important;
   }
-}
-
-li {
-  list-style: none !important;
 }
 
 textarea:focus,
@@ -358,7 +360,9 @@ form {
       background-color: $primary-light !important;
       border-width: 0 !important;
       color: $secondary;
-      box-shadow: -5px 0 0 $primary-light, 5px 0 0 $primary-light !important;
+      box-shadow:
+        -5px 0 0 $primary-light,
+        5px 0 0 $primary-light !important;
     }
   }
 }
@@ -465,5 +469,3 @@ form {
 .preloader {
   display: none;
 }
-
-

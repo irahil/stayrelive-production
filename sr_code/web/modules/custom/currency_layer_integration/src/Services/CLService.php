@@ -32,7 +32,6 @@ class CLService {
     $result = FALSE;
     if ($cache == TRUE && $cache = \Drupal::cache()->get($this->cache_id_live)) {
       if (!empty($cache->data) && $cache->expire > time()) {
-        // \Drupal::logger('currency_layer_integration')->info('Live : Reading from cache on ' . time());
         $result = $cache->data;
       }
     }
@@ -40,7 +39,6 @@ class CLService {
       $result_currency = $this->getApiData('live');
       if (isset($result_currency['success']) && $result_currency['success'] == 1 && !empty($result_currency['quotes'])) {
         $expire_date = time() + (24 * 60 * 60);
-        \Drupal::logger('currency_layer_integration')->info('Live : Writing to cache on '.time().' and expires on '.$expire_date);
         \Drupal::cache()->set($this->cache_id_live, $result_currency['quotes'], $expire_date);
         $result = $result_currency['quotes'];
       } else {
@@ -54,7 +52,6 @@ class CLService {
     $result = FALSE;
     if ($cache == TRUE && $cache = \Drupal::cache()->get($this->cache_id_list)) {
       if (!empty($cache->data) && $cache->expire > time()) {
-        //\Drupal::logger('currency_layer_integration')->info('Live : Reading from cache on ' . time());
         $result = $cache->data;
       }
     }
@@ -62,7 +59,6 @@ class CLService {
       $result_currency = $this->getApiData('list');
       if (isset($result_currency['success']) && $result_currency['success'] == 1 && !empty($result_currency['currencies'])) {
         $expire_date = time() + (24 * 60 * 60);
-        \Drupal::logger('currency_layer_integration')->info('List : Writing to cache on '.time().' and expires on '.$expire_date);
         \Drupal::cache()->set($this->cache_id_list, $result_currency['currencies'], $expire_date);
         $result = $result_currency['currencies'];
       } else {
@@ -96,7 +92,6 @@ class CLService {
   public function CFConvertUserCurrency($from_ctype = 'USD', $value = 1) {
     $to_ctype = $this->CFgetUserSessionCurrency();
     $currency_value = $this->CFConvert($from_ctype, $to_ctype, $value);
-    //\Drupal::logger('currency_layer_integration')->info(' convert : ' . print_r($currency_value, true));
 
     if ($currency_value != FALSE) {
       //$currency_value = number_format((float)$currency_value, 2, '.', '');

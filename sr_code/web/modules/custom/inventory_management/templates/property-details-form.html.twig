@@ -1,0 +1,80 @@
+{#
+  Custom template for the Property Form.
+  Assumes hook_theme() defines template 'property_form'.
+#}
+
+<div class="property-form-wrapper">
+
+  <div class="form-back-link">
+    {{ form.back_link }}
+  </div>
+  <div style="clear: both;"></div>
+
+  <fieldset>
+    <legend><strong>{{ form.property_basic_info['#title'] }}</strong></legend>
+    {% if form.property_basic_info.published is defined %}
+      {{ form.property_basic_info.published }}
+    {% endif %}
+    {% if form.property_basic_info.markup_type_wrapper is defined %}  
+      {{ form.property_basic_info.markup_type_wrapper }}
+    {% endif %}
+    {{ form.property_basic_info.property_type }}
+    {{ form.property_basic_info.room_types }}
+    {{ form.property_basic_info.property_name_age_wrapper }}
+    {{ form.property_basic_info.property_description }}
+    {{ form.property_basic_info.lat_lng_row }}
+    {{ form.property_basic_info.address }}
+    {{ form.property_basic_info.location_row_1 }}
+    {{ form.property_basic_info.location_row_2 }}
+  </fieldset>
+
+  <fieldset>
+    <legend><strong>{{ form.property_details['#title'] }}</strong></legend>
+    {{ form.property_details.primary_media }}
+    {{ form.property_details.media }}
+    {{ form.property_details.on_site_staffing }}
+    {{ form.property_details.property_amenities }}
+    {{ form.property_details.food_beverages }}
+    {{ form.property_details.breakfast_provides }}
+    {{ form.property_details.breakfast_price }}
+  </fieldset>
+
+  <fieldset>
+    <legend><strong>{{ form.host_details['#title'] }}</strong></legend>
+    {{ form.host_details.hosting_type }}
+    {{ form.host_details.owner_contact_wrapper}}
+    {{ form.host_details.owner_contact_mobile }}
+    {{ form.host_details.owner_contact_landline }}
+    {{ form.host_details.designation }}
+  </fieldset>
+
+   <fieldset>
+    <legend><strong>{{ form.policy_info['#title'] }}</strong></legend>
+    {{ form.policy_info.cancellation_info }}
+    {{ form.policy_info.early_checkout }}
+    {{ form.policy_info.security_deposit_wrapper }}
+  </fieldset>
+
+
+
+  <fieldset>
+    <legend><strong>{{ form.finance_details['#title'] }}</strong></legend>
+    {{ form.finance_details.billing_name }}
+
+    <fieldset>
+      <legend><strong>{{ form.finance_details.bank_details['#title'] }}</strong></legend>
+      {{ form.finance_details.bank_details.bank_account_wrapper }}
+      {{ form.finance_details.bank_details.bank_ifsc_wrapper}}
+      {{ form.finance_details.bank_details.bank_gst_wrapper }}
+    </fieldset>
+  </fieldset>
+
+  <div class="form-actions">
+    {{ form.form_build_id }}
+    {{ form.form_token }}
+    {{ form.form_id }}
+    {{ form.actions.submit }}
+    {{ form.submit }}
+  </div>
+
+</div>
