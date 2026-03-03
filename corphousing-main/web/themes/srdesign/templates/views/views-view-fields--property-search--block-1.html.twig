@@ -5,10 +5,27 @@
   {'number': '7.9', 'text': 'Good'}
 ] %}
 
+{# Get URL parameters for property links #}
+{% set check_in = url_check_in|default('') %}
+{% set check_out = url_check_out|default('') %}
+{% set guests = url_guests|default('') %}
+
+{# Build query string for property detail page #}
+{% set query_params = {'open_booking': '1'} %}
+{% if check_in %}
+  {% set query_params = query_params|merge({'check_in': check_in}) %}
+{% endif %}
+{% if check_out %}
+  {% set query_params = query_params|merge({'check_out': check_out}) %}
+{% endif %}
+{% if guests %}
+  {% set query_params = query_params|merge({'guests': guests}) %}
+{% endif %}
+
 {# ------------------- CARD WRAPPER (CLICKABLE) ----------------------- #}
 <div 
   class="property-card"
-  onclick="window.location='{{ path('entity.node.canonical', {'node': property_nid}) }}?open_booking=1'"
+  onclick="window.location='{{ path('entity.node.canonical', {'node': property_nid}, {'query': query_params}) }}'"
   style="cursor: pointer;"
 >
 
@@ -32,7 +49,7 @@
     {% set has_img_tag = rendered matches '/<img/i' %}
 
     <a 
-      href="{{ path('entity.node.canonical', {'node': property_nid}) }}?open_booking=1"
+      href="{{ path('entity.node.canonical', {'node': property_nid}, {'query': query_params}) }}"
       class="redirect-to-property"
       data-property-nid="{{ property_nid }}"
     >
@@ -54,7 +71,7 @@
 
     <h4>
       <a 
-        href="{{ path('entity.node.canonical', {'node': property_nid}) }}?open_booking=1"
+        href="{{ path('entity.node.canonical', {'node': property_nid}, {'query': query_params}) }}"
         class="redirect-to-property"
         data-property-nid="{{ property_nid }}"
       >
@@ -107,7 +124,7 @@
           %}
 
           <a 
-            href="{{ path('entity.node.canonical', {'node': property_nid}) }}?open_booking=1"
+            href="{{ path('entity.node.canonical', {'node': property_nid}, {'query': query_params}) }}"
             class="request-button redirect-to-property"
             data-property-nid="{{ property_nid }}">
             Request to Book

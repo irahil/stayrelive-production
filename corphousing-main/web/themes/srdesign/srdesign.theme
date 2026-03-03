@@ -210,6 +210,41 @@ function srdesign_preprocess_views_view_fields(&$variables)
     ($view->id() == 'property_search' && in_array($view->current_display, ['block_1', 'block_2'])) ||
     ($view->id() == 'flag_bookmark' && in_array($view->current_display, ['page_2']));
 
+  // Pass URL query parameters to property search templates
+  if ($view->id() == 'property_search') {
+    $request = \Drupal::request();
+    $variables['url_check_in'] = $request->query->get('check_in', '');
+    $variables['url_check_out'] = $request->query->get('check_out', '');
+    $variables['url_guests'] = $request->query->get('rooms', $request->query->get('guests', ''));
+    $variables['url_date'] = $request->query->get('date', '');
+    
+    // Parse date range if present (format: "4th Feb 2026 to 16th Mar 2026" or "2026-02-04 to 2026-03-16")
+    if (empty($variables['url_check_in']) && !empty($variables['url_date'])) {
+      $date_range = urldecode($variables['url_date']);
+      
+      // Check if it's already in YYYY-MM-DD format
+      if (preg_match('/^(\d{4}-\d{2}-\d{2})\s+to\s+(\d{4}-\d{2}-\d{2})$/', $date_range, $matches)) {
+        $variables['url_check_in'] = $matches[1];
+        $variables['url_check_out'] = $matches[2];
+      }
+      // Try to parse date range format like "4th Feb 2026 to 16th Mar 2026" or "4th Feb 26 to 16th Mar 26"
+      elseif (preg_match('/(\d{1,2})\w{0,2}\s+(\w+)\s+(\d{2,4})\s+to\s+(\d{1,2})\w{0,2}\s+(\w+)\s+(\d{2,4})/i', $date_range, $matches)) {
+        // Handle 2-digit years
+        $check_in_year = strlen($matches[3]) == 2 ? '20' . $matches[3] : $matches[3];
+        $check_out_year = strlen($matches[6]) == 2 ? '20' . $matches[6] : $matches[6];
+        
+        $check_in_str = $matches[1] . ' ' . $matches[2] . ' ' . $check_in_year;
+        $check_out_str = $matches[4] . ' ' . $matches[5] . ' ' . $check_out_year;
+        $check_in_timestamp = strtotime($check_in_str);
+        $check_out_timestamp = strtotime($check_out_str);
+        if ($check_in_timestamp && $check_out_timestamp) {
+          $variables['url_check_in'] = date('Y-m-d', $check_in_timestamp);
+          $variables['url_check_out'] = date('Y-m-d', $check_out_timestamp);
+        }
+      }
+    }
+  }
+
   if ($is_property_card_view) {
   $row = $variables['row'];
   $fields = &$variables['fields'];
@@ -596,6 +631,9 @@ function srdesign_preprocess_menu(&$variables) {
    // ✅ VERY IMPORTANT: vary menu cache per user
   $variables['#cache']['contexts'][] = 'user';
 
+  // Filter menu items based on user permissions
+  srdesign_preprocess_menu_filter($variables);
+
   // Only add user details if logged in.
   if ($account->isAuthenticated()) {
     $user = User::load($account->id());
@@ -607,5 +645,24 @@ function srdesign_preprocess_menu(&$variables) {
     $variables['user_last_name'] = '';
     $variables['user_mail'] = '';
     $variables['sr_admin_link'] = '';
+  }
+}
+
+/**
+ * Filter menu items to hide "List Your Property" for non-admin users.
+ */
+function srdesign_preprocess_menu_filter(&$variables) {
+  $account = \Drupal::currentUser();
+  $admin_roles = ['administrator', 'site_admin', 'vendor'];
+  $is_admin = $account->hasPermission('access administration pages') || !empty(array_intersect($admin_roles, $account->getRoles()));
+  
+  // Hide "List Your Property" for non-admin users
+  if (!$is_admin && isset($variables['items'])) {
+    foreach ($variables['items'] as $key => $item) {
+      $title = $item['title'] ?? $item['#title'] ?? '';
+      if ($title == 'List Your Property') {
+        unset($variables['items'][$key]);
+      }
+    }
   }
 }

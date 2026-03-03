@@ -666,6 +666,9 @@
       padding: 0 0 28px 40px;
       opacity: 1;
       border-bottom: 1px solid #e5e5e5;
+      height: auto !important;
+      max-height: none !important;
+      overflow: visible !important;
 
       @media (max-width: 768px) {
         padding: 0 0 24px 40px;

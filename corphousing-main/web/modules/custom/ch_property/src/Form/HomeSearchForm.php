@@ -71,6 +71,7 @@ class HomeSearchForm extends FormBase
         'id' => 'date-flatpicker',
         'class' => ['date-flatpicker'],
         'placeholder' => $this->t('Select Date'),
+        'autocomplete' => 'off',
       ],
       '#attached' => [
         'library' => [
