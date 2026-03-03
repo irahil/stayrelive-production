@@ -1,0 +1,7 @@
+entity.propertyfile.settings:
+  path: 'admin/structure/propertyfile'
+  defaults:
+    _form: '\Drupal\propertyfile\Form\PropertyfileSettingsForm'
+    _title: 'Propertyfile'
+  requirements:
+    _permission: 'administer propertyfile'

@@ -1,0 +1,22 @@
+entity.propertyvendor.settings:
+  title: 'Settings'
+  route_name: entity.propertyvendor.settings
+  base_route: entity.propertyvendor.settings
+entity.propertyvendor.view:
+  title: 'View'
+  route_name: entity.propertyvendor.canonical
+  base_route: entity.propertyvendor.canonical
+entity.propertyvendor.edit_form:
+  title: 'Edit'
+  route_name: entity.propertyvendor.edit_form
+  base_route: entity.propertyvendor.canonical
+entity.propertyvendor.delete_form:
+  title: 'Delete'
+  route_name: entity.propertyvendor.delete_form
+  base_route: entity.propertyvendor.canonical
+  weight: 10
+entity.propertyvendor.collection:
+  title: 'Propertyvendors'
+  route_name: entity.propertyvendor.collection
+  base_route: system.admin_content
+  weight: 10

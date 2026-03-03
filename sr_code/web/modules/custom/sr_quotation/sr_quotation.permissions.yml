@@ -1,3 +1,11 @@
 access quotation dashboard:
   title: 'Access quotation dashboard'
   description: 'Allow users to view quotation dashboard'
+
+add quotation:
+  title: 'Add quotation'
+  description: 'Allow users to add new quotations'
+
+edit quotation:
+  title: 'Edit quotation'
+  description: 'Allow users to edit quotations'

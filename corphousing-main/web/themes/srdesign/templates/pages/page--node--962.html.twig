@@ -1,0 +1,490 @@
+{% set gcc_img = directory ~ '/assets/images/gcc' %}
+{% include directory ~ '/templates/layout/header-internal.html.twig' %}
+
+<!-- ================= HERO SECTION ================= -->
+<section class="hero-section">
+	<div class="image-grid-container">
+		<div class="image-grid">
+			<img src="{{ gcc_img }}/hero-top-img1.webp">
+			<img src="{{ gcc_img }}/hero-top-img2.webp">
+			<img src="{{ gcc_img }}/hero-top-img3.webp">
+			<img src="{{ gcc_img }}/hero-top-img4.webp">
+			<img src="{{ gcc_img }}/hero-top-img5.webp">
+			<img src="{{ gcc_img }}/hero-top-img4.webp">
+		</div>
+		<div class="image-grid">
+			<img src="{{ gcc_img }}/hero-top-img1.webp">
+			<img src="{{ gcc_img }}/hero-top-img2.webp">
+			<img src="{{ gcc_img }}/hero-top-img3.webp">
+			<img src="{{ gcc_img }}/hero-top-img4.webp">
+			<img src="{{ gcc_img }}/hero-top-img5.webp">
+			<img src="{{ gcc_img }}/hero-top-img4.webp">
+		</div>
+	</div>
+
+	<div class="content">
+		<h1>
+			Corporate Housing Solutions for<br>
+			<span class="highlight">Global Capability Centers</span>
+			in India
+		</h1>
+		<p>Stay close to business. Stay productive. StayRelive.</p>
+		<a href="#" class="cta-button">Explore Apartments</a>
+	</div>
+</section>
+
+<!-- ================= ROLE / WHY GCC ================= -->
+<section class="role-section">
+	<div class="role-container">
+		<span class="sub-heading">Why GCC</span>
+		<h1>The Role of Corporate Housing in GCC Growth</h1>
+
+		<nav class="gcc-tabs">
+			<a class="tab-link active" data-tab="what-are-gccs">What are GCCs?</a>
+			<a class="tab-link" data-tab="why-choose-india">Why GCC Choose India</a>
+			<a class="tab-link" data-tab="gccs-in-india">GCCs in India</a>
+		</nav>
+
+		<!-- Tab Content: What are GCCs? -->
+		<div class="tab-content active" id="tab-what-are-gccs">
+			<p class="description">
+				Global Capability Centers (GCCs), also known as Global In-House Centers (GICs), are offshore service units established by multinational companies (MNCs) to manage technology, operations, and business support functions from strategic global locations.
+				<br>
+				Today, GCCs are a vital part of global business strategies. Enterprises in technology, banking, manufacturing, retail, and healthcare leverage GCCs for cost optimization, operational flexibility, and digital transformation. By building GCCs, businesses enhance efficiency, agility, and customer experience while ensuring global presence and consistency.
+			</p>
+
+			<div class="stats-grid">
+				<div class="stat-item">
+					<span class="stat-number">1580+</span>
+					<span class="stat-label">GCCs In
+						<br>
+						India</span>
+				</div>
+				<div class="stat-item">
+					<span class="stat-number">1.66M+</span>
+					<span class="stat-label">Professionals
+						<br>
+						Employed</span>
+				</div>
+				<div class="stat-item">
+					<span class="stat-number">$46B</span>
+					<span class="stat-label">Contribution To
+						<br>
+						Exports</span>
+				</div>
+			</div>
+		</div>
+
+		<!-- Tab Content: Why GCC Choose India -->
+		<div class="tab-content" id="tab-why-choose-india">
+			<p class="description">
+				India has become the preferred destination for Global Capability Centers due to its large pool of skilled talent, cost-effective operations, robust infrastructure, and favorable business environment. The country offers world-class technology capabilities, English-speaking workforce, and a strong culture of innovation that aligns perfectly with global business needs.
+			</p>
+
+			<div class="stats-grid">
+				<div class="stat-item">
+					<span class="stat-number">1.66M+</span>
+					<span class="stat-label">Professionals Employed</span>
+				</div>
+				<div class="stat-item">
+					<span class="stat-number">$46B</span>
+					<span class="stat-label">Contribution To Exports</span>
+				</div>
+				<div class="stat-item">
+					<span class="stat-number">1580+</span>
+					<span class="stat-label">GCCs In India</span>
+				</div>
+			</div>
+		</div>
+
+		<!-- Tab Content: GCCs in India -->
+		<div class="tab-content" id="tab-gccs-in-india">
+			<p class="description">
+				GCCs in India have experienced exponential growth, establishing centers across major metropolitan cities including Bangalore, Mumbai, Hyderabad, Pune, Chennai, and Delhi-NCR. These centers serve as strategic hubs for innovation, digital transformation, and operational excellence, contributing significantly to India's economy and positioning the country as a global technology and business services leader.
+			</p>
+
+			<div class="stats-grid">
+				<div class="stat-item">
+					<span class="stat-number">$46B</span>
+					<span class="stat-label">Contribution To Exports</span>
+				</div>
+				<div class="stat-item">
+					<span class="stat-number">1580+</span>
+					<span class="stat-label">GCCs In India</span>
+				</div>
+				<div class="stat-item">
+					<span class="stat-number">1.66M+</span>
+					<span class="stat-label">Professionals Employed</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="image-gallery">
+		<div class="left-images">
+			<img src="{{ gcc_img }}/role-img-topleft.webp" class="img-top-left" alt="Modern office space">
+			<img src="{{ gcc_img }}/role-img-bottomleft.webp" class="img-bottom-left" alt="Dining area">
+		</div>
+		<div class="right-image-container">
+			<div class="bg-shape"></div>
+			<img src="{{ gcc_img }}/role-img-right.webp" class="img-main-right" alt="Living room">
+		</div>
+	</div>
+</section>
+
+<!-- ================= COMPARISON TABLE ================= -->
+
+<section class="main-wrapper comparison-section">
+	<header class="comparison-header">
+		<p class="subtitle">Hotels vs Serviced Apartments</p>
+		<h1>Serviced Apartments vs Hotels</h1>
+		<p class="description">
+			When GCC employees travel to India, choosing the right accommodation directly impacts cost, comfort, and productivity.
+		</p>
+
+		<div class="toggle-container" role="tablist" aria-label="Comparison view">
+			<button type="button" class="toggle-btn active" data-view="price" aria-selected="true">
+				Price
+			</button>
+			<button type="button" class="toggle-btn" data-view="amenities" aria-selected="false">
+				Amenities
+			</button>
+		</div>
+	</header>
+
+	<div
+		class="comparison-card">
+		<!-- PRICE VIEW -->
+		<div class="comparison-view active" data-view="price">
+			<div class="comparison-grid">
+				<div class="grid-column sidebar">
+					<h3>Compare price across city</h3>
+					<div class="city-tabs">
+						<button type="button" class="city-tab active">Mumbai</button>
+						<button type="button" class="city-tab">Bangalore</button>
+						<button type="button" class="city-tab">Delhi-NCR</button>
+						<button type="button" class="city-tab">Chennai</button>
+						<button type="button" class="city-tab">Hyderabad</button>
+						<button type="button" class="city-tab">Pune</button>
+					</div>
+
+					{# Row labels #}
+					<div class="row-label">7 Nights</div>
+					<div class="row-label">15 Nights</div>
+					<div class="row-label">1 Month</div>
+					<div class="row-label">3 Months</div>
+					<div class="row-label">12 Months</div>
+				</div>
+
+				{# SERVICED APARTMENTS - Single wrapper with blue border #}
+				<div class="serviced-wrapper">
+					<div class="column-header">
+						<h4>SERVICED APARTMENTS</h4>
+						<div class="price-range">₹4,700 — ₹6,800</div>
+						<div class="avg-text">Avg. Per night</div>
+					</div>
+
+					<div class="serviced-prices">
+						<div class="price-item">₹13,500</div>
+						<div class="price-item">₹27,000</div>
+						<div class="price-item">₹55,000</div>
+						<div class="price-item">₹1,50,000</div>
+						<div class="price-item">₹5,50,000</div>
+					</div>
+				</div>
+
+				{# HOTEL COLUMN #}
+				<div class="grid-column hotel">
+					<div class="column-header">
+						<h4>HOTEL (★★★★)</h4>
+						<div class="price-range">₹7,500</div>
+						<div class="avg-text">Avg. Per night</div>
+					</div>
+
+					<div class="row-value">₹21,000</div>
+					<div class="row-value">₹45,000</div>
+					<div class="row-value">₹90,000</div>
+					<div class="row-value">₹2,70,000</div>
+					<div class="row-value">₹10,80,000</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- AMENITIES VIEW -->
+		<div class="comparison-view" data-view="amenities">
+			<div class="comparison-grid amenities-grid">
+				<div class="grid-column sidebar">
+					<h3>Compare amenities</h3>
+					<div class="row-label">Kitchen / Cooking</div>
+					<div class="row-label">Laundry</div>
+					<div class="row-label">Living Room</div>
+					<div class="row-label">Workspace &amp; Wi‑Fi</div>
+					<div class="row-label">Housekeeping</div>
+				</div>
+
+				{# SERVICED APARTMENTS - Amenities with wrapper #}
+				<div class="serviced-wrapper">
+					<div class="column-header">
+						<h4>SERVICED APARTMENTS</h4>
+						<div class="avg-text">Typically Included</div>
+					</div>
+
+					<div class="serviced-prices">
+						<div class="price-item">
+							<span class="amenity yes">✓ Full kitchen</span>
+						</div>
+						<div class="price-item">
+							<span class="amenity yes">✓ In‑unit / on‑site laundry</span>
+						</div>
+						<div class="price-item">
+							<span class="amenity yes">✓ Separate living area</span>
+						</div>
+						<div class="price-item">
+							<span class="amenity yes">✓ High‑speed Wi‑Fi, work desk</span>
+						</div>
+						<div class="price-item">
+							<span class="amenity yes">✓ Flexible housekeeping</span>
+						</div>
+					</div>
+				</div>
+
+				{# HOTEL COLUMN - Amenities #}
+				<div class="grid-column hotel">
+					<div class="column-header">
+						<h4>HOTEL (★★★★)</h4>
+						<div class="avg-text">Limited / Extra cost</div>
+					</div>
+
+					<div class="row-value">
+						<span class="amenity no">✕ No dedicated kitchen</span>
+					</div>
+					<div class="row-value">
+						<span class="amenity maybe">△ Paid laundry service</span>
+					</div>
+					<div class="row-value">
+						<span class="amenity maybe">△ Compact seating</span>
+					</div>
+					<div class="row-value">
+						<span class="amenity yes">✓ Wi‑Fi, but smaller workspace</span>
+					</div>
+					<div class="row-value">
+						<span class="amenity yes">✓ Daily housekeeping</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="stats-footer">
+		<div class="stat-item">
+			<h2>1580+</h2>
+			<p>GCCs In India</p>
+		</div>
+		<div class="divider"></div>
+		<div class="stat-item">
+			<h2>1.66M+</h2>
+			<p>Professionals Employed</p>
+		</div>
+		<div class="divider"></div>
+		<div class="stat-item">
+			<h2>$46B</h2>
+			<p>Contribution To Exports</p>
+		</div>
+	</div>
+
+
+</section>
+
+<section class="main-wrapper features-section">
+	<header class="features-header">
+		<p class="subtitle">Why Choose Us</p>
+		<h2>Empowering GCCs with Seamless Stays</h2>
+	</header>
+
+	<section class="import-section">
+		<div class="container">
+			<div class="text-content">
+				<h1>Easy Import
+					<span class="break">Functionality</span>
+				</h1>
+				<p>Effortlessly sync employee data for faster onboarding</p>
+			</div>
+
+			<div
+				class="image-stack">
+				<div class="bg-glow"></div>
+				{# <img src="{{gcc_img}}/Ellipse 1141.png" alt="" class="bg-glow"> #}
+				<img src="{{gcc_img}}/easy-import.webp" alt="Dashboard" class="main-ui">
+			</div>
+		</div>
+	</section>
+
+
+	<section class="booking-flow">
+		<div class="container">
+
+			<div
+				class="visual-stack">
+				<div class="bg-glow"></div>
+				{# <img src="{{gcc_img}}/Ellipse 1141.png" alt="" class="glow-bg"> #}
+				<img src="{{gcc_img}}/instant-booking.webp" alt="Booking Interface" class="interface-img">
+			</div>
+
+			<div class="content">
+				<h2 class="title">Instant/On-Request
+					<br>
+					Booking Flow</h2>
+				<p class="description">Book instantly or request custom stays anytime</p>
+			</div>
+
+		</div>
+	</section>
+
+
+	<section class="support-section">
+		<div class="container">
+
+			<div class="content">
+				<h2 class="title">Blended Booking
+					<br>
+					Support</h2>
+				<p class="description">
+					Tech-driven + human touch for smooth operations
+				</p>
+			</div>
+
+			<div
+				class="visual-stack">
+				<div class="bg-glow"></div>
+				{# <img src="{{gcc_img}}/Ellipse 1141.png" alt="" class="bg-glow"> #}
+				<img src="{{gcc_img}}/blended-booking-support.webp" alt="Support Dashboard" class="main-ui">
+			</div>
+
+		</div>
+	</section>
+
+
+	<section class="service-section">
+		<div class="container">
+
+			<div
+				class="visual-stack">
+				<div class="bg-glow"></div>
+				{# <img src="{{gcc_img}}/Ellipse 1141.png" alt="" class="bg-glow"> #}
+				<img src="{{gcc_img}}/high-touch-service.webp" alt="Service Interface" class="main-ui">
+			</div>
+
+			<div class="content">
+				<h2 class="title">High Touch
+					<br>
+					Service</h2>
+				<p class="description">
+					Personalized support ensuring every stay feels effortless
+				</p>
+			</div>
+
+		</div>
+	</section>
+
+
+	<section class="vetted-portfolio">
+		<div class="container">
+
+			<div class="content">
+				<h2 class="title">Vetted Supply
+					<br>
+					Portfolio</h2>
+				<p class="description">
+					Curated, compliant stays meeting Corporate health and safety standards
+				</p>
+			</div>
+
+			<div
+				class="visual-stack">
+				<div class="bg-glow"></div>
+				{# <img src="{{gcc_img}}/background-frame.jpeg" alt="" class="bg-glow"> #}
+				<img src="{{gcc_img}}/vetted-supply.webp" alt="Portfolio Dashboard" class="main-ui">
+			</div>
+
+		</div>
+	</section>
+
+
+	<section class="flexibility-section">
+		<div class="container">
+
+			<div
+				class="visual-stack">
+				<div class="bg-glow"></div>
+				{# <img src="{{gcc_img}}/background-frame.jpeg" alt="" class="bg-glow"> #}
+				<img src="{{gcc_img}}/flexibility.webp" alt="Flexible Booking Interface" class="main-ui">
+			</div>
+
+			<div class="content">
+				<h2 class="title">Flexibility</h2>
+				<p class="description">
+					Viable lease terms adapting to every corporate travellers need
+				</p>
+			</div>
+
+		</div>
+	</section>
+</section>
+
+<!-- ================= RATINGS ================= -->
+<div id="block-srdesign-successstories">
+{{ drupal_entity('block_content', 14) }}
+</div>
+
+<!-- ================= CONTACT ================= -->
+<div class="container gcc-wrapper">
+	<div class="contact-left">
+		<p class="subtitle">Contact Us</p>
+		<h2 class="contact-desc">
+			The Perfect Partner for your housing solutions
+		</h2>
+		<div class="contact-info">
+			<div class="contact-item email">
+				<div>
+					<strong>Email</strong>
+					<a href="mailto:ops@stayrelive.com">ops@stayrelive.com</a>
+				</div>
+			</div>
+			
+			<div class="contact-item phone">
+				<div>
+					<strong>Call Us</strong>
+					<a href="tel:+918657894083">+91 8657894083</a>
+					<a href="tel:+918657894483">+91 8657894483</a>
+				</div>
+			</div>
+			
+			<div class="contact-item address">
+				<div>
+					<strong>Visit Us</strong>
+					<p>
+						2806, Plan S Business Park, Opp D.Y. Patil Stadium,
+						Navi Mumbai - 400706
+					</p>
+				</div>
+			</div>
+			
+			<div class="contact-item hours">
+				<div>
+					<strong>Business Hours</strong>
+					<p>Monday - Friday, 9:30 AM - 6:30 PM</p>
+					<p>Saturday, 9:30 AM - 3:30 PM</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<div class="bg-overlay bg-overlay-1">&nbsp;</div>
+<div class="bg-overlay bg-overlay-2">&nbsp;</div>
+	<div class="gcc-page-contact-us">
+		{{ drupal_entity('webform', 'contact') }}
+	</div>
+</div>
+
+
+{% include directory ~ '/templates/layout/footer.html.twig' %}

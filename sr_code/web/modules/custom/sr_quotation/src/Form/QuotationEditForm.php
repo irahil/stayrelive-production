@@ -51,6 +51,18 @@ class QuotationEditForm extends QuotationForm
     $form['booking_info']['times']['check_out_time']['#default_value'] = $record['checkout_time'];
 
     $form['booking_info']['nights']['#default_value'] = $record['nights'];
+    $form['booking_info']['enquired_location']['#default_value'] = $record['enquired_location'] ?? '';
+
+    // Hide agent/customer info fields on edit form
+    if (isset($form['booking_info']['agent_name'])) {
+      $form['booking_info']['agent_name']['#access'] = FALSE;
+    }
+    if (isset($form['booking_info']['agent_phone'])) {
+      $form['booking_info']['agent_phone']['#access'] = FALSE;
+    }
+    if (isset($form['booking_info']['agent_email'])) {
+      $form['booking_info']['agent_email']['#access'] = FALSE;
+    }
 
     /* ------------------------------------------------
      * PROPERTY INFO
@@ -110,12 +122,6 @@ class QuotationEditForm extends QuotationForm
               'files' => $files_data,
             ],
           ]);
-          \Drupal::logger('sr_quotation')->notice('Preloaded location_screenshot files for edit: @files', [
-            '@files' => print_r($files_data, TRUE),
-          ]);
-          \Drupal::logger('sr_quotation')->notice('DEBUG - drupalSettings structure after location_screenshot: @settings', [
-            '@settings' => print_r($form['#attached']['drupalSettings']['dropzonejs'], TRUE),
-          ]);
         } else {
           \Drupal::logger('sr_quotation')->warning('No location_screenshot files_data to preload. FIDs: @fids', [
             '@fids' => print_r($fids, TRUE),
@@ -141,6 +147,16 @@ class QuotationEditForm extends QuotationForm
     $form['financials']['fx_rate']['#default_value'] = $record['fx_rate'];
     $form['financials']['addon_prices']['#default_value'] = $record['addon_prices'] ?? '';
 
+    // Set default values for new financial fields
+    $form['financials']['avg_nightly_rate']['#default_value'] = $record['avg_nightly_rate'] ?? '';
+    $form['financials']['extras_tax']['#default_value'] = $record['extras_tax'] ?? '';
+    $form['financials']['total_outlay']['#default_value'] = $record['total_outlay'] ?? '';
+    $form['financials']['markup_client_percentage']['#default_value'] = $record['markup_client_percentage'] ?? '';
+    $form['financials']['markup_client_value']['#default_value'] = $record['markup_client_value'] ?? '';
+    $form['financials']['total_profit']['#default_value'] = $record['total_profit'] ?? '';
+    $form['financials']['commission_sr_percentage']['#default_value'] = $record['commission_sr_percentage'] ?? '';
+    $form['financials']['commission_sr_value']['#default_value'] = $record['commission_sr_value'] ?? '';
+
     /* ------------------------------------------------
      * AMENITIES
      * ------------------------------------------------ */
@@ -165,8 +181,50 @@ class QuotationEditForm extends QuotationForm
       $supplier_dropdown = $record['supplier_reference'];
     }
 
+    // Update supplier reference options to match parent form
+    $form['extras']['supplier_reference']['#options'] = [
+      'WhatsApp' => 'WhatsApp',
+      'Email' => 'Email',
+      'Call' => 'Call',
+      'Portal Log-ins' => 'Portal Log-ins',
+      'Property Website' => 'Property Website',
+    ];
+
     $form['extras']['supplier_reference']['#default_value'] = trim($supplier_dropdown);
-    $form['extras']['supplier_reference_text']['#default_value'] = trim($supplier_text);
+    
+    // Add AJAX to supplier reference dropdown (same as parent form)
+    $form['extras']['supplier_reference']['#ajax'] = [
+      'callback' => '::supplierReferenceCallback',
+      'wrapper' => 'supplier-reference-wrapper',
+      'event' => 'change',
+    ];
+    
+    // Wrapper MUST exist even if empty (same as parent form)
+    $form['extras']['supplier_reference_wrapper'] = [
+      '#type' => 'container',
+      '#attributes' => ['id' => 'supplier-reference-wrapper'],
+    ];
+
+    // Detect selected value correctly even on first build + AJAX rebuild (same as parent form)
+    $selected_reference =
+      $form_state->getTriggeringElement()['#value']
+      ?? $form_state->getValue('supplier_reference')
+      ?? $supplier_dropdown; // Fallback to default value for edit form
+
+    // Add conditional field (same as parent form - direct in wrapper)
+    if (!empty($selected_reference)) {
+
+      $label = in_array($selected_reference, ['WhatsApp', 'Call'])
+        ? 'Enter Quoted Text'
+        : 'Enter URL or Quoted Text';
+
+      $form['extras']['supplier_reference_wrapper']['supplier_reference_text'] = [
+        '#type' => 'textfield',
+        '#title' => $this->t($label),
+        '#required' => TRUE,
+        '#default_value' => trim($supplier_text), // This will be empty if no text exists
+      ];
+    }
 
     $form['extras']['confirmation_status']['#default_value'] = $record['confirmation_status'];
 
@@ -194,7 +252,6 @@ class QuotationEditForm extends QuotationForm
           ];
         }
       }
-      \Drupal::logger('files_data')->warning('<pre><code>' . print_r($files_data, TRUE) . '</code></pre>');
 
       // Load for display
       $form['images']['apartment_images']['#default_value'] = $fids;
@@ -238,8 +295,19 @@ class QuotationEditForm extends QuotationForm
   public function submitForm(array &$form, FormStateInterface $form_state)
 {
   $values = $form_state->getValues();
+
+  // Recalculate nights from check-in and check-out dates (d-m-Y format).
+  $check_in = $values['check_in_date'] ?? '';
+  $check_out = $values['check_out_date'] ?? '';
+  if ($check_in !== '' && $check_out !== '') {
+    $d1 = \DateTime::createFromFormat('d-m-Y', trim($check_in));
+    $d2 = \DateTime::createFromFormat('d-m-Y', trim($check_out));
+    if ($d1 && $d2 && $d2 >= $d1) {
+      $values['nights'] = (int) $d1->diff($d2)->days;
+    }
+  }
+
   $id = $values['id'] ?? NULL;
-  $uid = \Drupal::currentUser()->id();
 
   /* ------------------------------------------------------------
    * 1. LOAD EXISTING IMAGES FROM DB (SOURCE OF TRUTH)
@@ -254,8 +322,6 @@ class QuotationEditForm extends QuotationForm
   $old_fids = !empty($existing_images)
     ? array_values(array_filter(array_map('intval', explode(',', $existing_images))))
     : [];
-
-  \Drupal::logger('sr_quotation')->debug('Old DB FIDs: @f', ['@f' => print_r($old_fids, TRUE)]);
 
   /* ------------------------------------------------------------
    * 1b. LOAD EXISTING LOCATION SCREENSHOTS FROM DB (SOURCE OF TRUTH)
@@ -272,7 +338,6 @@ class QuotationEditForm extends QuotationForm
    * ------------------------------------------------------------ */
   $removed_fids = [];
   $apartment_images = $values['apartment_images'] ?? [];
-   \Drupal::logger('sr_quotation')->debug('Apartment Images: @r', ['@r' => print_r($apartment_images, TRUE)]);
 
   if (!empty($apartment_images['removed_files'])) {
     $removed_fids = array_values(
@@ -282,7 +347,6 @@ class QuotationEditForm extends QuotationForm
     );
   }
 
-  \Drupal::logger('sr_quotation')->debug('Removed FIDs: @r', ['@r' => print_r($removed_fids, TRUE)]);
 
   /* ------------------------------------------------------------
    * 3. REMOVE ONLY SELECTED IMAGES
@@ -329,23 +393,21 @@ class QuotationEditForm extends QuotationForm
     }
   }
 
-  \Drupal::logger('sr_quotation')->debug('New FIDs: @n', ['@n' => print_r($new_fids, TRUE)]);
-
   /* ------------------------------------------------------------
    * 5. FINAL IMAGE SET
    * ------------------------------------------------------------ */
   $final_fids = array_values(array_unique(array_merge($old_fids, $new_fids)));
 
-  \Drupal::logger('sr_quotation')->debug('Final FIDs saved: @f', ['@f' => print_r($final_fids, TRUE)]);
 
   // ------------------------------------------------------------
   // 5. SAVE FORM FIELDS AND IMAGES
   // ------------------------------------------------------------
   $amenities = (!empty($values['amenities'])) ? implode(', ', array_filter($values['amenities'])) : '';
 
-  $supplier_reference_combined = trim($values['supplier_reference']);
+  // Combine Supplier Reference + Text into one DB field (exact same as add form)
+  $supplier_reference_combined = $values['supplier_reference'] ?? '';
   if (!empty($values['supplier_reference_text'])) {
-    $supplier_reference_combined .= ' | ' . trim($values['supplier_reference_text']);
+    $supplier_reference_combined .= ' | ' . $values['supplier_reference_text'];
   }
 
   $currency = ($values['currency'] === 'Other' && !empty($values['currency_other']))
@@ -357,12 +419,12 @@ class QuotationEditForm extends QuotationForm
     ->fields([
       'booker_name' => $values['booker_name'],
       'travel_partner' => $values['travel_partner'],
-      'uid' => $uid,
       'checkin_date' => $values['check_in_date'],
       'checkout_date' => $values['check_out_date'],
       'checkin_time' => $values['check_in_time'],
       'checkout_time' => $values['check_out_time'],
       'nights' => $values['nights'],
+      'enquired_location' => $values['enquired_location'] ?? '',
       'unit_type' => $values['unit_type'],
       'room_type' => $values['room_type'],
       'room_category' => $values['room_category'] ?? '',
@@ -381,11 +443,19 @@ class QuotationEditForm extends QuotationForm
       'fx_rate' => $values['fx_rate'],
       'addon_prices' => $values['addon_prices'] ?? '',
       'amenities' => $amenities,
-      'cancellation_policy' => $values['cancellation_policy'],
-      'rules' => $values['rules'],
-      'note' => $values['note'],
+      'cancellation_policy' => $values['cancellation_policy']['value'] ?? '',
+      'rules' => $values['rules']['value'] ?? '',
+      'note' => $values['note']['value'] ?? '',
       'supplier_reference' => $supplier_reference_combined,
       'confirmation_status' => $values['confirmation_status'],
+      'avg_nightly_rate' => $values['avg_nightly_rate'] ?? '',
+      'extras_tax' => $values['extras_tax'] ?? '',
+      'total_outlay' => $values['total_outlay'] ?? '',
+      'markup_client_percentage' => $values['markup_client_percentage'] ?? '',
+      'markup_client_value' => $values['markup_client_value'] ?? '',
+      'total_profit' => $values['total_profit'] ?? '',
+      'commission_sr_percentage' => $values['commission_sr_percentage'] ?? '',
+      'commission_sr_value' => $values['commission_sr_value'] ?? '',
       'images' => implode(',', $final_fids),
     ])
     ->condition('id', $id)
@@ -409,15 +479,7 @@ class QuotationEditForm extends QuotationForm
       }
     }
     
-    // Try nested path first (property_info > location_screenshot)
     $location_screenshot = $values['property_info']['location_screenshot'] ?? $values['location_screenshot'] ?? [];
-    
-    \Drupal::logger('sr_quotation')->debug('Edit - location_screenshot from values: @data', [
-      '@data' => print_r($location_screenshot, TRUE),
-    ]);
-    \Drupal::logger('sr_quotation')->debug('Edit - Old FIDs before processing: @fids', [
-      '@fids' => print_r($old_fids, TRUE),
-    ]);
     
     // Read removed FIDs from JS
     $removed_fids = [];
@@ -429,25 +491,15 @@ class QuotationEditForm extends QuotationForm
       );
     }
     
-    \Drupal::logger('sr_quotation')->debug('Edit - Removed FIDs: @fids', [
-      '@fids' => print_r($removed_fids, TRUE),
-    ]);
-    
     // Remove only selected images
     if (!empty($removed_fids)) {
       $old_fids = array_values(array_diff($old_fids, $removed_fids));
     }
-    
-    \Drupal::logger('sr_quotation')->debug('Edit - Old FIDs after removal: @fids', [
-      '@fids' => print_r($old_fids, TRUE),
-    ]);
+
     
     // Handle new uploads
     $new_fids = [];
     if (!empty($location_screenshot['uploaded_files']) && is_array($location_screenshot['uploaded_files'])) {
-      \Drupal::logger('sr_quotation')->debug('Edit - Processing new uploaded files: @count', [
-        '@count' => count($location_screenshot['uploaded_files']),
-      ]);
       $directory = 'public://quotation_location_images/';
       \Drupal::service('file_system')->prepareDirectory(
         $directory,
@@ -480,17 +532,8 @@ class QuotationEditForm extends QuotationForm
       \Drupal::logger('sr_quotation')->debug('Edit - No new uploaded files found in location_screenshot');
     }
     
-    \Drupal::logger('sr_quotation')->debug('Edit - New FIDs: @fids', [
-      '@fids' => print_r($new_fids, TRUE),
-    ]);
-    
     // Combine old and new FIDs
     $final_fids = array_merge($old_fids, $new_fids);
-    
-    \Drupal::logger('sr_quotation')->debug('Edit - Final combined FIDs: @fids', [
-      '@fids' => print_r($final_fids, TRUE),
-    ]);
-    
     return !empty($final_fids) ? implode(',', $final_fids) : '';
   }
 }

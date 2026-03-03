@@ -9,10 +9,9 @@
 
         $input.flatpickr({
           mode: 'range',
-          dateFormat: 'J M y', // <-- updated format
+          dateFormat: 'J M y', 
           allowInput: true,
           minDate: "today",
-          maxDate: new Date().fp_incr(60),
           showMonths: 2,
           defaultDate: defaultDate ? defaultDate.split(' to ') : null,
         });

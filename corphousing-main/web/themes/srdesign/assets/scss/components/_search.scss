@@ -413,7 +413,7 @@
     display: flex;
     align-items: center;
     gap: 16px;
-    width: 550px;
+    width: 575px;
     height: 60px;
     margin: 0 auto;
     margin-left: 150px;
@@ -578,8 +578,7 @@
       }
 
       input {
-        min-width: 90px;
-        max-width: 150px;
+        width: 170px;
 
         @include media-breakpoint-down(lg) {
           min-width: 100%;

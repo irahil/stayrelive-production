@@ -950,6 +950,45 @@ window.addEventListener("load", () => {
     }
   };
 
+  // Pre-fill check-in and check-out dates from URL parameters on property detail page
+  Drupal.behaviors.prefillPropertyDates = {
+    attach: function (context, settings) {
+      once('prefill-property-dates', 'body', context).forEach(function() {
+        const checkInInput = document.getElementById('check-in');
+        const checkOutInput = document.getElementById('check-out');
+        
+        if (!checkInInput || !checkOutInput) {
+          return; // Date inputs not found on this page
+        }
+
+        // Get dates from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        let checkIn = urlParams.get('check_in') || '';
+        let checkOut = urlParams.get('check_out') || '';
+
+        // Set the values if we have them
+        if (checkIn) {
+          checkInInput.value = checkIn;
+          // Trigger input event to update check-out min date
+          checkInInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+
+        if (checkOut) {
+          checkOutInput.value = checkOut;
+        }
+
+        // Also pre-fill guests if available
+        const guestsSelect = document.getElementById('guests');
+        if (guestsSelect) {
+          const guests = urlParams.get('guests') || urlParams.get('rooms') || '';
+          if (guests && guestsSelect.querySelector('option[value="' + guests + '"]')) {
+            guestsSelect.value = guests;
+          }
+        }
+      });
+    }
+  };
+
 })(jQuery, Drupal);
 // services accordion js 
 document.addEventListener("DOMContentLoaded", function () {
@@ -1204,6 +1243,40 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   };
+
+  /* ------------------------------
+   * 4️⃣ PROPERTY FORM PRE-FILL
+   * ------------------------------ */
+  Drupal.behaviors.propertyFormPrefill = {
+    attach: function (context, settings) {
+      once('propertyFormPrefill', 'body', context).forEach(() => {
+        // Pre-fill guests field from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const guestsParam = urlParams.get('guests');
+        
+        console.log('Guests param from URL:', guestsParam); // Debug log
+        
+        if (guestsParam) {
+          const guestsSelect = document.getElementById('guests');
+          console.log('Guests select element:', guestsSelect); // Debug log
+          
+          if (guestsSelect) {
+            console.log('Available options:', Array.from(guestsSelect.options).map(opt => ({ text: opt.text, value: opt.value }))); // Debug log
+              
+            // Find matching option in guests dropdown by text content
+            for (let i = 0; i < guestsSelect.options.length; i++) {
+              if (guestsSelect.options[i].text === guestsParam) {
+                guestsSelect.selectedIndex = i;
+                console.log('Matched option at index:', i); // Debug log
+                break;
+              }
+            }
+          }
+        }
+      });
+    }
+  };
+
 })(Drupal, once, drupalSettings);
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -1230,3 +1303,77 @@ document.addEventListener('click', function (e) {
     link.click();
   }
 });
+
+(function($, Drupal) {
+    'use strict';
+
+    // =====================================================
+    // TAB SWITCHING BEHAVIOR FOR GCC ROLE SECTION
+    // =====================================================
+    Drupal.behaviors.gccRoleSectionTabs = {
+        attach: function(context, settings) {
+            once('gcc-role-tabs', '.role-section', context).forEach(function(roleSection) {
+                const tabs = roleSection.querySelectorAll('.tab-link');
+                const contents = roleSection.querySelectorAll('.tab-content');
+
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const key = this.getAttribute('data-tab');
+
+                        // Remove active from all tabs and content sections
+                        tabs.forEach(t => t.classList.remove('active'));
+                        contents.forEach(c => c.classList.remove('active'));
+
+                        // Add active to clicked tab and matching content
+                        this.classList.add('active');
+                        const activeContent = roleSection.querySelector('#tab-' + key);
+                        if (activeContent) {
+                            activeContent.classList.add('active');
+                        }
+                    });
+                });
+            });
+        }
+    };
+
+    // =====================================================
+// PRICE / AMENITIES TOGGLE FOR COMPARISON SECTION
+// =====================================================
+Drupal.behaviors.priceAmenitiesToggle = {
+  attach: function (context, settings) {
+    once('price-amenities-toggle', '.comparison-section', context).forEach(function (section) {
+      const toggleBtns = section.querySelectorAll('.toggle-btn');
+      const views = section.querySelectorAll('.comparison-view');
+      const cityTabs = section.querySelectorAll('.city-tab');
+
+      // Toggle between price & amenities
+      toggleBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const view = this.getAttribute('data-view');
+
+          toggleBtns.forEach(function (b) {
+            b.classList.remove('active');
+            b.setAttribute('aria-selected', 'false');
+          });
+          this.classList.add('active');
+          this.setAttribute('aria-selected', 'true');
+
+          views.forEach(function (v) {
+            v.classList.toggle('active', v.getAttribute('data-view') === view);
+          });
+        });
+      });
+
+      // Simple active state for city pills (visual only)
+      cityTabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          cityTabs.forEach(function (t) { t.classList.remove('active'); });
+          this.classList.add('active');
+        });
+      });
+    });
+  }
+};
+
+})(jQuery, Drupal);

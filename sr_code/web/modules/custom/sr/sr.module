@@ -89,7 +89,6 @@ function sr_theme($existing, $type, $theme, $path)
 function sr_form_user_register_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id)
 {
   $country_code = \Drupal::service('session')->get('country_code', 'default');
-  \Drupal::logger('sr_user_register')->notice('Country code used: ' . $country_code);
 
   $form['field_phone_code']['widget']['#options']['_none'] = "Select";
   $form['actions']['submit']['#value'] = 'Register';
@@ -160,39 +159,37 @@ function sr_user_login_submit(&$form, \Drupal\Core\Form\FormStateInterface $form
   }
 }
 
-function sr_preprocess_page(array &$variables)
-{
-  // $customblock = \Drupal::service('plugin.manager.block')->createInstance('sr_search_block', []);
-  // $variables['content']['sr_search_block'] = $customblock->build();
-}
-
-
 /**
  * Implements hook_mail().
  */
 function sr_mail($key, &$message, $params)
 {
   $site_name = \Drupal::config('system.site')->get('name');
+  \Drupal::logger('mail params')->info('<pre><code>' . print_r($params, TRUE) . '</code></pre>');
+  \Drupal::logger('mail key')->info($key);
   //$from = \Drupal::config('system.site')->get('mail');
   $from = "book@stayrelive.com";
   switch ($key) {
     case 'booking':
       $message['from'] = $from;
       $message['subject'] = $params['subject'];
-      //$message['body'][] = htmlspecialchars($params['message'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+      $message['params']['is_html'] = TRUE;
       $message['body'][] = $params['message'];
-      //$message['params']['files'] = $params['attachments'];
-      $message['headers']['Bcc'] = $params['Cc'];
+      $message['headers']['MIME-Version'] = '1.0';
+      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8';
+      $message['headers']['Content-Transfer-Encoding'] = '8Bit';
       $message['headers']['From'] = $site_name . '<' . $from . '>';
       $message['headers']['Reply-To'] = $from;
-      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed; delsp=yes';
+
+      if (!empty($params['Cc'])) {
+        $message['headers']['Cc'] = $params['Cc'];
+      }
       break;
+      
     case 'booking_confirm':
       $message['from'] = $from;
       $message['subject'] = $params['subject'];
-      //$message['body'][] = htmlspecialchars($params['message'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
       $message['body'][] = $params['message'];
-      //$message['params']['files'] = $params['attachments'];
       $message['headers']['Bcc'] = $params['Cc'];
       $message['headers']['From'] = $site_name . '<' . $from . '>';
       $message['headers']['Reply-To'] = $from;
@@ -201,9 +198,7 @@ function sr_mail($key, &$message, $params)
     case 'dlp_alert':
       $message['from'] = $from;
       $message['subject'] = $params['subject'];
-      //$message['body'][] = htmlspecialchars($params['message'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
       $message['body'][] = $params['message'];
-      //$message['params']['files'] = $params['attachments'];
       $message['headers']['Bcc'] = $params['Cc'];
       $message['headers']['From'] = $site_name . '<' . $from . '>';
       $message['headers']['Reply-To'] = $from;
@@ -257,11 +252,9 @@ function sr_preprocess_menu__account(&$variables)
     $session = \Drupal::service('session');
     $country_code = $session->get('country_code');
   } catch (Exception $e) {
-    \Drupal::logger('sr_preprocess_menu__account')->error('Failed to retrieve session data: ' . $e->getMessage());
     $country_code = 'default';
   }
   $variables['country_code'] = $country_code;
-  \Drupal::logger('sr_preprocess_menu__account')->notice("Menu country code: $country_code");
   $variables['#cache']['contexts'][] = 'session';
 }
 
@@ -271,7 +264,6 @@ function sr_preprocess_menu__account(&$variables)
 function sr_preprocess_form_user_login_form(&$variables)
 {
   $country_code = \Drupal::request()->getSession()->get('country_code', 'default');
-  \Drupal::logger('country_code_login')->notice('Country code in preprocess: ' . $country_code);
   $variables['country_code'] = $country_code;
 }
 
@@ -331,12 +323,6 @@ function sr_mail_alter(&$message)
       $html_body = \Drupal::service('renderer')->renderPlain($build);
       $message['body'] = [$html_body];
       $message['headers']['Content-Type'] = 'text/html; charset=UTF-8';
-
-      // Log internal email
-      \Drupal::logger('sr')->info('Internal email prepared for contact form. To: @to, Subject: @subject', [
-        '@to' => $message['to'] ?? 'Not available',
-        '@subject' => $message['subject'],
-      ]);
     }
   }
 }
@@ -458,11 +444,6 @@ function sr_webform_submission_insert(WebformSubmissionInterface $submission) {
     // Get submitted values
     $data = $submission->getData();
 
-    // Log full submission data
-    \Drupal::logger('sr_contact')->notice(
-      'Contact form submitted. Data: <pre>@data</pre>',
-      ['@data' => print_r($data, TRUE)]
-    );
   }
 }
 

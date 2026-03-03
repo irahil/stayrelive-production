@@ -1,95 +1,13 @@
-/* .quotation-form-wrapper {
-  background: #fff;
-  border-radius: 10px;
-  padding: 30px;
-  max-width: 900px;
-  margin: 30px auto;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+.quotation-form-sections .form-section {
+  margin-bottom: 2.5rem;
+  border: 5px solid #cce5ee;
+  border-radius: 15px;
+  padding: 20px;
 }
 
-.form-title {
-  text-align: center;
-  font-size: 1.6rem;
-  font-weight: 600;
-  margin-bottom: 25px;
-  color: #222;
+.quotation-form-sections .form-item {
+  margin: 0;
 }
-
-.quotation-form .form-grid {
-  display: grid;
-  gap: 20px;
-  margin-bottom: 25px;
-}
-
-.quotation-form .two-cols {
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-}
-
-.quotation-form .one-col {
-  grid-template-columns: 1fr;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group label {
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #333;
-  font-size: 0.95rem;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  transition: border-color 0.2s;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-  border-color: #0074bd;
-  outline: none;
-}
-
-.form-actions {
-  text-align: center;
-  margin-top: 30px;
-}
-
-.form-actions input[type="submit"],
-.form-actions button {
-  background: #0074bd;
-  color: #fff;
-  border: none;
-  padding: 12px 30px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.2s;
-}
-
-.form-actions input[type="submit"]:hover,
-.form-actions button:hover {
-  background: #005a93;
-}
-
-@media (max-width: 600px) {
-  .quotation-form-wrapper {
-    padding: 20px;
-  }
-  .form-title {
-    font-size: 1.3rem;
-  }
-} */
-
 
 .quotation-form-page {
   background: #e9f6fa;
@@ -113,10 +31,6 @@
   color: #1b3b5d;
   margin-bottom: 2rem;
   text-align: center;
-}
-
-.form-section {
-  margin-bottom: 2.5rem;
 }
 
 .section-title {
@@ -187,26 +101,37 @@ button[type="submit"]:hover {
   margin-bottom: 1.5rem;
 }
 
-.quotation-form-page .amenities-section .form-checkboxes .js-form-type-checkbox{
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border: 1px solid #ccc;
-    padding: 8px 12px;
-    margin-left: 0px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: border-color 0.2s 
-ease, background-color 0.2s 
-ease;
-    box-sizing: border-box;
+.quotation-form-page
+  .amenities-section
+  .form-checkboxes
+  .js-form-type-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  margin-left: 0px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+  box-sizing: border-box;
 }
-.quotation-form-page .amenities-section .form-checkboxes .js-form-type-checkbox .form-boolean{
+.quotation-form-page
+  .amenities-section
+  .form-checkboxes
+  .js-form-type-checkbox
+  .form-boolean {
   border-radius: 12px;
 }
-.quotation-form-page .amenities-section .form-checkboxes .js-form-type-checkbox .form-item__label{
+.quotation-form-page
+  .amenities-section
+  .form-checkboxes
+  .js-form-type-checkbox
+  .form-item__label {
   padding-left: 0.1rem;
-  top:0;
+  top: 0;
 }
 
 /* ===== Amenities Scroll Container ===== */
@@ -214,6 +139,7 @@ ease;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  width: 98%;
 }
 
 .amenities-search {
@@ -227,7 +153,7 @@ ease;
 .amenities-scroll {
   max-height: 330px;
   overflow-y: auto;
-  padding-right: 6px;
+  padding: 6px;
   border: 1px solid #d6e4ed;
   border-radius: 10px;
   background: #f9fdff;
@@ -247,7 +173,6 @@ ease;
   background: #b0d6e5;
   border-radius: 4px;
 }
-
 
 /* --- Section Titles --- */
 .quotation-form-page .quotation-form-sections .fieldset__label {
@@ -307,20 +232,20 @@ ease;
 .time-icon,
 .date-icon {
   position: absolute;
-  right: 10px;
-  top: 50%;
+  right: 20px;
+  top: 55%;
   transform: translateY(-50%);
   color: #888;
   cursor: pointer;
 }
 
 .quotation-form-page .quotation-form-sections .form-textarea-wrapper textarea {
-    padding: 1.25rem;
-    background-color: rgb(214, 238, 242);
-    color: #192452;
-    border-radius: 1.25rem;
-    font-size: 1.125rem;
-    max-width: 50rem;
+  padding: 1.25rem;
+  background-color: rgb(214, 238, 242);
+  color: #192452;
+  border-radius: 1.25rem;
+  font-size: 1.125rem;
+  max-width: 50rem;
 }
 
 .quotation-form-page .dropzone {
@@ -334,7 +259,6 @@ ease;
   font-size: 18px;
   color: #00567e;
 }
-
 
 /* crop image model css start  */
 
@@ -410,9 +334,9 @@ ease;
 
 /* Hover effect */
 .cropper-toolbar button:hover {
-  background: #0B8D9F;
+  background: #0b8d9f;
   color: #fff;
-  border-color: #0B8D9F;
+  border-color: #0b8d9f;
   transform: translateY(-1px);
 }
 
@@ -442,11 +366,11 @@ ease;
 }
 
 .cropper-btn.crop-btn {
-  background: #0B8D9F;
+  background: #0b8d9f;
 }
 
 .cropper-btn.crop-btn:hover {
-  background: #0B8D9F;
+  background: #0b8d9f;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 116, 217, 0.3);
 }
@@ -455,12 +379,12 @@ ease;
   background: #6c757d;
 }
 .cropper-btn#crop-image-btn {
-  background-color: #0B8D9F;
+  background-color: #0b8d9f;
   color: rgb(214, 238, 242);
 }
 .cropper-btn#crop-image-btn:hover {
   background-color: rgb(214, 238, 242);
-  color: #0B8D9F;
+  color: #0b8d9f;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 116, 217, 0.3);
 }
@@ -478,15 +402,13 @@ ease;
   transform: translateY(0);
 }
 
-.quotation-form-sections .dropzone .dz-preview.dz-image-preview{
+.quotation-form-sections .dropzone .dz-preview.dz-image-preview {
   background: #fff;
   z-index: 0;
 }
 
-
-
 /* Mobile Responsive */
-@media(max-width: 480px) {
+@media (max-width: 480px) {
   .cropper-container {
     width: 95vw;
     max-height: 90vh;
@@ -502,13 +424,18 @@ ease;
   }
 }
 
-
-
-
-
 /* crop image model css end  */
-
-
 
 /* ===== Toolbar Buttons (Font Awesome Icons) ===== */
 
+/* fields validations  */
+.fx-rate-error {
+  border: 2px solid red !important;
+  outline: none !important;
+}
+
+.fx-rate-error:focus {
+  border: 2px solid red !important;
+  outline: none !important;
+  box-shadow: none !important;
+}

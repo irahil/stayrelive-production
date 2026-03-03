@@ -1,6 +1,6 @@
 name: Sr Design Custom Theme
 type: theme
-description: Custom SR Theme for My Website.
+description: Custom SR Theme for Stay Relive Website.
 package: Other
 core_version_requirement: ^9 || ^10
 base theme: claro

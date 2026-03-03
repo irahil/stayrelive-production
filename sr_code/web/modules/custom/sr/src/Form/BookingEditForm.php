@@ -321,5 +321,6 @@ class BookingEditForm extends FormBase {
     if ($form_state->getValue('hidden_status') != $form_state->getValue('status')) {
       \Drupal::service('sr.services')->emailBooking($booking_id);
     }
+    $form_state->setRedirectUrl(Url::fromUserInput('/property/booking/search'));
   }
 }

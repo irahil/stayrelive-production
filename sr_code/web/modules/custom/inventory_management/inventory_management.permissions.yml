@@ -1,0 +1,8 @@
+administer inventory_management:
+  title: 'Administer inventory_management'
+  restrict access: true
+
+access inventory management property edit:
+  title: 'Access Inventory Management Property Edit Page'
+  description: 'Allow access to the property edit form in inventory management.'
+  restrict access: true

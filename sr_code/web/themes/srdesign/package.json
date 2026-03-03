@@ -1,9 +1,9 @@
 {
-    "name": "StayRelive-UI",
+    "name": "stayrelive-ui",
     "version": "1.0.0",
     "description": "UI project with SCSS compilation and Prettier formatting",
     "scripts": {
-        "scss": "sass --watch assets/scss:assets/css",
+        "scss": "sass --watch assets/scss:assets/css/",
         "format": "prettier --write \"assets/**/*.{html,scss,css}\"",
         "webp": "node convert-to-webp.js"
     },

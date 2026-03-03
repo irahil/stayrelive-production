@@ -1,220 +1,95 @@
 (function ($, Drupal, once) {
-  Drupal.behaviors.dropzoneCropper = {
+  Drupal.behaviors.dropzoneOnly = {
     attach: function (context, settings) {
-      $(
-        once(
-          "cropper-init",
-          ".dropzone, .dropzonejs, .dropzonejs-wrapper",
-          context
-        )
-      ).each(function () {
+      once(
+        "dropzone-init",
+        ".dropzone, .dropzonejs, .dropzonejs-wrapper",
+        context,
+      ).forEach(function (element) {
         let checkInterval = setInterval(() => {
-          let dz = this.dropzone;
+          let dz = element.dropzone;
           if (!dz) return;
 
           clearInterval(checkInterval);
 
-          // Get the field ID from the dropzone element
-          let fieldId = $(this).attr('id');
-          if (!fieldId) {
-            console.log('DropzoneJS: No field ID found');
-            return;
-          }
-          
-          console.log('DropzoneJS: Field ID:', fieldId);
-          console.log('DropzoneJS: Available settings:', settings.dropzonejs);
-          console.log('DropzoneJS: Full settings object:', settings);
+          let fieldId = element.id;
+          if (!fieldId) return;
 
-          // === PRELOAD EXISTING IMAGES ===
-          // Check which field this is and load appropriate files
-          if (fieldId.includes('apartment-images') || fieldId.includes('apartment_images')) {
-            // Handle apartment images
-            if (
-              settings.dropzonejs &&
-              settings.dropzonejs.apartment_images &&
-              settings.dropzonejs.apartment_images.files
-            ) {
-              let existingFiles = settings.dropzonejs.apartment_images.files;
+          // ===============================
+          // PRELOAD EXISTING IMAGES
+          // ===============================
 
-              existingFiles.forEach(function (file) {
-                let mockFile = {
-                  name: file.name,
-                  size: file.size,
-                  type: file.mime,
-                  accepted: true,
-                  fid: file.fid,
-                };
+          let fieldKey = null;
 
-                dz.emit("addedfile", mockFile);
-                dz.emit("thumbnail", mockFile, file.url);
-                dz.emit("complete", mockFile);
-
-                if (mockFile.previewElement) {
-                  mockFile.previewElement.setAttribute("data-fid", file.fid);
-                }
-              });
-            }
-          } else if (fieldId.includes('location-screenshot') || fieldId.includes('location_screenshot')) {
-            // Handle location screenshots
-            console.log('DropzoneJS: Detected location_screenshot field');
-            console.log('DropzoneJS: Checking settings.dropzonejs:', settings.dropzonejs);
-            console.log('DropzoneJS: Checking settings.dropzonejs.location_screenshot:', settings.dropzonejs?.location_screenshot);
-            
-            if (
-              settings.dropzonejs &&
-              settings.dropzonejs.location_screenshot &&
-              settings.dropzonejs.location_screenshot.files
-            ) {
-              let existingFiles = settings.dropzonejs.location_screenshot.files;
-              console.log('DropzoneJS: Found location_screenshot files:', existingFiles);
-
-              existingFiles.forEach(function (file) {
-                let mockFile = {
-                  name: file.name,
-                  size: file.size,
-                  type: file.mime,
-                  accepted: true,
-                  fid: file.fid,
-                };
-
-                dz.emit("addedfile", mockFile);
-                dz.emit("thumbnail", mockFile, file.url);
-                dz.emit("complete", mockFile);
-
-                if (mockFile.previewElement) {
-                  mockFile.previewElement.setAttribute("data-fid", file.fid);
-                }
-              });
-            }
+          if (
+            fieldId.includes("apartment-images") ||
+            fieldId.includes("apartment_images")
+          ) {
+            fieldKey = "apartment_images";
+          } else if (
+            fieldId.includes("location-screenshot") ||
+            fieldId.includes("location_screenshot")
+          ) {
+            fieldKey = "location_screenshot";
           }
 
-          dz.on("addedfile", function (file) {
-            console.log("File Added:", file);
+          if (
+            fieldKey &&
+            settings.dropzonejs &&
+            settings.dropzonejs[fieldKey] &&
+            settings.dropzonejs[fieldKey].files
+          ) {
+            let existingFiles = settings.dropzonejs[fieldKey].files;
 
-            let reader = new FileReader();
-            reader.onload = function (e) {
-              let modal = $(`
-                <div class="cropper-modal">
-                  <div class="cropper-container">
+            existingFiles.forEach(function (file) {
+              let mockFile = {
+                name: file.name,
+                size: file.size,
+                type: file.mime,
+                accepted: true,
+                fid: file.fid,
+              };
 
-                    <!-- IMAGE -->
-                    <img id="cropper-image" src="${e.target.result}">
+              dz.emit("addedfile", mockFile);
+              dz.emit("thumbnail", mockFile, file.url);
+              dz.emit("complete", mockFile);
 
-                    <!-- ==== TOOLBAR ==== -->
-                    <div class="cropper-controls">
-                      <div class="cropper-toolbar">
+              if (mockFile.previewElement) {
+                mockFile.previewElement.setAttribute("data-fid", file.fid);
+              }
+            });
+          }
+          // ===============================
+          // HANDLE REMOVE IMAGE
+          // ===============================
+          dz.on("removedfile", function (file) {
+            let fid =
+              file.fid ||
+              (file.previewElement &&
+                file.previewElement.getAttribute("data-fid"));
 
-                        <button data-action="move" title="Move">
-                          <i class="fa fa-arrows"></i>
-                        </button>
+            if (!fid) return;
 
-                        <button data-action="crop" title="Crop">
-                          <i class="fa fa-crop"></i>
-                        </button>
+            let hiddenInput = document.querySelector(
+              '[name="images[' + fieldKey + '_removed_files]"]',
+            );
 
-                        <button data-action="zoom-in" title="Zoom In">
-                          <i class="fa fa-search-plus"></i>
-                        </button>
+            if (!hiddenInput) {
+              console.log("Hidden input not found");
+              return;
+            }
 
-                        <button data-action="zoom-out" title="Zoom Out">
-                          <i class="fa fa-search-minus"></i>
-                        </button>
+            let existing = hiddenInput.value
+              ? hiddenInput.value.split(";")
+              : [];
 
-                        <button data-action="rotate-left" title="Rotate Left">
-                          <i class="fa fa-rotate-left"></i>
-                        </button>
+            if (!existing.includes(String(fid))) {
+              existing.push(fid);
+            }
 
-                        <button data-action="rotate-right" title="Rotate Right">
-                          <i class="fa fa-rotate-right"></i>
-                        </button>
+            hiddenInput.value = existing.join(";");
 
-                        <button data-action="flip-horizontal" title="Flip Horizontal">
-                          <i class="fa fa-arrows-h"></i>
-                        </button>
-
-                        <button data-action="flip-vertical" title="Flip Vertical">
-                          <i class="fa fa-arrows-v"></i>
-                        </button>
-
-                      </div>
-
-                      <div class="cropper-actions">
-                        <button class="cropper-btn cancel-btn" id="cancel-crop">Cancel</button>
-                        <button class="cropper-btn" id="crop-image-btn">Crop</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              `);
-
-              $("body").append(modal);
-
-              let cropper = new Cropper(
-                document.getElementById("cropper-image"),
-                {
-                  aspectRatio: NaN, // free selection (no forced width/height)
-                  viewMode: 0, // no restriction, allow full image selection
-                  responsive: true,
-                  autoCropArea: 1,
-                  movable: true,
-                  zoomable: true,
-                  scalable: true,
-                  rotatable: true,
-                  guides: true,
-                }
-              );
-
-              // --- APPLY TOOLBAR ACTIONS ---
-              $(".cropper-toolbar button").on("click", function () {
-                let action = $(this).data("action");
-
-                switch (action) {
-                  case "move":
-                    cropper.setDragMode("move");
-                    break;
-                  case "crop":
-                    cropper.setDragMode("crop");
-                    break;
-                  case "zoom-in":
-                    cropper.zoom(0.1);
-                    break;
-                  case "zoom-out":
-                    cropper.zoom(-0.1);
-                    break;
-                  case "rotate-left":
-                    cropper.rotate(-45);
-                    break;
-                  case "rotate-right":
-                    cropper.rotate(45);
-                    break;
-                  case "flip-horizontal":
-                    cropper.scaleX(cropper.getData().scaleX * -1);
-                    break;
-                  case "flip-vertical":
-                    cropper.scaleY(cropper.getData().scaleY * -1);
-                    break;
-                }
-              });
-
-              // CROP BUTTON
-              $("#crop-image-btn").on("click", function () {
-                cropper.getCroppedCanvas().toBlob(function (blob) {
-                  blob.name = file.name;
-
-                  dz.removeFile(file);
-                  dz.addFile(blob);
-
-                  modal.remove();
-                });
-              });
-
-              // CANCEL BUTTON
-              $("#cancel-crop").on("click", function () {
-                modal.remove();
-              });
-            };
-
-            reader.readAsDataURL(file);
+            console.log("Removed FIDs:", hiddenInput.value);
           });
         }, 200);
       });

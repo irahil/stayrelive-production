@@ -106,7 +106,7 @@ class JsonParser {
                     $diff_days_timestamp = $your_date - time();
                     $diff_days = round($diff_days_timestamp / (60 * 60 * 24));
                     // Skip records if date is more than load_days
-                    if ($diff_days <= 0 || $arr_property['load_days'] > $diff_days) {
+                    if (1==1 || $diff_days <= 0 || $arr_property['load_days'] > $diff_days) {
                         $result[$arr_node_load_data['field_reference_id']] = Importer::createProperty($arr_node_load_data);
                         echo "\nReference ID : " . $arr_node_load_data['field_reference_id'] . " - Node ID : " . $result[$arr_node_load_data['field_reference_id']] . " - Diff Date : " . $diff_days;
                         Importer::writeDeleteFile($private_path_delete_process, $arr_node_load_data['field_reference_id']);

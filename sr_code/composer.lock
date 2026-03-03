@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9d61525801d6537c78e3da3f77114fd4",
+    "content-hash": "fb81b2efe04349a1c3f659ba2e8ff1f6",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1278,17 +1278,17 @@
         },
         {
             "name": "drupal/blog",
-            "version": "3.1.3",
+            "version": "3.1.2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/blog.git",
-                "reference": "3.1.3"
+                "reference": "3.1.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/blog-3.1.3.zip",
-                "reference": "3.1.3",
-                "shasum": "ac65cc94db5ba5e7d2b9bce77169279a16f14981"
+                "url": "https://ftp.drupal.org/files/projects/blog-3.1.2.zip",
+                "reference": "3.1.2",
+                "shasum": "cb4377bb87aadb4db872d7b239cdb967bcf25edd"
             },
             "require": {
                 "drupal/core": "^9 || ^10"
@@ -1296,8 +1296,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "3.1.3",
-                    "datestamp": "1735776371",
+                    "version": "3.1.2",
+                    "datestamp": "1660691734",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"

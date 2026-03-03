@@ -1,4 +1,4 @@
-<div class="page-header page-title">
+<div class="page-header page-title mb-5">
    <div class="container">
       <div class="row">
          <div class="col-12">
@@ -7,56 +7,128 @@
       </div>
    </div>
 </div>
-<div class="container">
-   <div class="quote-hero mb-5">
-      <img src="https://static.plumcache.com/listings/d145409d-84c1-4e73-aabf-1d040aeb7059/59c76128-65de-407a-9d2f-2b91d0decef0..jpeg" alt="Stay Relive Hero image" class="property-hero">
-   </div>
-</div>
 <section class="why-we">
    <div class="container">
       <div class="row">
          <div class="col-12">
-            <h2 class="text-center mb-5">Booking Details</h2>
-         </div>
-      </div>
-      <div class="row">
-         <div class="col-12 ">
             <div class="quote-wrapper  mb-5">
                <div class="row">
                   <h4 class="icon-one">Booking Information</h4>
-                  <div class="col-12">
-                    <ul class="list-columns">
-                        <li><span>Booker Name:</span>  {{ data.booker_name|upper }}</li>
-                        <li><span>Travel Partner / Corporate:</span> {{ data.travel_partner }}</li>
-                        <li><span>Check-in Date:</span> {{ data.checkin_date }} </li>
-                        <li><span>Check-out Date:</span> {{ data.checkout_date }}</li>
-                        <li><span>Check-In Time:</span> {{ data.checkin_time}}</li>
-                        <li><span>Check-out Time:</span> {{ data.checkout_time }}</li>
-                        <li><span>Number of Nights:</span> {{ data.nights }}</li>
-                    </ul>
-                </div>
-                 
+                  <div class="col-md-4">
+                     <ul class="list-columns">
+                        {% if data.booker_name|default('')|trim %}
+                        <li><span>Booker Name</span> {{ data.booker_name }}</li>
+                        {% endif %}
+                        {% if data.travel_partner|default('')|trim %}
+                        <li><span>Enquired by</span> {{ data.travel_partner }}</li>
+                        {% endif %}
+                        {% if data.checkin_date|default('')|trim %}
+                        <li><span>Check-in Date</span> {{ data.checkin_date }}</li>
+                        {% endif %}
+                        {% if data.checkout_date|default('')|trim %}
+                        <li><span>Check-out Date</span> {{ data.checkout_date }}</li>
+                        {% endif %}
+                     </ul>
+                  </div>
+                  <div class="col-md-4">
+                     <ul class="list-columns">
+                        {% if data.checkin_time|default('')|trim %}
+                        <li><span>Check-In Time</span> {{ data.checkin_time }}</li>
+                        {% endif %}
+                        {% if data.checkout_time|default('')|trim %}
+                        <li><span>Check-out Time</span> {{ data.checkout_time }}</li>
+                        {% endif %}
+                        {% if data.nights is not empty %}
+                        <li><span>Number of Nights</span> {{ data.nights }}</li>
+                        {% endif %}
+                        {% if data.enquired_location|default('')|trim %}
+                        <li><span>Enquired Location</span> {{ data.enquired_location }}</li>
+                        {% endif %}
+                     </ul>
+                  </div>
+                  <div class="col-md-4">
+                     <ul class="list-columns">
+                        {% if data.quotation_id|default('')|trim %}
+                        <li class="agent-detail">
+                           <span class="agent-icon"><i class="fas fa-file-alt"></i></span>
+                           <span class="agent-text">
+                              <span class="label">Quotation ID</span>
+                              <span class="field-value">{{ data.quotation_id }}</span>
+                           </span>
+                        </li>
+                        {% endif %}
+                        {% if data.agent_name|default('')|trim %}
+                        <li class="agent-detail">
+                           <span class="agent-icon agent-logo-icon"></span>
+                           <span class="agent-text">
+                              <span class="label">StayRelive Agent Name</span>
+                              <span class="field-value">{{ data.agent_name }}</span>
+                           </span>
+                        </li>
+                        {% endif %}
+                        {% if data.agent_phone|default('')|trim %}
+                        <li class="agent-detail">
+                           <span class="agent-icon"><i class="fa fa-phone"></i></span>
+                           <span class="agent-text">
+                              <span class="label">StayRelive Agent Contact No</span>
+                              <span class="field-value">{{ data.agent_phone }}</span>
+                           </span>
+                        </li>
+                        {% endif %}
+                        {% if data.agent_email|default('')|trim %}
+                        <li class="agent-detail">
+                           <span class="agent-icon"><i class="far fa-envelope"></i></span>
+                           <span class="agent-text">
+                              <span class="label">StayRelive Agent Email</span>
+                              <span class="field-value">{{ data.agent_email }}</span>
+                           </span>
+                        </li>
+                        {% endif %}
+                     </ul>
+                  </div>
                </div>
             </div>
          </div>
-         <div class="col-12 ">
+         <div class="col-12">
             <div class="quote-wrapper mb-5">
                <h4 class="icon-two">Property Information</h4>
                <div class="row">
                   <div class="col-12">
-                  <ul class="list-columns">
-                        <li><span>Unit_type:</span> {{ data.unit_type }}</li>
-                        <li><span>Room Type:</span> {{ data.room_type }}</li>
-                        <li><span>Room Category:</span> {{ data.room_category }}</li>
-                        <li><span>No of bathrooms:</span> {{ data.bathrooms }}</li>
-                        <li><span>Apartment Size (sqm):</span> {{ data.apartment_size }}</li>
-                        <li><span>No. of Adults:</span> {{ data.adults }}</li>
-                        <li><span>No. of Kids:</span> {{ data.kids }}</li>
-                        <li><span>Location:</span> {{ data.location }}</li>
-                        <li><span>Distance (in km):</span> {{ data.distance }}</li>
-                        <li><span>Map Link:</span> {{ data.map_link }}</li>
-                        <li><span>Property Description:</span> {{ data.property_description }}</li>
-                    </ul>
+                     <ul class="list-columns two-columns">
+                        {% if data.unit_type|default('')|trim %}
+                        <li><span>Unit Type</span> {{ data.unit_type }}</li>
+                        {% endif %}
+                        {% if data.room_type|default('')|trim %}
+                        <li><span>Room Type</span> {{ data.room_type }}</li>
+                        {% endif %}
+                        {% if data.room_category|default('')|trim %}
+                        <li><span>Room Category</span> {{ data.room_category }}</li>
+                        {% endif %}
+                        {% if data.bathrooms is not empty %}
+                        <li><span>Bathrooms</span> {{ data.bathrooms }}</li>
+                        {% endif %}
+                        {% if data.apartment_size is not empty %}
+                        <li><span>Apartment Size (sqm)</span> {{ data.apartment_size }}</li>
+                        {% endif %}
+                        {% if data.adults is not empty %}
+                        <li><span>Adults</span> {{ data.adults }}</li>
+                        {% endif %}
+                        {% if data.kids is not empty %}
+                        <li><span>Kids</span> {{ data.kids }}</li>
+                        {% endif %}
+                        {% if data.location|default('')|trim %}
+                        <li><span>Location</span> {{ data.location }}</li>
+                        {% endif %}
+                        {% if data.distance is not empty %}
+                        <li><span>Distance (in km)</span> {{ data.distance }}</li>
+                        {% endif %}
+                        {% if data.map_link|default('')|trim %}
+                        <li><span>Map Link</span> <a href="{{ data.map_link }}" target="_blank"  class="text-break" rel="noopener noreferrer">{{ data.map_link }}</a></li>
+                        {% endif %}
+                        {% if data.property_description|default('')|trim %}
+                        <li><span>Property Description</span> {{ data.property_description }}</li>
+                        {% endif %}
+                     </ul>
                   </div>
                </div>
             </div>
@@ -66,12 +138,22 @@
                <h4 class="icon-three">Pricing & Financials</h4>
                <div class="row">
                   <div class="col-12">
-                     <ul class="list-columns">
-                        <li><span>Quote:</span> {{ data.quote }}</li>
-                        <li><span>Taxes:</span> {{ data.taxes }}</li>
-                        <li><span>FX Rate:</span> {{ data.fx_rate }}</li>
-                        <li><span>Currency:</span> {{ data.currency }}</li>
-                        <li><span>Add on Prices:</span> {{ data.addon_prices ? data.addon_prices : 'N/A' }}</li>
+                     <ul class="list-columns two-columns">
+                        {% if data.quote is not empty %}
+                        <li><span>Quote</span> {{ data.quote }}</li>
+                        {% endif %}
+                        {% if data.taxes is not empty %}
+                        <li><span>Taxes</span> {{ data.taxes }}</li>
+                        {% endif %}
+                        {% if data.fx_rate is not empty %}
+                        <li><span>FX Rate</span> {{ data.fx_rate }}</li>
+                        {% endif %}
+                        {% if data.currency|default('')|trim %}
+                        <li><span>Currency</span> {{ data.currency }}</li>
+                        {% endif %}
+                        {% if data.addon_prices|default('')|trim %}
+                        <li><span>Add on Prices</span> {{ data.addon_prices }}</li>
+                        {% endif %}
                      </ul>
                   </div>
                </div>
@@ -83,63 +165,67 @@
                <div class="row">
                   <div class="col-12">
                      {% if data.amenities %}
-                        {% set amenities_list = data.amenities|split(',') %}
-                        <div class="field field--name-field-amenities">
-                           <ul class="field__items property-details">
-                              {% for amenity in amenities_list %}
-                                 {% set amenity_trimmed = amenity|trim %}
-                                 {% if amenity_trimmed %}
-                                    {% set amenity_class = amenity_trimmed|lower|replace({' ': '-', '_': '-', '/': '-', '&': '', '(': '', ')': '', '.': ''})|replace({'--': '-'}) %}
-                                    <li class="field__item {{ amenity_class }}">{{ amenity_trimmed }}</li>
-                                 {% endif %}
-                              {% endfor %}
-                           </ul>
-                        </div>
+                     {% set amenities_list = data.amenities|split(',') %}
+                     <div class="field field--name-field-amenities">
+                        <ul class="field__items property-details two-columns">
+                           {% for amenity in amenities_list %}
+                           {% set amenity_trimmed = amenity|trim %}
+                           {% if amenity_trimmed %}
+                           {% set amenity_class = amenity_trimmed|lower|replace({' ': '-', '_': '-', '/': '-', '&': '', '(': '', ')': '', '.': ''})|replace({'--': '-'}) %}
+                           <li class="field__item {{ amenity_class }}">{{ amenity_trimmed }}</li>
+                           {% endif %}
+                           {% endfor %}
+                        </ul>
+                     </div>
                      {% else %}
-                        <p>No amenities selected.</p>
+                     <p>No amenities selected.</p>
                      {% endif %}
                   </div>
                </div>
             </div>
          </div>
+         {% if image_urls %}
+         <div class="col-12 ">
+            <div class="quote-wrapper   mb-5">
+               <h4 class="icon-three">Property Images</h4>
+               <div class="row">
+                  <div class="col-12">
+                     <div class="property-images">
+                        {% for image_url in image_urls %}
+                        <img src="{{ image_url }}" alt="Property Image" />
+                        {% endfor %}
+                        {% for image_url in location_screenshot_urls %}
+                        <img src="{{ image_url }}" alt="Location Screenshot" />
+                        {% endfor %}
+                     </div>
+                     <p class="image-disclaimer small m-3">
+                        <em>All the images are used for sample and illustration purposes of the apartment type; the design and detail may vary.</em>
+                     </p>
+                  </div>
+               </div>
+            </div>
+         </div>
+         {% endif %}
          <div class="col-12 ">
             <div class="quote-wrapper mb-5">
                <h4  class="icon-three">Policies</h4>
                <div class="row">
                   <div class="col-12">
                      <ul>
-                        <li><span>Cancellation Policy:</span> {{ data.cancellation_policy }}</li>
-                        <li><span>Rules & Regulations:</span> {{ data.rules }}</li>
-                        <li><span>Note (Extra Details):</span> {{ data.note }}</li>
-                        <li><span>Supplier Reference:</span> {{ data.supplier_reference }}</li>
-                        <li><span>Confirmation Status:</span> {{ data.confirmation_status }}</li>
-                        {% if data.supplier_reference_text %}
-                        <li><span>Entered URL or Quoted Text:</span> {{ data.supplier_reference_text }}</li>
+                        {% if data.cancellation_policy|default('')|trim %}
+                        <li><span><strong>Cancellation Policy</strong></span> {{ data.cancellation_policy|raw }}</li>
+                        {% endif %}
+                        {% if data.rules|default('')|trim %}
+                        <li><span><strong>Rules & Regulations</strong></span> {{ data.rules|raw }}</li>
+                        {% endif %}
+                        {% if data.note|default('')|trim %}
+                        <li><span><strong>Note (Extra Details)</strong></span> {{ data.note|raw }}</li>
                         {% endif %}
                      </ul>
                   </div>
                </div>
             </div>
          </div>
-         {% if image_urls %}
-            <div class="col-12 ">
-               <div class="quote-wrapper  mb-5">
-                  <h4 class="icon-three">Property Images</h4>
-                  <div class="row">
-                     <div class="col-12">
-                        <div class="property-images">
-                           {% for image_url in image_urls %}
-                              <img src="{{ image_url }}" alt="Property Image" style="max-width: 300px; margin: 10px; display: inline-block;" />
-                           {% endfor %}
-                           {% for image_url in location_screenshot_urls %}
-                              <img src="{{ image_url }}" alt="Location Screenshot" style="max-width: 300px; margin: 10px; display: inline-block;" />
-                           {% endfor %}
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         {% endif %}
       </div>
    </div>
 </section>

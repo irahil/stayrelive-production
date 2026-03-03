@@ -1,0 +1,36 @@
+<?php
+
+use Drupal\Core\Url;
+use Drupal\Core\Session\AccountInterface;
+
+function vendor_management_page_attachments(array &$attachments) {
+  $current_user = \Drupal::currentUser();
+  $roles = $current_user->getRoles();
+
+  if ($current_user->isAnonymous()) {
+    $target_url = Url::fromUri('internal:/vendor/register')->toString();
+  }
+  elseif (in_array('vendor', $roles) || in_array('administrator', $roles)) {
+    $target_url = Url::fromUri('internal:/inventory-management/property/list')->toString();
+  }
+  else {
+    $target_url = Url::fromUri('internal:/vendor/register')->toString();
+  }
+
+  $js = "
+    document.addEventListener('DOMContentLoaded', function() {
+      var link = document.querySelector('.list-your-property-link');
+      if (link) {
+        link.setAttribute('href', '{$target_url}');
+      }
+    });
+  ";
+
+  $attachments['#attached']['html_head'][] = [
+    [
+      '#tag' => 'script',
+      '#value' => $js,
+    ],
+    'custom_property_link_update',
+  ];
+}

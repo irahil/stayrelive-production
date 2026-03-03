@@ -28,6 +28,20 @@
 
       @media (max-width: 992px) {
         flex-direction: column;
+
+        .property-view-wrapper {
+          flex-direction: column;
+        }
+
+        .property-results {
+          order: 1;
+          width: 100%;
+        }
+
+        .property-sidebar {
+          order: 2;
+          width: 100%;
+        }
       }
     }
 

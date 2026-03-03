@@ -1,0 +1,35 @@
+vendor_management.vendor_list:
+  path: '/vendor-management/list'
+  defaults:
+    _controller: '\Drupal\vendor_management\Controller\VendorController::list'
+    _title: 'List Vendors'
+  requirements:
+    _role: 'authenticated'
+  options:
+    _admin_route: TRUE
+
+vendor_management.vendor_register:
+  path: '/vendor/register'
+  defaults:
+    _form: '\Drupal\vendor_management\Form\VendorRegisterForm'
+    _title: 'Register Vendor'
+  requirements:
+    _permission: 'access content'
+
+vendor_management.vendor_add:
+  path: '/vendor-management/add'
+  defaults:
+    _form: '\Drupal\vendor_management\Form\VendorForm'
+    _title: 'Add Vendor'
+  requirements:
+    _role: 'authenticated'
+  options:
+    _admin_route: TRUE
+
+vendor_management.vendor_edit:
+  path: '/vendor-management/edit/{vendor_id}'
+  defaults:
+    _form: '\Drupal\vendor_management\Form\VendorEditForm'
+    _title: 'Edit Vendor'
+  requirements:
+    _role: 'authenticated'

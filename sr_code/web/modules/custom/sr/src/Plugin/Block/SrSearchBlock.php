@@ -27,7 +27,6 @@ class SrSearchBlock extends BlockBase {
 */
 /*
     $form = \Drupal::formBuilder()->getForm('Drupal\sr\Form\HomeSearchForm');
-    \Drupal::logger('Sr')->info('HomeSearchForm: output '. print_r($form, true));
 
     return $form;
     */

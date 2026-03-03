@@ -88,8 +88,6 @@ class PriceForm extends FormBase {
 
     $arr_block_param = \Drupal::service('sr.services')->generatePriceInfo($pid, $form_param);
 
-    // \Drupal::logger('Sr')->info('arr_block_param: ' . print_r($arr_block_param, true));
-
     $arr_block_param['price'] = ($arr_block_param['price'] != '') ? commonUtil::formatCurrency($arr_block_param['price']) : '';
     $arr_block_param['deposit'] = ($arr_block_param['deposit'] != '') ? commonUtil::formatCurrency($arr_block_param['deposit']) : '';
     $arr_block_param['price_for_days'] = ($arr_block_param['price_for_days'] != '') ? commonUtil::formatCurrency($arr_block_param['price_for_days']) : '';
@@ -108,8 +106,6 @@ class PriceForm extends FormBase {
     foreach ($arr_block_param as $key_block => $val_block) {
       $form['price_summary'][$key_block] = ['#markup' => $val_block];
     }
-
-    //\Drupal::logger('Sr')->info('arr_block_param : ' . print_r($arr_block_param, true));
 
     $form['#attached']['library'][] = 'sr/sr_lib';
 

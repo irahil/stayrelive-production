@@ -1,0 +1,39 @@
+<?php
+use Drupal\field\Entity\FieldConfig;
+use Drupal\Core\Entity\EntityFieldManager;
+use Drupal\user\Entity\User;
+use Drupal\node\NodeInterface;
+
+
+function inventory_management_theme($existing, $type, $theme, $path) {
+  return [
+    'room_form' => [
+      'render element' => 'form',
+      'template' => 'room-form',
+    ],
+    'room_edit_form' => [
+      'render element' => 'form',
+      'template' => 'room-form',
+    ],
+    'property_details_form' => [
+      'render element' => 'form',
+      'template' => 'property-details-form',
+    ],
+    'property_details_edit_form' => [
+      'render element' => 'form',
+      'template' => 'property-details-edit-form',
+    ],
+    'property_list' => [
+      'render element' => 'form',
+      'template' => 'property-list-form',
+    ],
+    'property_file_list' => [
+      'render element' => 'form',
+      'template' => 'property-file-list-form',
+    ],
+    'property_upload_form' => [
+      'render element' => 'form',
+      'template' => 'property-upload-form',
+    ],
+  ];
+}

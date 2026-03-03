@@ -1,0 +1,7 @@
+entity.propertyvendor.settings:
+  path: 'admin/structure/propertyvendor'
+  defaults:
+    _form: '\Drupal\propertyvendor\Form\PropertyvendorSettingsForm'
+    _title: 'Propertyvendor'
+  requirements:
+    _permission: 'administer propertyvendor'

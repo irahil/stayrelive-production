@@ -1,0 +1,9 @@
+inventory_management.property_list:
+  route_name: inventory_management.property_list
+  title: 'List Property'
+  base_route: inventory_management.property_list
+
+inventory_management.file_list:
+  route_name: inventory_management.file_list
+  title: 'List Files'
+  base_route: inventory_management.property_list

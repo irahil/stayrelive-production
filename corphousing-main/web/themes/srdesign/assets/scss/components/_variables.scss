@@ -1,27 +1,72 @@
 /* Colors */
 $primary: #0b8d9f;
-$secondary: rgb(51, 58, 77);
+$secondary: #333a4d;
 $tertiary: #13d2ef;
 $white: #fff;
 $black: #000;
 $light: rgb(214, 238, 242);
 $golden: #cfaf6e;
 $text-primary: #666;
+$text-muted: #5e6d82;
+$text-dark: #1e3a5f;
 $red: #ff3b30;
 $stroke-border: #e5e7eb;
+
+/* Font Weights */
+$fw-light: 300;
+$fw-regular: 400;
+$fw-medium: 500;
+$fw-semibold: 600;
+$fw-bold: 700;
+$fw-extra-bold: 800;
+
+/* Font Sizes */
+$fs-h1: 48px;
+$fs-h2: 42px;
+$fs-h3: 36px;
+$fs-h1-tablet: 32px;
+$fs-h1-mobile: 28px;
+$fs-subtitle: 24px;
+$fs-body: 16px;
+$fs-small: 14px;
+$fs-tiny: 12px;
+
+/* Spacing & Borders */
+$radius-xl: 32px;
+$radius-lg: 24px;
+$radius-md: 12px;
+$radius-sm: 8px;
 
 /* Fonts */
 $primary-font: "Poppins", sans-serif;
 $secondary-font: "Caveat", cursive;
 $icon-fonts: "Font Awesome 5 Free";
 
-// Grid breakpoints extend
-
 $grid-breakpoints: (
   xs: 0,
   sm: 576px,
   md: 768px,
   lg: 992px,
-  xl: 1200px,
-  xxl: 1400px,
+  xl: 1200px
 );
+
+/* Breakpoint Mixin */
+/* Breakpoint Mixin */
+@mixin respond-to($breakpoint) {
+
+  @if $breakpoint == "tablet" {
+    @media (max-width: 1024px) { @content; }
+
+  } @else if $breakpoint == "mobile" {
+    @media (max-width: 768px) { @content; }
+
+  } @else if $breakpoint == "mobile-lg" { // 425px
+    @media (max-width: 425px) { @content; }
+
+  } @else if $breakpoint == "mobile-md" { // 375px
+    @media (max-width: 375px) { @content; }
+
+  } @else if $breakpoint == "mobile-sm" { // 320px
+    @media (max-width: 320px) { @content; }
+  }
+}

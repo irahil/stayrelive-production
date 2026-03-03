@@ -1,0 +1,111 @@
+{#
+  Custom template for Property Listing page
+#}
+
+<div class="property-listing-wrapper">
+<div class="search-filter-heading">
+  <p class="fieldset__label">My Properties</p>
+</div>
+
+<div class="property-stats-cards">
+  <div class="stat-card total-properties">
+    <div class="card-header">
+      <span>Total Properties</span>
+      <span class="card-icon"><i class="fas fa-building"></i></span> 
+    </div>
+    <div class="card-value">{{ form.count_total }}</div>
+  </div>
+
+  <div class="stat-card approved-properties">
+    <div class="card-header">
+      <span>Approved</span>
+      <span class="card-icon green"><i class="fa-solid fa-check"></i></i></span> 
+    </div>
+    <div class="card-value">{{ form.count_published }}</div>
+  </div>
+
+  <div class="stat-card pending-properties">
+    <div class="card-header">
+      <span>Pending</span>
+      <span class="card-icon amber"><i class="fas fa-clock"></i></span> 
+    </div>
+    <div class="card-value">{{ form.count_unpublished }}</div>
+  </div>
+</div>
+
+<div class="search-filter-row">
+  {{ form.search }}
+  {{ form.actions.submit }}
+</div>
+
+{{ form.form_build_id }}
+{{ form.form_token }}
+{{ form.form_id }}
+
+
+<div class="property-actions">
+    <div class="action-link">{{ form.add_property_link }}</div>
+    <div class="action-link">{{ form.bulk_upload_link }}</div>
+</div>
+
+  {% if form.search_result.result is defined %}
+  {% set rows_shown = 0 %}
+  <table class="tbl-vendor">
+    <thead>
+      <tr>
+        <th>{{ 'Action'|t }}</th>
+        <th>{{ 'Title'|t }}</th>
+        <th>{{ 'Status'|t }}</th>
+        <th>{{ 'Created By'|t }}</th>
+        <th>{{ 'Created On'|t }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in form.search_result.result %}
+        {% if (row.title is not empty or row.status is not empty or row.created_by is not empty or row.created_date is not empty) and rows_shown < 10 %}
+          {% set rows_shown = rows_shown + 1 %}
+
+          {# Assign class based on status value #}
+          {% set status_class = '' %}
+          {% if row.status == 'Active' %}
+            {% set status_class = 'active' %}
+          {% elseif row.status == 'Approved' %}
+            {% set status_class = 'approved' %}
+          {% elseif row.status == 'Pending' %}
+            {% set status_class = 'pending' %}
+          {% endif %}
+
+          <tr>
+            <td>{{ row.edit }}</td>
+            <td>{{ row.title }}</td>
+            <td>
+              <span class="status-badge {{ status_class }}">{{ row.status }}</span>
+            </td>
+            <td>{{ row.created_by }}</td>
+            <td>{{ row.created_date }}</td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+
+      {% if rows_shown == 0 %}
+        <tr>
+          <td colspan="5" class="no-results">{{ 'No properties found.'|t }}</td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+
+  {% if form.search_result.pager is defined %}
+    <div class="pager-wrapper">
+      {{ form.search_result.pager }}
+    </div>
+  {% endif %}
+
+{% elseif form.search_result.no_result is defined %}
+  <div class="no-results">
+    <strong>{{ form.search_result.no_result['#title'] }}</strong>: {{ form.search_result.no_result['#markup'] }}
+  </div>
+{% endif %}
+
+
+</div>

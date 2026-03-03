@@ -13,11 +13,8 @@ class FavouriteController extends ControllerBase {
     if ($node_id) {
       $session = \Drupal::service('session');
       $session->set('flag_node_id', $node_id);
-      \Drupal::logger('custom_module')->info('Stored node ID in session: ' . $node_id);
-
       return new JsonResponse(['success' => TRUE]);
     }
-
     return new JsonResponse(['success' => FALSE], 400);
   }
 }

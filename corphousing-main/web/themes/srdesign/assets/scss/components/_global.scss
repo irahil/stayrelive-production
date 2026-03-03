@@ -248,9 +248,16 @@ input[type="submit"] {
 .flatpickr-months {
   display: flex !important;
 
-  .flatpickr-month {
-    &:nth-child(2) {
-      display: none !important;
-    }
+  .flatpickr-prev-month {
+    padding: 5px 10px !important
   }
+  .flatpickr-next-month {
+    padding: 5px 10px !important;
+  }
+
+  // .flatpickr-month {
+  //   &:nth-child(2) {
+  //     display: none !important;
+  //   }
+  // }
 }

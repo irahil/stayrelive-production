@@ -4,7 +4,7 @@ sr_quotation.form:
     _form: '\Drupal\sr_quotation\Form\QuotationForm'
     _title: 'Add Quotation'
   requirements:
-    _role: 'authenticated'
+    _permission: 'add quotation'
 
 sr_quotation.edit:
   path: '/quotation/{id}/edit'
@@ -12,7 +12,7 @@ sr_quotation.edit:
     _form: '\Drupal\sr_quotation\Form\QuotationEditForm'
     _title: 'Edit Quotation'
   requirements:
-    _permission: 'administer site content'
+    _permission: 'edit quotation'
 
 sr_quotation.list:
   path: '/quotation'
