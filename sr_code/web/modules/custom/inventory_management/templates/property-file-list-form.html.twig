@@ -2,11 +2,11 @@
   Custom template for Property Listing page
 #}
 
-<div class="property-listing-wrapper">
+<div class="property-listing-wrapper container">
 
-  <div class="property-actions">
-    <div class="action-link">{{ form.back_link }}</div>
-    <div class="action-link">{{ form.upload_property_link }}</div>
+  <div class="property-actions d-flex justify-content-between">
+    <div class="action-link back-link-button">{{ form.back_link }}</div>
+    <div class="action-link upload-button">{{ form.upload_property_link }}</div>
   </div>
 
   {% if form.search_result.result is defined %}

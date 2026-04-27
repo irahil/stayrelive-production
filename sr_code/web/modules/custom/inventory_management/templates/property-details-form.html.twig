@@ -5,39 +5,76 @@
 
 <div class="property-form-wrapper">
 
-  <div class="form-back-link">
-    {{ form.back_link }}
+<div class="form-back-link">
+  <div class="back-link-button">
+    <a>{{ form.back_link }}</a>
   </div>
-  <div style="clear: both;"></div>
+</div>
+<div style="clear: both;"></div>
 
+<div class="property-basic-info">
   <fieldset>
-    <legend><strong>{{ form.property_basic_info['#title'] }}</strong></legend>
+  <legend><strong>{{ form.property_basic_info['#title'] }}</strong></legend>
+    
     {% if form.property_basic_info.published is defined %}
-      {{ form.property_basic_info.published }}
+    <div class="published">
+    {{ form.property_basic_info.published }}
+    </div>
+
     {% endif %}
     {% if form.property_basic_info.markup_type_wrapper is defined %}  
-      {{ form.property_basic_info.markup_type_wrapper }}
+      <div class="markup_type_wrapper">{{ form.property_basic_info.markup_type_wrapper }}</div>
     {% endif %}
+    
     {{ form.property_basic_info.property_type }}
     {{ form.property_basic_info.room_types }}
+    <div class="name-wrapper">
     {{ form.property_basic_info.property_name_age_wrapper }}
+    </div>
+    <div class="description">
     {{ form.property_basic_info.property_description }}
+    </div>
+    
+    <div class="lat-lng-row">
     {{ form.property_basic_info.lat_lng_row }}
-    {{ form.property_basic_info.address }}
-    {{ form.property_basic_info.location_row_1 }}
-    {{ form.property_basic_info.location_row_2 }}
-  </fieldset>
+    </div>
 
+    <div class="address">
+    {{ form.property_basic_info.address }}
+    </div>
+    
+    <div class="country-row">
+    {{ form.property_basic_info.location_row_1 }}
+    </div>
+    
+
+    <div class="location-row">
+    {{ form.property_basic_info.location_row_2 }}
+    </div>
+    
+  </fieldset>
+  </div>
+
+  <div class="property-details">
   <fieldset>
     <legend><strong>{{ form.property_details['#title'] }}</strong></legend>
     {{ form.property_details.primary_media }}
+
+    <div class="property-photos">
     {{ form.property_details.media }}
+    </div>
+    
     {{ form.property_details.on_site_staffing }}
+
+    <div class="amenities">
     {{ form.property_details.property_amenities }}
+    </div>
+    
     {{ form.property_details.food_beverages }}
     {{ form.property_details.breakfast_provides }}
     {{ form.property_details.breakfast_price }}
   </fieldset>
+  </div>
 
   <fieldset>
     <legend><strong>{{ form.host_details['#title'] }}</strong></legend>
@@ -77,4 +114,4 @@
     {{ form.submit }}
   </div>
 
-</div>
+</div?>
