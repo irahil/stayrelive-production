@@ -194,6 +194,8 @@ class PropertyDetailsForm extends FormBase {
       '#value' => $this->t('Save'),
     ];
     $form['#theme'] = 'property_details_form';
+    $form['#attached']['library'][] = 'inventory_management/property_add';
+
 
     return $form;
   }

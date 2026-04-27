@@ -10,3 +10,9 @@ property_list:
     - core/drupal
     - core/drupal.dialog
     - core/drupal.dialog.ajax
+
+property_add:
+  version: 1.x
+  css:
+    theme:
+      css/property-add.css: {}

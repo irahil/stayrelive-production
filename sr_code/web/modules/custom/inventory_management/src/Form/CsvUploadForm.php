@@ -50,7 +50,7 @@ class CsvUploadForm extends FormBase {
     $obj_vendor = new vendor(); 
     $arg_data = array('query' => array());
     $arr_vendor = $obj_vendor->searchVendor($arg_data, 5000);
-    $arr_vendor_list = array('' => "Select Vendor");
+    $arr_vendor_list = array();
     if (is_array($arr_vendor['search_result']) && count($arr_vendor['search_result']) > 0) {
         foreach ($arr_vendor['search_result'] as $val_vendor) {
             $arr_vendor_list[$val_vendor['id']] = $val_vendor['name'];
