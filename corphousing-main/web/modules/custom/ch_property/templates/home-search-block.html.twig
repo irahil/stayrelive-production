@@ -1,38 +1,51 @@
 <div class="container">
-    <div class="home-search">
-        <h1>Corporate Living, <span>Simplified</span></h1>
-            <p>
-                <span>Find</span>
-                <span>your</span>
-                <span>ideal</span>
-                <span>Serviced</span>
-                <span>Apartment,</span>
-                <span>perfect</span>
-                <span>for</span>
-                <span>expats,</span>
-                <span>relocations,</span>
-                <span>new</span>
-                <span>hires,</span>
-                <span>and</span>
-                <span>corporate</span>
-                <span>travelers</span>
-            </p>
+	<div class="home-search">
+		<h1>Corporate Living,
+			<span>Simplified</span>
+		</h1>
+		<p>
+			<span>Find</span>
+			<span>your</span>
+			<span>ideal</span>
+			<span>Serviced</span>
+			<span>Apartment,</span>
+			<span>perfect</span>
+			<span>for</span>
+			<span>expats,</span>
+			<span>relocations,</span>
+			<span>new</span>
+			<span>hires,</span>
+			<span>and</span>
+			<span>corporate</span>
+			<span>travelers</span>
+		</p>
 
-        {{ form }}
+		{{ form }}
 
-        {% set cities = [
-            {'name': 'Mumbai', 'id': '123'},
-            {'name': 'Bengaluru', 'id': '125'},
-            {'name': 'Delhi', 'id': '177'},
-            {'name': 'Hyderabad', 'id': '197'},
-            {'name': 'Pune', 'id': '124'},
-            {'name': 'Chennai', 'id': '178'}
-        ] %}
-        <ul class="quick-search">
-            <li>Quick Search</li>
-            {% for city in cities %}
-            <li><a href="/property/search?field_city_target_id={{ city.id }}">{{ city.name }}</a></li>
-            {% endfor %}
-        </ul>
-    </div>
-</div>
+			{% set today = "now"|date("jS M y") %}
+			{% set next_month = "+30 days"|date("jS M y") %}
+			{% set date_range = today ~ " to " ~ next_month %}
+
+			{% set cities = [
+                {'name': 'Mumbai', 'id': '123'},
+                {'name': 'Bengaluru', 'id': '125'},
+                {'name': 'Delhi', 'id': '177'},
+                {'name': 'Hyderabad', 'id': '197'},
+                {'name': 'Pune', 'id': '124'},
+                {'name': 'Chennai', 'id': '178'}
+            ] %}
+
+			<ul class="quick-search">
+				<li>Quick Search</li>
+
+				{% for city in cities %}
+					<li>
+						<a href="/property/search?field_city_target_id={{ city.id }}&rooms=1&date={{ date_range|url_encode }}">
+							{{ city.name }}
+						</a>
+					</li>
+				{% endfor %}
+
+			</ul>
+		</div>
+	</div>

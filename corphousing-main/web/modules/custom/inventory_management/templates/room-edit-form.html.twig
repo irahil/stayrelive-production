@@ -9,9 +9,8 @@
 
   <fieldset>
     <legend><strong>{{ form.room_info['#title'] }}</strong></legend>
-    {% if form.room_info.title is defined %}
+    {% if form.room_info.published is defined %}
       {{ form.room_info.published }}
-      {{ form.room_info.title }}
     {% endif %}
     {{ form.room_info.room_type }}
     {{ form.room_info.number_of_units }}
@@ -31,9 +30,45 @@
 
   <fieldset>
     <legend><strong>{{ form.room_price['#title'] }}</strong></legend>
-    {{ form.room_price.price }}
-    {{ form.room_price.tax_details }}
+    {{ form.room_price.rate_on_request_toggle }}
+    <div class="room-price-tax-wrapper room-price-tax-wrapper-manual" id="room-price-tax-wrapper-manual-edit">
+      {{ form.room_price.room_price_tax_wrapper.single_occupancy_heading }}
+      <div class="room-price-vat-club room-price-vat-club--nightly">
+        {{ form.room_price.room_price_tax_wrapper.single_nightly_rate }}
+        {{ form.room_price.room_price_tax_wrapper.nightly_vat_percent }}
+        {{ form.room_price.room_price_tax_wrapper.nightly_vat_amount }}
+      </div>
+      <div class="room-price-vat-club room-price-vat-club--monthly">
+        {{ form.room_price.room_price_tax_wrapper.single_monthly_rate }}
+        {{ form.room_price.room_price_tax_wrapper.monthly_vat_percent }}
+        {{ form.room_price.room_price_tax_wrapper.monthly_vat_amount }}
+      </div>
+
+      {{ form.room_price.room_price_tax_wrapper.double_occupancy_heading }}
+      <div class="room-price-vat-club room-price-vat-club--double-nightly">
+        {{ form.room_price.room_price_tax_wrapper.double_nightly_rate }}
+        {{ form.room_price.room_price_tax_wrapper.double_nightly_rate_vat_pt }}
+        {{ form.room_price.room_price_tax_wrapper.double_nightly_rate_vat_am }}
+      </div>
+      <div class="room-price-vat-club room-price-vat-club--double-monthly">
+        {{ form.room_price.room_price_tax_wrapper.double_monthly_rate }}
+        {{ form.room_price.room_price_tax_wrapper.double_monthly_rate_vat_pt }}
+        {{ form.room_price.room_price_tax_wrapper.double_monthly_rate_vat_am }}
+      </div>
+
+      <div class="room-price-vat-legacy-headings">
+        {{ form.room_price.room_price_tax_wrapper.vat_heading }}
+        {{ form.room_price.room_price_tax_wrapper.total_vat_heading }}
+      </div>
+    </div>
   </fieldset>
+
+  <style>
+    .room-form-wrapper:has(input[type="checkbox"][name="rate_on_request_toggle"]:checked) #room-price-tax-wrapper-manual-edit,
+    .room-form-wrapper:has(input[type="checkbox"][name="room_price[rate_on_request_toggle]"]:checked) #room-price-tax-wrapper-manual-edit {
+      display: none !important;
+    }
+  </style>
 
   <div class="form-actions">
     {{ form.form_build_id }}

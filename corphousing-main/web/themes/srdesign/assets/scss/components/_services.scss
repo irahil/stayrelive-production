@@ -421,7 +421,7 @@
       }
 
       .custom-accordion-header,
-      .ui-accordion-header {
+      .ui-accordion-header:not(.faqfield-question) {
         font-size: 16px;
         padding: 8px 18px;
 
@@ -431,7 +431,7 @@
       }
 
       .custom-accordion-content,
-      .ui-accordion-content {
+      .ui-accordion-content:not(.faqfield-answer) {
         padding: 0 18px 15px;
 
         p {
@@ -492,7 +492,7 @@
       }
 
       .custom-accordion-header,
-      .ui-accordion-header {
+      .ui-accordion-header:not(.faqfield-question) {
         font-size: 14px;
         padding: 12px 16px;
 
@@ -502,7 +502,7 @@
       }
 
       .custom-accordion-content,
-      .ui-accordion-content {
+      .ui-accordion-content:not(.faqfield-answer) {
         padding: 0 16px 12px;
 
         p {
@@ -932,8 +932,9 @@
       }
     }
 
+    // Exclude faqfield (Services FAQ): shared rules live in _property-list.scss
     .custom-accordion-header,
-    .ui-accordion-header {
+    .ui-accordion-header:not(.faqfield-question) {
       position: relative;
       border: none;
       font-size: 24px;
@@ -997,7 +998,7 @@
     }
 
     .custom-accordion-content,
-    .ui-accordion-content {
+    .ui-accordion-content:not(.faqfield-answer) {
       border: none;
       background: transparent;
       overflow: hidden;

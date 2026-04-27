@@ -621,19 +621,45 @@ document.addEventListener('DOMContentLoaded', function() {
 })(Drupal, once);
 
 (function ($, Drupal, once) {
+  /**
+   * Sidebar "From ₹…/nightly" and "From ₹…/monthly" match the selected room
+   * (same values as data-sidebar-* on #room-type options).
+   */
+  function updatePropertySidebarFromRoomOption(selectEl) {
+    const opt = selectEl.options[selectEl.selectedIndex];
+    if (!opt) {
+      return;
+    }
+    const block = document.getElementById('property-sidebar-price-block');
+    if (!block) {
+      return;
+    }
+    const ror = opt.getAttribute('data-rate-on-request') === '1';
+    const night = (opt.getAttribute('data-sidebar-night') || '').trim();
+    const month = (opt.getAttribute('data-sidebar-month') || '').trim();
+    if (ror) {
+      block.innerHTML = '<div class="property-sidebar-price-inner"><strong>Rate on request</strong></div>';
+      return;
+    }
+    let html = '<div class="property-sidebar-price-inner mb-3">';
+    if (night) {
+      html += '<div class="mb-1 property-sidebar-line property-sidebar-line--night">From <strong><span id="room-price">₹' + night + '</span></strong>/nightly</div>';
+    }
+    if (month) {
+      html += '<div class="property-sidebar-line property-sidebar-line--month">From <strong><span id="room-price-monthly">₹' + month + '</span></strong>/monthly</div>';
+    }
+    html += '</div>';
+    if (!night && !month) {
+      html = '<div class="property-sidebar-price-inner"></div>';
+    }
+    block.innerHTML = html;
+  }
+
   Drupal.behaviors.roomPriceUpdate = {
     attach: function (context, settings) {
       once('roomPriceChange', '#room-type', context).forEach(function (element) {
         element.addEventListener('change', function () {
-          const selectedOption = element.options[element.selectedIndex];
-          const selectedPrice = selectedOption.getAttribute('data-price');
-
-          if (selectedPrice) {
-            const priceElement = document.getElementById('room-price');
-            if (priceElement) {
-              priceElement.textContent = '₹' + Number(selectedPrice).toLocaleString();
-            }
-          }
+          updatePropertySidebarFromRoomOption(element);
         });
       });
     }
@@ -1151,12 +1177,7 @@ document.addEventListener("DOMContentLoaded", function () {
           .then(response => {
             if (response.status === 'success') {
               alert(response.message);
-              const card = el.closest('.booking-card');
-              if (card) {
-                card.style.transition = 'opacity 0.4s';
-                card.style.opacity = 0;
-                setTimeout(() => card.remove(), 400);
-              }
+              window.location.reload();
             } else {
               alert(response.message || 'Failed to cancel booking');
             }
@@ -1278,19 +1299,6 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
 })(Drupal, once, drupalSettings);
-
-document.addEventListener('DOMContentLoaded', function() {
-  const roomTypeSelect = document.getElementById('room-type');
-  const priceDisplay = document.getElementById('room-price');
-
-  if (roomTypeSelect && priceDisplay) {
-    roomTypeSelect.addEventListener('change', function() {
-      const selectedOption = this.options[this.selectedIndex];
-      const price = selectedOption.getAttribute('data-price');
-      priceDisplay.textContent = '₹' + parseFloat(price).toLocaleString('en-IN');
-    });
-  }
-});
 
 document.addEventListener('click', function (e) {
   const text = e.target.closest('.favorite-text');

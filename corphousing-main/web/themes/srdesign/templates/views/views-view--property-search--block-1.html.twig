@@ -122,12 +122,12 @@
           {{ empty }}
         </div>
       {% endif %}
+
+      {% if pager %}
+        <div class="property-results-pager">{{ pager }}</div>
+      {% endif %}
     </div>
   </div>
-
-  {% if pager %}
-    {{ pager }}
-  {% endif %}
 
   {% if footer %}
     <div class="view-footer">

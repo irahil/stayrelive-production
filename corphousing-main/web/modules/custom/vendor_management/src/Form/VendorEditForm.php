@@ -220,15 +220,19 @@ class VendorEditForm extends FormBase {
       $form_state->setErrorByName('phone', $this->t('Please enter a valid phone number.'));
     }
 
-    // Validate vendor name is duplicate 
+    // Validate vendor email is duplicate - same email cannot register twice.
+    // Allow same vendor name - different vendors may have similar names.
+    // Uses DB query on info JSON - no full entity load. Exclude current vendor when editing.
+    $email = trim($form_state->getValue('email'));
+    $pattern = '"email":"' . \Drupal::database()->escapeLike($email) . '"';
     $query = \Drupal::entityQuery('propertyvendor')
-      ->condition('name', $form_state->getValue('name'))
+      ->condition('info', $pattern, 'CONTAINS')
       ->condition('id', $vendor_id, '!=')
-      ->accessCheck(TRUE);
-
-    $entity_ids = $query->execute();
-    if (!empty($entity_ids)) {
-      $form_state->setErrorByName('name', $this->t('Vendor Name already exists.'));
+      ->accessCheck(TRUE)
+      ->range(0, 1);
+    $ids = $query->execute();
+    if (!empty($ids)) {
+      $form_state->setErrorByName('email', $this->t('Vendor email is already registered.'));
     }
 
     // This is a validation to make sure we validate if the author of the vendor is not assigned to another vendor.

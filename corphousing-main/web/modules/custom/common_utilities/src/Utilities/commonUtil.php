@@ -227,7 +227,8 @@ class commonUtil {
 
         $query = \Drupal::entityQuery('taxonomy_term');
         $query->condition('vid', $vid);
-        $query->sort('tid');
+        $query->sort('weight'); // Sort by weight first
+        $query->sort('name');   // Then by name alphabetically
         $query->accessCheck(TRUE);
         $tids = $query->execute();
         $terms = \Drupal\taxonomy\Entity\Term::loadMultiple($tids);

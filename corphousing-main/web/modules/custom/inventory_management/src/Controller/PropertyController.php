@@ -8,6 +8,7 @@ use Drupal\Core\Url;
 use Drupal\user\Entity\User;
 use Drupal\node\Entity\Node;
 use Drupal\vendor_management\vendor;
+use Drupal\common_utilities\Utilities\commonUtil;
 
 class PropertyController extends ControllerBase {
     /**
@@ -320,6 +321,135 @@ public static function submitSearchForm(array &$form, \Drupal\Core\Form\FormStat
 
     // Redirect to the property edit page.
     return $this->redirect('inventory_management.property_edit', ['id' => $pid]);
+  }
+
+  /**
+   * Export properties as CSV.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   A CSV file download response.
+   */
+  public function exportCsv()
+  {
+    $arr_admin_roles = ['administrator', 'site_admin'];
+    $arr_vendor_roles = ['vendor'];
+
+    $user = User::load(\Drupal::currentUser()->id());
+    $roles = $user->getRoles();
+
+    $request = \Drupal::request();
+    $property_name = $request->query->get('property_name');
+    $city = $request->query->get('city');
+    $status = (string) $request->query->get('status');
+    $vendor_id = $request->query->get('vendor_id');
+
+    $arr_query = ['sort' => 'created', 'order' => 'DESC'];
+
+    if (!empty($property_name)) {
+      $arr_query['property_name'] = $property_name;
+    }
+    if (!empty($city)) {
+      $arr_query['city'] = $city;
+    }
+    if (!empty($vendor_id)) {
+      $arr_query['vendor_id'] = $vendor_id;
+    }
+    if ($status === '1' || $status === '0') {
+      $arr_query['status'] = $status;
+    }
+
+    if (array_intersect($roles, $arr_admin_roles)) {
+      // Admin: no extra filter needed
+    } elseif (array_intersect($roles, $arr_vendor_roles)) {
+      $arr_query['vendor_id'] = $user->field_vendor_id->value;
+    } else {
+      throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
+    }
+
+    $obj_property = new property();
+    $total_count = $obj_property->countProperty(['query' => $arr_query]);
+    // Fetch all matching rows for export.
+    $arr_result = $obj_property->searchProperty(['query' => $arr_query], max(1, (int) $total_count));
+
+    // Build CSV output
+    $rows = [];
+    $rows[] = ['Title', 'Display Name', 'State', 'City', 'Status', 'Created By', 'Created On'];
+    $arr_state = commonUtil::get_term_list('state');
+    $arr_city = commonUtil::get_term_list('city');
+
+    if (is_array($arr_result['search_result'])) {
+      foreach ($arr_result['search_result'] as $val_result) {
+        $property_name_val = '';
+        $display_name = '';
+        $state_name = '';
+        $city_name = '';
+
+        if (!empty($val_result['nid'])) {
+          $node = \Drupal\node\Entity\Node::load($val_result['nid']);
+          if ($node) {
+            if ($node->hasField('field_property_name')) {
+              $property_name_val = $node->get('field_property_name')->getString();
+            }
+            if ($node->hasField('field_display_name') && !$node->get('field_display_name')->isEmpty()) {
+              $display_name = $node->get('field_display_name')->getString();
+            }
+            if ($node->hasField('field_state') && !$node->get('field_state')->isEmpty()) {
+              $state_id = $node->get('field_state')->getString();
+              $state_name = $arr_state[$state_id] ?? $state_id;
+            }
+            if ($node->hasField('field_city') && !$node->get('field_city')->isEmpty()) {
+              $city_id = $node->get('field_city')->getString();
+              $city_name = $arr_city[$city_id] ?? $city_id;
+            }
+          }
+        }
+        if (empty($property_name_val)) {
+          $property_name_val = $val_result['title'] ?? '';
+        }
+
+        $status_label = ($val_result['status'] == TRUE) ? 'Active' : 'Inactive';
+
+        $email = '';
+        if (!empty($val_result['uid']) && $val_result['uid'] > 0) {
+          $user_obj = User::load($val_result['uid']);
+          if ($user_obj) {
+            $email = $user_obj->getEmail();
+          }
+        }
+
+        $created_on = date('d-m-Y H:i:s', $val_result['created']);
+
+        $rows[] = [
+          $property_name_val,
+          $display_name,
+          $state_name,
+          $city_name,
+          $status_label,
+          $email,
+          $created_on,
+        ];
+      }
+    }
+
+    // Convert rows to CSV string
+    $csv_output = '';
+    foreach ($rows as $row) {
+      $escaped = array_map(function ($field) {
+        // Wrap in quotes and escape internal quotes
+        return '"' . str_replace('"', '""', $field) . '"';
+      }, $row);
+      $csv_output .= implode(',', $escaped) . "\r\n";
+    }
+
+    $filename = 'properties_' . date('Ymd_His') . '.csv';
+
+    $response = new \Symfony\Component\HttpFoundation\Response($csv_output);
+    $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
+    $response->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
+    $response->headers->set('Pragma', 'no-cache');
+    $response->headers->set('Expires', '0');
+
+    return $response;
   }
 
 }

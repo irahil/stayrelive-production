@@ -109,7 +109,53 @@
     </div>
 
     <div class="price">
-      {{ 'From'|t }} <strong>₹{{ final_room_price is defined and final_room_price != '0' ? final_room_price : markup_price }}</strong>/night
+    {% set price_source = null %}
+    {% set display_price = null %}
+    
+    {# Try final_room_price first (calculated from rooms) #}
+    {% if final_room_price is defined and final_room_price != '0' and final_room_price != 0 %}
+        {% set price_source = 'final_room_price' %}
+        {% set display_price = final_room_price %}
+    {% elseif fields.field_room_price is defined and fields.field_room_price.content is not empty %}
+        {# Fallback to direct property price field #}
+        {% set price_value = fields.field_room_price.content|render|striptags|trim %}
+        {% if price_value and price_value != '' and price_value != '0' %}
+            {% set price_source = 'field_room_price' %}
+            {% set display_price = price_value %}
+        {% endif %}
+    {% endif %}
+    
+    {# From ₹ night (rate+VAT) & ₹ month (rate+VAT); property field fallback = night only. #}
+    {% if has_rate_on_request|default(false) %}
+        {{ 'Rate on request'|t }}
+    {% elseif display_price %}
+        {% set price_value = display_price|render|striptags|trim %}
+        {% if price_value and price_value != '' %}
+            {% if price_source == 'final_room_price' %}
+              {% if sidebar_single_night is defined and sidebar_single_night != '' %}
+                <div class="property-card__price-line">{{ 'From'|t }} <strong>₹{{ sidebar_single_night }}</strong>/{{ 'nightly'|t }}</div>
+              {% endif %}
+              {% if sidebar_single_month is defined and sidebar_single_month != '' %}
+                <div class="property-card__price-line property-card__price-line--monthly">{{ 'From'|t }} <strong>₹{{ sidebar_single_month }}</strong>/{{ 'monthly'|t }}</div>
+              {% endif %}
+              {% if (sidebar_single_night is not defined or sidebar_single_night == '') and (sidebar_single_month is not defined or sidebar_single_month == '') %}
+                <div class="property-card__price-line">{{ 'From'|t }} <strong>₹{{ price_value }}</strong>/{{ 'nightly'|t }}</div>
+              {% endif %}
+            {% else %}
+              {% set numeric_price = price_value|replace({',': ''})|replace({' ': ''})|trim + 0 %}
+              {% if numeric_price > 0 %}
+                {% set rounded_price = ((numeric_price / 100)|round(0) * 100)|number_format(0, '.', ',') %}
+                <div class="property-card__price-line">{{ 'From'|t }} <strong>₹{{ rounded_price }}</strong>/{{ 'nightly'|t }}</div>
+              {% else %}
+                <div class="property-card__price-line">{{ 'From'|t }} <strong>₹{{ price_value }}</strong>/{{ 'nightly'|t }}</div>
+              {% endif %}
+            {% endif %}
+        {% else %}
+            <div class="property-card__price-line">{{ 'From'|t }} <strong>₹{{ price_value }}</strong>/{{ 'nightly'|t }}</div>
+        {% endif %}
+    {% else %}
+        {{ 'Price on request'|t }}
+    {% endif %}
     </div>
   </div>
 </div>

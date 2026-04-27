@@ -578,8 +578,10 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transform: scale(0.8) translateY(-4%);
+      // transform: scale(0.8) translateY(-4%);
+      transform: none;
       display: block;
+
     }
 
     img[alt="Sr. Manager Supplier Partnerships"] {

@@ -2,3 +2,11 @@ property_list:
   dependencies:
     - srdesign/property_list
 
+room_price:
+  version: 1.x
+  js:
+    js/room-price.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+

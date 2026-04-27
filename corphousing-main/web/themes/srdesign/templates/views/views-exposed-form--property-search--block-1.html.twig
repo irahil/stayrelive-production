@@ -16,31 +16,31 @@
   #}
 {{ q }}
 {% endif %}
-{# {{ form }} #}
+
 <form{{ attributes.addClass('property-filter-form') }}>
-  {# {{ title_prefix }} #}
-  {# {{ title_suffix }} #}
-    {# ✅ VERY IMPORTANT: render hidden city field #}
-  {{ form.field_city_target_id }}
 
   <div class="filter-wrapper">
 
-    {# Price range #}
-    {# <div class="filter-block">
-      <h3 class="filter-title">Price Range</h3>
-      <div class="price-range">
-        {{ form.field_price_value_min }}
-        {{ form.field_price_value_max }}
-      </div>
-    </div> #}
+  {# Area Name #}
+    <div class="filter-block">
+      {{ form.field_area_name_value }}
+    </div>
+
+    {# City #}
+    <div class="filter-block">
+      {{ form.field_city_target_id }}
+    </div>
 
     {# Property Type #}
     <div class="filter-block">
-      {# <h3 class="filter-title">Property Type</h3> #}
+      {{ form.field_property_type_target_id }}
+    </div>
 
-      <div class="property-type-radios">
-        {{ form.field_property_type_target_id }}
-      </div>
+    
+
+    {# Amenities #}
+    <div class="filter-block">
+      {{ form.field_amenities_target_id }}
     </div>
 
     <div class="filter-actions">
@@ -50,8 +50,11 @@
   </div>
 
  {{ form|without(
-  'field_property_type_target_id',
   'field_city_target_id',
+  'field_property_type_target_id',
+  'field_amenities_target_id',
+  'field_area_name_value',
   'actions'
 ) }}
+
 </form>

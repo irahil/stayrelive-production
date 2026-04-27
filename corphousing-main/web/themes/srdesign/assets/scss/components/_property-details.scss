@@ -281,10 +281,39 @@
       }
 
       .accordion-body {
-        padding: 1rem 2rem;
+        padding: 2rem 2rem;
 
         @media (max-width: 500px) {
           padding: 1rem;
+        }
+
+        .overview-section {
+          margin-bottom: 1rem;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+
+        .overview-heading {
+          font-size: 1rem;
+          font-weight: 600;
+          color: $black;
+          margin-bottom: 3px;
+          margin-top: 0;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+          &__icon {
+            flex-shrink: 0;
+            opacity: 0.85;
+          }
+        }
+
+        .overview-description .overview-content {
+          color: rgba(0, 0, 0, 0.8);
+          line-height: 1.6;
         }
 
         .overview-details {

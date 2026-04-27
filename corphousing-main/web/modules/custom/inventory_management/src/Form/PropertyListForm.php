@@ -9,6 +9,7 @@ use Drupal\Core\Url;
 use Drupal\user\Entity\User;
 use Drupal\node\Entity\Node;
 use Drupal\vendor_management\vendor;
+use Drupal\common_utilities\Utilities\commonUtil;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class PropertyListForm extends FormBase {
@@ -25,12 +26,17 @@ class PropertyListForm extends FormBase {
     $user = User::load(\Drupal::currentUser()->id());
     $roles = $user->getRoles();
     $property_name = \Drupal::request()->query->get('property_name');
+    $city = \Drupal::request()->query->get('city');
     $status = (string) \Drupal::request()->query->get('status');
     $vendor_id = \Drupal::request()->query->get('vendor_id');
 
     $arr_query = array('sort' => 'created', 'order' => 'DESC');
     if (!empty($property_name)) {
       $arr_query['property_name'] = $property_name;
+    }
+
+    if (!empty($city)) {
+      $arr_query['city'] = $city;
     }
 
     if (!empty($vendor_id)) {
@@ -67,6 +73,21 @@ class PropertyListForm extends FormBase {
     $count_unpublished = $obj_property->countProperty($arg_data_count);
     $count_total = $arr_result['result_count'];
 
+    // Build export URL with current search params
+    $export_query = [];
+    if (!empty($property_name)) {
+      $export_query['property_name'] = $property_name;
+    }
+    if (!empty($city)) {
+      $export_query['city'] = $city;
+    }
+    if ($status == '0' || $status == '1') {
+      $export_query['status'] = $status;
+    }
+    if (!empty($vendor_id)) {
+      $export_query['vendor_id'] = $vendor_id;
+    }
+
     $form['count_published'] = [
       '#type' => 'markup',
       '#markup' => $count_published,
@@ -94,6 +115,22 @@ class PropertyListForm extends FormBase {
         '#url' => Url::fromRoute('inventory_management.file_list'),
     ];
 
+    $form['vendor_list_link'] = [
+      '#type' => 'link',
+      '#title' => $this->t('Vendor List'),
+      '#url' => Url::fromRoute('vendor_management.vendor_list'),
+      '#prefix' => '<div class="action-link action-link--vendor-list">',
+      '#suffix' => '</div>',
+      '#access' => $is_admin,
+    ];
+
+    $form['export_csv_link'] = [
+    '#type' => 'link',
+    '#title' => 'Export Properties',
+    '#url' => Url::fromRoute('inventory_management.property_export_csv', [], ['query' => $export_query]),
+    '#attributes' => ['class' => ['export-csv-link']],
+    ];
+
     $form['search'] = array(
       '#type' => 'fieldset',
       '#title' => $this
@@ -108,6 +145,15 @@ class PropertyListForm extends FormBase {
         'placeholder' => array('Enter property name'),
       ),
       '#default_value' => (!empty($property_name)) ? $property_name : '',
+    ];
+
+    $arr_city = commonUtil::get_term_list('city');
+    $city_options = ['' => $this->t('- All -')] + $arr_city;
+    $form['search']['city'] = [
+      '#type' => 'select',
+      '#title' => $this->t('City'),
+      '#options' => $city_options,
+      '#default_value' => ($city !== NULL && $city !== '') ? (string) $city : '',
     ];
 
     $form['search']['status'] = [
@@ -257,6 +303,15 @@ class PropertyListForm extends FormBase {
     $form['#theme'] = 'property_list';
     $form['#attached']['library'][] = 'inventory_management/property_list';
 
+    // Results are built from ?property_name=&city=&status=&vendor_id= — without these
+    // contexts, rendered output can be cached from another query string (city ignored).
+    $form['#cache']['contexts'][] = 'user';
+    $form['#cache']['contexts'][] = 'user.roles';
+    $form['#cache']['contexts'][] = 'url.query_args:property_name';
+    $form['#cache']['contexts'][] = 'url.query_args:city';
+    $form['#cache']['contexts'][] = 'url.query_args:status';
+    $form['#cache']['contexts'][] = 'url.query_args:vendor_id';
+
     return $form;
   }
 
@@ -270,6 +325,11 @@ class PropertyListForm extends FormBase {
     $property_name = $form_state->getValue('property_name');
     if (!empty($property_name)) {
       $query['property_name'] = $property_name;
+    }
+
+    $city = $form_state->getValue('city');
+    if (!empty($city)) {
+      $query['city'] = $city;
     }
 
     $status = $form_state->getValue('status');

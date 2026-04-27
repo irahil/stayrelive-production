@@ -72,18 +72,32 @@ function ch_property_custom_login_redirect($form, FormStateInterface $form_state
   $request = \Drupal::requestStack()->getCurrentRequest();
   $current_user = \Drupal::currentUser();
   $roles = $current_user->getRoles();
+  // Destination can be in query (?destination=...) or POST (hidden form field).
+  $destination = $request->query->get('destination') ?: $request->request->get('destination') ?: '';
 
-  // Only apply custom redirect if no ?destination is set
-  if (!$request->query->has('destination')) {
-    // If user has role 'vendor', redirect to inventory management list.
+  $is_vendor_or_admin = in_array('vendor', $roles) ||
+    in_array('administrator', $roles) ||
+    in_array('site_admin', $roles) ||
+    $current_user->hasPermission('access administration pages');
+
+  // Coming from "List Your Property": vendors/admins should go to property list, not vendor form.
+  // Must remove destination from query, or RedirectResponseSubscriber will override our redirect.
+  if ($destination && (strpos($destination, 'vendor/register') !== FALSE) && $is_vendor_or_admin) {
+    $request->query->remove('destination');
+    $request->request->remove('destination');
+    $form_state->setRedirectUrl(Url::fromUri('internal:/inventory-management/property/list'));
+    return;
+  }
+
+  // No destination: apply default redirect.
+  if (!$destination) {
     if (in_array('vendor', $roles)) {
       $form_state->setRedirectUrl(Url::fromUri('internal:/inventory-management/property/list'));
     }
-    // If user has role 'administrator', redirect to front page (can customize if needed).
     elseif (in_array('administrator', $roles)) {
       $form_state->setRedirectUrl(Url::fromRoute('<front>'));
-    } else {
-      // Default fallback behavior.
+    }
+    else {
       $form_state->setRedirectUrl(Url::fromRoute('<front>'));
     }
   }
@@ -235,6 +249,23 @@ function ch_property_preprocess_views_view_field(&$variables)
     }
 
     $variables['output'] = Markup::create($output);
+  }
+}
+
+/**
+ * Implements hook_preprocess_views_view().
+ */
+function ch_property_preprocess_views_view(&$variables) {
+  $view = $variables['view'] ?? NULL;
+  if (!$view) {
+    return;
+  }
+
+  // Avoid stale tabs/cards on My Bookings after status updates (cancel/complete).
+  if ($view->id() === 'user_bookings' && $view->current_display === 'block_1') {
+    $variables['#cache']['contexts'][] = 'user';
+    $variables['#cache']['contexts'][] = 'url.path';
+    $variables['#cache']['max-age'] = 0;
   }
 }
 
@@ -450,40 +481,72 @@ function ch_property_form_views_exposed_form_alter(
   FormStateInterface $form_state,
   $form_id
 ) {
+
   if ($form['#id'] !== 'views-exposed-form-property-search-block-1') {
     return;
   }
 
+  $request = \Drupal::request()->query;
+  $rooms = $request->get('rooms');
+  $date = $request->get('date');
+
   /* ---------------------------------
-   * CITY FILTER (hidden but active)
+   * CITY → HIDDEN (hidden from sidebar, preserved for search results)
    * --------------------------------- */
   if (isset($form['field_city_target_id'])) {
-    $request = \Drupal::request();
-    $form['field_city_target_id']['#access'] = FALSE;
-
-    if ($request->query->has('field_city_target_id')) {
-      $form['field_city_target_id']['#default_value'] =
-        $request->query->get('field_city_target_id');
-    }
+    $element = &$form['field_city_target_id'];
+    $element['#type'] = 'hidden';
+    // Value comes from request (e.g. homepage search) so search results still filter by city
   }
 
   /* ---------------------------------
-   * PROPERTY TYPE → RADIOS
+   * PROPERTY TYPE → CHECKBOXES
    * --------------------------------- */
-  if (!isset($form['field_property_type_target_id'])) {
-    return;
+  if (isset($form['field_property_type_target_id'])) {
+
+    $element = &$form['field_property_type_target_id'];
+    $element['#type'] = 'checkboxes';
+    $element['#attributes']['class'][] = 'property-type-checkboxes';
   }
 
-  $element = &$form['field_property_type_target_id'];
-  $element['#type'] = 'radios';
+  /* ---------------------------------
+   * AMENITIES → CHECKBOXES
+   * --------------------------------- */
+  if (isset($form['field_amenities_target_id'])) {
 
-  if (
-    empty($element['#default_value']) ||
-    !isset($element['#options'][$element['#default_value']])
-  ) {
-    $element['#default_value'] = NULL;
+    $element = &$form['field_amenities_target_id'];
+    $element['#type'] = 'checkboxes';
+    $element['#attributes']['class'][] = 'amenities-checkboxes';
   }
 
-  $element['#attributes']['class'][] = 'property-type-radios';
+  /* ---------------------------------
+   * AREA NAME → TEXT FIELD
+   * --------------------------------- */
+  if (isset($form['field_area_name_value'])) {
+
+    $element = &$form['field_area_name_value'];
+    $element['#type'] = 'textfield';
+    $element['#placeholder'] = 'Search by area';
+    $element['#attributes']['class'][] = 'area-search';
+  }
+
+  /* ---------------------------------
+   * PRESERVE DATE + ROOMS IN URL
+   * --------------------------------- */
+
+  if ($rooms) {
+    $form['rooms'] = [
+      '#type' => 'hidden',
+      '#value' => $rooms,
+    ];
+  }
+
+  if ($date) {
+    $form['date'] = [
+      '#type' => 'hidden',
+      '#value' => $date,
+    ];
+  }
+
   $form['#cache']['max-age'] = 0;
 }

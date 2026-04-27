@@ -137,7 +137,24 @@
     </div>
 
     <div class="price">
-      {{ 'From'|t }} <strong>₹{{ final_room_price is defined and final_room_price != '0' ? final_room_price : markup_price }}</strong>/night
+      {% set fp = final_room_price is defined and final_room_price != '0' and final_room_price != 0 ? final_room_price : (markup_price|default('')) %}
+      {% if fp %}
+        {% if final_room_price is defined and final_room_price != '0' and final_room_price != 0 %}
+          {% if sidebar_single_night is defined and sidebar_single_night != '' %}
+            <div class="property-card__price-line">{{ 'From'|t }} <strong>₹{{ sidebar_single_night }}</strong>/{{ 'night'|t }}</div>
+          {% endif %}
+          {% if sidebar_single_month is defined and sidebar_single_month != '' %}
+            <div class="property-card__price-line property-card__price-line--monthly">{{ 'From'|t }} <strong>₹{{ sidebar_single_month }}</strong>/{{ 'month'|t }}</div>
+          {% endif %}
+          {% if (sidebar_single_night is not defined or sidebar_single_night == '') and (sidebar_single_month is not defined or sidebar_single_month == '') %}
+            <div class="property-card__price-line">{{ 'From'|t }} <strong>₹{{ final_room_price }}</strong>/{{ 'night'|t }}</div>
+          {% endif %}
+        {% else %}
+          <div class="property-card__price-line">{{ 'From'|t }} <strong>₹{{ fp }}</strong>/{{ 'night'|t }}</div>
+        {% endif %}
+      {% else %}
+        <strong>{{ 'Price on request'|t }}</strong>
+      {% endif %}
     </div>
 
     <div class="form-group">
