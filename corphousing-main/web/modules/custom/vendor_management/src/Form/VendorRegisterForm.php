@@ -116,14 +116,18 @@ class VendorRegisterForm extends FormBase {
       $form_state->setErrorByName('phone', $this->t('Please enter a valid phone number.'));
     }
 
-    // Validate vendor name is duplicate 
-    $query = \Drupal::entityQuery('propertyvendor')
-      ->condition('name', $form_state->getValue('name'))
-      ->accessCheck(TRUE);
-
-    $entity_ids = $query->execute();
-    if (!empty($entity_ids)) {
-      $form_state->setErrorByName('name', $this->t('Vendor Name already exists.'));
+    // Validate vendor email is duplicate - same email cannot register twice.
+    // Allow same vendor name - different vendors may have similar names.
+    // Uses DB query on info JSON - no full entity load, scales with vendor count.
+    $email = trim($form_state->getValue('email'));
+    $pattern = '"email":"' . \Drupal::database()->escapeLike($email) . '"';
+    $ids = \Drupal::entityQuery('propertyvendor')
+      ->condition('info', $pattern, 'CONTAINS')
+      ->accessCheck(TRUE)
+      ->range(0, 1)
+      ->execute();
+    if (!empty($ids)) {
+      $form_state->setErrorByName('email', $this->t('Vendor email is already registered.'));
     }
 
   }

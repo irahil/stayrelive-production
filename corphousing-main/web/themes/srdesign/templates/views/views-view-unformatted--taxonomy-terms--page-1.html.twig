@@ -1,0 +1,29 @@
+{#
+  Override for taxonomy-term amenities view.
+  Outputs markup compatible with existing JS icon mapper:
+  .amenities > li.<slug>
+#}
+{% if rows %}
+  <ul class="amenities">
+    {% for row in rows %}
+      {% set amenity_markup = row.content|render %}
+      {% set amenity_clean = amenity_markup|striptags|trim %}
+      {% set amenity_slug = amenity_clean
+        |lower
+        |replace({
+          ' ':'-',
+          '/':'-',
+          '&':'-',
+          ',':'',
+          '(':'',
+          ')':'',
+          '.':'',
+          "'":''
+        })
+      %}
+      <li class="{{ amenity_slug }}">
+        {{ amenity_markup }}
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}

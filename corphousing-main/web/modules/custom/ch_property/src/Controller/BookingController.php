@@ -23,7 +23,10 @@ class BookingController extends ControllerBase {
     }
 
     try {
-      $submission->delete();
+      $data = $submission->getData();
+      $data['booking_status'] = 'canceled_booking';
+      $submission->setData($data);
+      $submission->save();
       return new JsonResponse(['status' => 'success', 'message' => 'Booking cancelled successfully']);
     }
     catch (\Exception $e) {

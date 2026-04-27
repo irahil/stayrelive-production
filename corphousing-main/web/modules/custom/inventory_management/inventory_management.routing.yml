@@ -84,3 +84,11 @@ inventory_management.admin_form:
     _title: 'Inventory Settings'
   requirements:
     _permission: 'administer site configuration'
+
+inventory_management.property_export_csv:
+  path: '/inventory-management/properties/export-csv'
+  defaults:
+    _controller: '\Drupal\inventory_management\Controller\PropertyController::exportCsv'
+    _title: 'Export Properties CSV'
+  requirements:
+    _permission: 'access content'

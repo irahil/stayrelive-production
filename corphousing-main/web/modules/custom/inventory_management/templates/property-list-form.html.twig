@@ -44,8 +44,10 @@
 
 
 <div class="property-actions">
-    <div class="action-link">{{ form.add_property_link }}</div>
-    <div class="action-link">{{ form.bulk_upload_link }}</div>
+    <div class="action-link action-link--add-property">{{ form.add_property_link }}</div>
+    <div class="action-link action-link--bulk-upload">{{ form.bulk_upload_link }}</div>
+    {{ form.vendor_list_link }}
+    <div class="action-link action-link--export">{{ form.export_csv_link }}</div>
 </div>
 
   {% if form.search_result.result is defined %}

@@ -3,6 +3,7 @@
 use Drupal\taxonomy\Entity\Term;
 use Drupal\Component\Utility\Html;
 use Drupal\user\Entity\User;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_theme_suggestions_form_alter().
@@ -29,6 +30,12 @@ function srdesign_preprocess_page(&$variables) {
  */
 function srdesign_preprocess_node(array &$variables) {
   $node = $variables['node'];
+  $request = \Drupal::request();
+
+  // Get values from URL
+  $variables['url_check_in'] = $request->query->get('check_in');
+  $variables['url_check_out'] = $request->query->get('check_out');
+  $variables['url_guests'] = $request->query->get('guests');
 
   if ($node->getType() === 'property') {
     $property_id = $node->id();
@@ -90,7 +97,31 @@ function srdesign_preprocess_node(array &$variables) {
       $view->execute();
       $variables['faq_view'] = $view->render();
     }
-    
+
+    // On-Site Staffing for overview (like cancellation/early checkout).
+    $on_site_staffing = '';
+    if ($node->hasField('field_on_site_staffing') && !$node->get('field_on_site_staffing')->isEmpty()) {
+      $on_site_staffing = (string) $node->get('field_on_site_staffing')->value;
+    }
+    $variables['on_site_staffing_value'] = $on_site_staffing;
+
+    // Food & Beverages for overview (selected options as labels).
+    $food_beverages_labels = [];
+    $fb_option_labels = [
+      'restaurant' => t('Restaurant Available'),
+      'room_service' => t('Room Service'),
+      'breakfast' => t('Breakfast Provided'),
+    ];
+    if ($node->hasField('field_food_beverages') && !$node->get('field_food_beverages')->isEmpty()) {
+      foreach ($node->get('field_food_beverages')->getValue() as $item) {
+        $key = $item['value'] ?? '';
+        if ($key !== '' && isset($fb_option_labels[$key])) {
+          $food_beverages_labels[] = $fb_option_labels[$key];
+        }
+      }
+    }
+    $variables['food_beverages_list'] = $food_beverages_labels;
+
     // Load related rooms.
     $query = \Drupal::entityQuery('node')
       ->accessCheck(FALSE)
@@ -100,19 +131,27 @@ function srdesign_preprocess_node(array &$variables) {
 
     $nids = $query->execute();
 
+    $variables['room_occupancy_by_id'] = [];
+    $variables['room_display_labels'] = [];
     if (!empty($nids)) {
       $rooms = \Drupal\node\Entity\Node::loadMultiple($nids);
 
       // Full rooms for detailed section
       $variables['related_rooms_full'] = $rooms;
 
-      // Simplified dropdown rooms with price
+      foreach ($rooms as $room) {
+        $variables['room_occupancy_by_id'][$room->id()] = _srdesign_room_occupancy_sidebar_strings($node, $room);
+        $variables['room_display_labels'][$room->id()] = _srdesign_room_type_display_label($room);
+      }
+
+      // Simplified dropdown rooms with price (label = room type term when set).
       $related_rooms_dropdown = [];
       foreach ($rooms as $room) {
+        $display_label = _srdesign_room_type_display_label($room);
         $price = $room->get('field_room_price')->value ?? 0;
         $related_rooms_dropdown[] = [
           'nid' => $room->id(),
-          'label' => $room->label(),
+          'label' => $display_label,
           'price' => $price,
         ];
       }
@@ -121,6 +160,11 @@ function srdesign_preprocess_node(array &$variables) {
     // ✅ Add share URL and title
     $variables['share_url'] = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
     $variables['share_title'] = $node->label();
+
+    // Min single/double occupancy (markup + VAT) for sidebar — same rules as listing cards.
+    $occ_prices = _srdesign_property_occupancy_price_summary($node);
+    unset($occ_prices['sort_nightly_total']);
+    $variables['property_occupancy_prices'] = $occ_prices;
     
     // ✅ Pass node ID for PDF generation
     $variables['node_id'] = $property_id;
@@ -163,10 +207,436 @@ function srdesign_preprocess_views_view(&$variables) {
     } else {
       $variables['dynamic_city_title'] = 'Top Spaces';
     }
+    //  ------- 4. Google Maps API Key -----
+     $variables['#attached']['drupalSettings']['google_maps_api_key'] = 'AIzaSyBd7hoeq3JClkyQ2MQ33_jqPbzRhuB1WiA';
   }
 
 }
 
+/**
+ * Single-occupancy nightly base for listing (field_single_nightly_rate, else field_room_price).
+ */
+function _srdesign_listing_room_single_nightly_base(NodeInterface $room): float {
+  if (_srdesign_room_is_rate_on_request($room)) {
+    return 0.0;
+  }
+  if ($room->hasField('field_single_nightly_rate') && !$room->get('field_single_nightly_rate')->isEmpty()) {
+    $v = (float) $room->get('field_single_nightly_rate')->value;
+    if ($v > 0) {
+      return $v;
+    }
+  }
+  if ($room->hasField('field_room_price') && !$room->get('field_room_price')->isEmpty()) {
+    return (float) $room->get('field_room_price')->value;
+  }
+  return 0.0;
+}
+
+/**
+ * Single-occupancy monthly base for listing.
+ */
+function _srdesign_listing_room_single_monthly_base(NodeInterface $room): float {
+  if (_srdesign_room_is_rate_on_request($room)) {
+    return 0.0;
+  }
+  if ($room->hasField('field_single_monthly_rate') && !$room->get('field_single_monthly_rate')->isEmpty()) {
+    return (float) $room->get('field_single_monthly_rate')->value;
+  }
+  return 0.0;
+}
+
+/**
+ * Double-occupancy nightly base for listing.
+ */
+function _srdesign_listing_room_double_nightly_base(NodeInterface $room): float {
+  if (_srdesign_room_is_rate_on_request($room)) {
+    return 0.0;
+  }
+  if ($room->hasField('field_double_nightly_rate') && !$room->get('field_double_nightly_rate')->isEmpty()) {
+    return (float) $room->get('field_double_nightly_rate')->value;
+  }
+  return 0.0;
+}
+
+/**
+ * Double-occupancy monthly base for listing.
+ */
+function _srdesign_listing_room_double_monthly_base(NodeInterface $room): float {
+  if (_srdesign_room_is_rate_on_request($room)) {
+    return 0.0;
+  }
+  if ($room->hasField('field_double_monthly_rate') && !$room->get('field_double_monthly_rate')->isEmpty()) {
+    return (float) $room->get('field_double_monthly_rate')->value;
+  }
+  return 0.0;
+}
+
+/**
+ * TRUE when room is marked as "Rate on request".
+ */
+function _srdesign_room_is_rate_on_request(NodeInterface $room): bool {
+  if (!$room->hasField('field_rate_on_request') || $room->get('field_rate_on_request')->isEmpty()) {
+    return FALSE;
+  }
+  $raw = strtolower(trim((string) $room->get('field_rate_on_request')->value));
+  return in_array($raw, ['1', 'true', 'yes', 'on'], TRUE);
+}
+
+/**
+ * Label for UI: room type taxonomy (e.g. "1 Bedroom Apartment"), else node title.
+ */
+function _srdesign_room_type_display_label(NodeInterface $room): string {
+  if ($room->hasField('field_room_type') && !$room->get('field_room_type')->isEmpty()) {
+    $item = $room->get('field_room_type')->first();
+    if ($item && ($entity = $item->entity)) {
+      return $entity->label();
+    }
+  }
+  return $room->label();
+}
+
+/**
+ * Apply property markup to a room base amount (same rules as before).
+ */
+function _srdesign_listing_apply_markup(float $base, string $markup_type, float $markup_value): float {
+  if ($base <= 0) {
+    return 0.0;
+  }
+  return ($markup_type === 'fixed')
+    ? $base + $markup_value
+    : $base + ($base * $markup_value / 100);
+}
+
+/**
+ * Float value from a room field, or 0.
+ */
+function _srdesign_listing_room_float(NodeInterface $room, string $field_name): float {
+  if ($room->hasField($field_name) && !$room->get($field_name)->isEmpty()) {
+    return (float) $room->get($field_name)->value;
+  }
+  return 0.0;
+}
+
+/**
+ * Round amount to the nearest ₹100 (half away from zero), e.g. 37266 → 37300.
+ *
+ * Used for nightly and monthly display rates on listings and property detail.
+ */
+function _srdesign_round_nearest_hundred(float $amount): int {
+  if ($amount <= 0 || !is_finite($amount)) {
+    return 0;
+  }
+  return (int) (round($amount / 100.0, 0, PHP_ROUND_HALF_UP) * 100.0);
+}
+
+/**
+ * Parse a display amount string to float (commas, spaces, markup stripped).
+ *
+ * Avoids PHP/Twig float casts on strings like "17,300" becoming 17 instead of 17300.
+ */
+function _srdesign_parse_amount_string($raw): float {
+  if ($raw === NULL || $raw === '') {
+    return 0.0;
+  }
+  if (is_object($raw) && method_exists($raw, '__toString')) {
+    $raw = (string) $raw;
+  }
+  elseif (!is_string($raw)) {
+    $raw = (string) $raw;
+  }
+  $raw = strip_tags($raw);
+  $s = preg_replace('/[^\d.]/', '', $raw);
+  if ($s === '' || $s === '.') {
+    return 0.0;
+  }
+  if (substr_count($s, '.') > 1) {
+    $parts = explode('.', $s);
+    $decimal = array_pop($parts);
+    $s = implode('', $parts) . '.' . $decimal;
+  }
+  return (float) $s;
+}
+
+/**
+ * Default keys for property occupancy summary arrays.
+ */
+function _srdesign_property_occupancy_price_defaults(): array {
+  return [
+    'final_room_price' => 0,
+    'final_single_nightly_price' => '',
+    'final_single_nightly_vat' => '',
+    'final_single_monthly_price' => '',
+    'final_single_monthly_base' => '',
+    'final_single_monthly_vat' => '',
+    'total_bedrooms' => 0,
+    'total_bathrooms' => 0,
+    'sidebar_single_night' => '',
+    'sidebar_single_month' => '',
+    'sidebar_double_night' => '',
+    'sidebar_double_month' => '',
+    'has_rate_on_request' => FALSE,
+    'sort_nightly_total' => NULL,
+    'sidebar_minimum_room_nid' => 0,
+    'sidebar_minimum_room_label' => '',
+  ];
+}
+
+/**
+ * Lowest single/double occupancy totals (markup + VAT) across rooms.
+ *
+ * For each category, the room with the minimum (display after markup + VAT amount) wins.
+ * Nightly and monthly sidebar amounts use nearest ₹100 (same rounding rule).
+ *
+ * @param \Drupal\node\NodeInterface[] $rooms
+ *   Published room nodes for this property.
+ *
+ * @return array
+ *   Same keys as _srdesign_property_occupancy_price_defaults(), including sort_nightly_total
+ *   (unrounded float for sorting; NULL if no nightly rate).
+ */
+function _srdesign_property_occupancy_price_summary_from_rooms(NodeInterface $property_node, array $rooms): array {
+  $defaults = _srdesign_property_occupancy_price_defaults();
+  if (empty($rooms)) {
+    return $defaults;
+  }
+
+  $markup_type = 'percent';
+  if ($property_node->hasField('field_markup_type') && !$property_node->get('field_markup_type')->isEmpty()) {
+    $markup_type = $property_node->get('field_markup_type')->value;
+  }
+  $markup_value = 0.0;
+  if ($property_node->hasField('field_markup_price') && !$property_node->get('field_markup_price')->isEmpty()) {
+    $markup_value = (float) $property_node->get('field_markup_price')->value;
+  }
+
+  $best_nightly_total = NULL;
+  $best_nightly_room = NULL;
+  $best_monthly_total = NULL;
+  $best_monthly_room = NULL;
+  $best_double_nightly_total = NULL;
+  $best_double_nightly_room = NULL;
+  $best_double_monthly_total = NULL;
+  $best_double_monthly_room = NULL;
+  $has_rate_on_request = FALSE;
+
+  foreach ($rooms as $room) {
+    if (_srdesign_room_is_rate_on_request($room)) {
+      $has_rate_on_request = TRUE;
+      continue;
+    }
+
+    $nightly_base = _srdesign_listing_room_single_nightly_base($room);
+    if ($nightly_base > 0) {
+      $display_n = _srdesign_listing_apply_markup($nightly_base, $markup_type, $markup_value);
+      $vat_n = _srdesign_listing_room_float($room, 'field_nightly_vat_amount');
+      $total_n = $display_n + $vat_n;
+      if ($best_nightly_total === NULL || $total_n < $best_nightly_total) {
+        $best_nightly_total = $total_n;
+        $best_nightly_room = $room;
+      }
+    }
+
+    $monthly_base = _srdesign_listing_room_single_monthly_base($room);
+    if ($monthly_base > 0) {
+      $display_m = _srdesign_listing_apply_markup($monthly_base, $markup_type, $markup_value);
+      $vat_m = _srdesign_listing_room_float($room, 'field_monthly_vat_amount');
+      $total_m = $display_m + $vat_m;
+      if ($best_monthly_total === NULL || $total_m < $best_monthly_total) {
+        $best_monthly_total = $total_m;
+        $best_monthly_room = $room;
+      }
+    }
+
+    $double_nightly_base = _srdesign_listing_room_double_nightly_base($room);
+    if ($double_nightly_base > 0) {
+      $display_dn = _srdesign_listing_apply_markup($double_nightly_base, $markup_type, $markup_value);
+      $vat_dn = _srdesign_listing_room_float($room, 'field_double_nightly_rate_vat_am');
+      $total_dn = $display_dn + $vat_dn;
+      if ($best_double_nightly_total === NULL || $total_dn < $best_double_nightly_total) {
+        $best_double_nightly_total = $total_dn;
+        $best_double_nightly_room = $room;
+      }
+    }
+
+    $double_monthly_base = _srdesign_listing_room_double_monthly_base($room);
+    if ($double_monthly_base > 0) {
+      $display_dm = _srdesign_listing_apply_markup($double_monthly_base, $markup_type, $markup_value);
+      $vat_dm = _srdesign_listing_room_float($room, 'field_double_monthly_rate_vat_am');
+      $total_dm = $display_dm + $vat_dm;
+      if ($best_double_monthly_total === NULL || $total_dm < $best_double_monthly_total) {
+        $best_double_monthly_total = $total_dm;
+        $best_double_monthly_room = $room;
+      }
+    }
+  }
+
+  $out = $defaults;
+  $out['has_rate_on_request'] = $has_rate_on_request;
+
+  if ($best_nightly_room !== NULL && $best_nightly_total !== NULL) {
+    $display_n = _srdesign_listing_apply_markup(
+      _srdesign_listing_room_single_nightly_base($best_nightly_room),
+      $markup_type,
+      $markup_value
+    );
+    $vat_n = _srdesign_listing_room_float($best_nightly_room, 'field_nightly_vat_amount');
+    $nightly_total = $display_n + $vat_n;
+    $out['sort_nightly_total'] = $nightly_total;
+    $out['final_room_price'] = number_format($nightly_total, 0, '.', ',');
+    $out['final_single_nightly_price'] = number_format($display_n, 0, '.', ',');
+    if ($vat_n > 0) {
+      $out['final_single_nightly_vat'] = number_format($vat_n, 0, '.', ',');
+    }
+    $out['sidebar_single_night'] = number_format(_srdesign_round_nearest_hundred($nightly_total), 0, '.', ',');
+
+    $bedrooms = 0;
+    $bathrooms = 0;
+    if ($best_nightly_room->hasField('field_bedrooms') && !$best_nightly_room->get('field_bedrooms')->isEmpty()) {
+      $bedrooms = (int) $best_nightly_room->get('field_bedrooms')->value;
+    }
+    if ($best_nightly_room->hasField('field_bathrooms') && !$best_nightly_room->get('field_bathrooms')->isEmpty()) {
+      $bathrooms = (int) $best_nightly_room->get('field_bathrooms')->value;
+    }
+    $out['total_bedrooms'] = $bedrooms;
+    $out['total_bathrooms'] = $bathrooms;
+  }
+
+  if ($best_monthly_room !== NULL && $best_monthly_total !== NULL && $best_monthly_total > 0) {
+    $display_m = _srdesign_listing_apply_markup(
+      _srdesign_listing_room_single_monthly_base($best_monthly_room),
+      $markup_type,
+      $markup_value
+    );
+    $vat_m = _srdesign_listing_room_float($best_monthly_room, 'field_monthly_vat_amount');
+    $monthly_total = $display_m + $vat_m;
+    $out['final_single_monthly_price'] = number_format(_srdesign_round_nearest_hundred($monthly_total), 0, '.', ',');
+    $out['final_single_monthly_base'] = number_format($display_m, 0, '.', ',');
+    if ($vat_m > 0) {
+      $out['final_single_monthly_vat'] = number_format($vat_m, 0, '.', ',');
+    }
+    $out['sidebar_single_month'] = number_format(_srdesign_round_nearest_hundred($monthly_total), 0, '.', ',');
+  }
+
+  if ($best_double_nightly_room !== NULL && $best_double_nightly_total !== NULL) {
+    $display_dn = _srdesign_listing_apply_markup(
+      _srdesign_listing_room_double_nightly_base($best_double_nightly_room),
+      $markup_type,
+      $markup_value
+    );
+    $vat_dn = _srdesign_listing_room_float($best_double_nightly_room, 'field_double_nightly_rate_vat_am');
+    $double_nightly_total = $display_dn + $vat_dn;
+    $out['sidebar_double_night'] = number_format(_srdesign_round_nearest_hundred($double_nightly_total), 0, '.', ',');
+  }
+
+  if ($best_double_monthly_room !== NULL && $best_double_monthly_total !== NULL && $best_double_monthly_total > 0) {
+    $display_dm = _srdesign_listing_apply_markup(
+      _srdesign_listing_room_double_monthly_base($best_double_monthly_room),
+      $markup_type,
+      $markup_value
+    );
+    $vat_dm = _srdesign_listing_room_float($best_double_monthly_room, 'field_double_monthly_rate_vat_am');
+    $double_monthly_total = $display_dm + $vat_dm;
+    $out['sidebar_double_month'] = number_format(_srdesign_round_nearest_hundred($double_monthly_total), 0, '.', ',');
+  }
+
+  // Room type label for UI: prefer room with lowest nightly, else lowest monthly.
+  $label_room = $best_nightly_room ?? $best_monthly_room;
+  if ($label_room !== NULL) {
+    $out['sidebar_minimum_room_nid'] = (int) $label_room->id();
+    $out['sidebar_minimum_room_label'] = _srdesign_room_type_display_label($label_room);
+  }
+
+  return $out;
+}
+
+/**
+ * Loads child rooms and returns occupancy summary (lowest totals, rounded display).
+ */
+function _srdesign_property_occupancy_price_summary(NodeInterface $property_node): array {
+  $defaults = _srdesign_property_occupancy_price_defaults();
+
+  $room_nids = \Drupal::entityTypeManager()
+    ->getStorage('node')
+    ->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('type', 'room')
+    ->condition('status', 1)
+    ->condition('field_parent_id', (int) $property_node->id())
+    ->execute();
+
+  if (empty($room_nids)) {
+    return $defaults;
+  }
+
+  $rooms = \Drupal\node\Entity\Node::loadMultiple($room_nids);
+  return _srdesign_property_occupancy_price_summary_from_rooms($property_node, $rooms);
+}
+
+/**
+ * Per-room occupancy display (markup + VAT) for Room Types cards.
+ *
+ * Nightly and monthly: nearest ₹100.
+ *
+ * @return array
+ *   Keys: sidebar_single_night, sidebar_single_month, sidebar_double_night, sidebar_double_month.
+ */
+function _srdesign_room_occupancy_sidebar_strings(NodeInterface $property_node, NodeInterface $room): array {
+  $out = [
+    'rate_on_request' => FALSE,
+    'sidebar_single_night' => '',
+    'sidebar_single_month' => '',
+    'sidebar_double_night' => '',
+    'sidebar_double_month' => '',
+  ];
+
+  if (_srdesign_room_is_rate_on_request($room)) {
+    $out['rate_on_request'] = TRUE;
+    return $out;
+  }
+
+  $markup_type = 'percent';
+  if ($property_node->hasField('field_markup_type') && !$property_node->get('field_markup_type')->isEmpty()) {
+    $markup_type = $property_node->get('field_markup_type')->value;
+  }
+  $markup_value = 0.0;
+  if ($property_node->hasField('field_markup_price') && !$property_node->get('field_markup_price')->isEmpty()) {
+    $markup_value = (float) $property_node->get('field_markup_price')->value;
+  }
+
+  $nightly_base = _srdesign_listing_room_single_nightly_base($room);
+  if ($nightly_base > 0) {
+    $display_n = _srdesign_listing_apply_markup($nightly_base, $markup_type, $markup_value);
+    $vat_n = _srdesign_listing_room_float($room, 'field_nightly_vat_amount');
+    $total = $display_n + $vat_n;
+    $out['sidebar_single_night'] = number_format(_srdesign_round_nearest_hundred($total), 0, '.', ',');
+  }
+
+  $monthly_base = _srdesign_listing_room_single_monthly_base($room);
+  if ($monthly_base > 0) {
+    $display_m = _srdesign_listing_apply_markup($monthly_base, $markup_type, $markup_value);
+    $vat_m = _srdesign_listing_room_float($room, 'field_monthly_vat_amount');
+    $total_m = $display_m + $vat_m;
+    $out['sidebar_single_month'] = number_format(_srdesign_round_nearest_hundred($total_m), 0, '.', ',');
+  }
+
+  $dn_base = _srdesign_listing_room_double_nightly_base($room);
+  if ($dn_base > 0) {
+    $display_dn = _srdesign_listing_apply_markup($dn_base, $markup_type, $markup_value);
+    $vat_dn = _srdesign_listing_room_float($room, 'field_double_nightly_rate_vat_am');
+    $total_dn = $display_dn + $vat_dn;
+    $out['sidebar_double_night'] = number_format(_srdesign_round_nearest_hundred($total_dn), 0, '.', ',');
+  }
+
+  $dm_base = _srdesign_listing_room_double_monthly_base($room);
+  if ($dm_base > 0) {
+    $display_dm = _srdesign_listing_apply_markup($dm_base, $markup_type, $markup_value);
+    $vat_dm = _srdesign_listing_room_float($room, 'field_double_monthly_rate_vat_am');
+    $total_dm = $display_dm + $vat_dm;
+    $out['sidebar_double_month'] = number_format(_srdesign_round_nearest_hundred($total_dm), 0, '.', ',');
+  }
+
+  return $out;
+}
 
 /**
  * Implements hook_preprocess_views_view_fields().
@@ -205,7 +675,6 @@ function srdesign_preprocess_views_view_fields(&$variables)
 
   }
 
-  // Apply only to your property listing view and specific display.
   $is_property_card_view =
     ($view->id() == 'property_search' && in_array($view->current_display, ['block_1', 'block_2'])) ||
     ($view->id() == 'flag_bookmark' && in_array($view->current_display, ['page_2']));
@@ -218,7 +687,6 @@ function srdesign_preprocess_views_view_fields(&$variables)
     $variables['url_guests'] = $request->query->get('rooms', $request->query->get('guests', ''));
     $variables['url_date'] = $request->query->get('date', '');
     
-    // Parse date range if present (format: "4th Feb 2026 to 16th Mar 2026" or "2026-02-04 to 2026-03-16")
     if (empty($variables['url_check_in']) && !empty($variables['url_date'])) {
       $date_range = urldecode($variables['url_date']);
       
@@ -227,7 +695,6 @@ function srdesign_preprocess_views_view_fields(&$variables)
         $variables['url_check_in'] = $matches[1];
         $variables['url_check_out'] = $matches[2];
       }
-      // Try to parse date range format like "4th Feb 2026 to 16th Mar 2026" or "4th Feb 26 to 16th Mar 26"
       elseif (preg_match('/(\d{1,2})\w{0,2}\s+(\w+)\s+(\d{2,4})\s+to\s+(\d{1,2})\w{0,2}\s+(\w+)\s+(\d{2,4})/i', $date_range, $matches)) {
         // Handle 2-digit years
         $check_in_year = strlen($matches[3]) == 2 ? '20' . $matches[3] : $matches[3];
@@ -267,70 +734,18 @@ function srdesign_preprocess_views_view_fields(&$variables)
   $variables['property_nid'] = $property_nid ?? 0;
 
   if ($property_nid) {
-    // Load the property node.
     $property_node = \Drupal\node\Entity\Node::load($property_nid);
 
-    // ✅ Get markup percentage from the property field.
-    $markup_percentage = 0;
-    if ($property_node->hasField('field_markup_price') && !$property_node->get('field_markup_price')->isEmpty()) {
-      $markup_percentage = (float) $property_node->get('field_markup_price')->value;
-    }
-
-    // ✅ Query all rooms for this property.
-    $room_query = \Drupal::entityTypeManager()
-      ->getStorage('node')
-      ->getQuery()
-      ->accessCheck(FALSE)
-      ->condition('type', 'room')
-      ->condition('status', 1)
-      ->condition('field_parent_id', $property_nid);
-
-    $room_nids = $room_query->execute();
-
-    $lowest_price = NULL;
-    $lowest_room = NULL;
-
-    if (!empty($room_nids)) {
-      // Load all room nodes.
-      $rooms = \Drupal\node\Entity\Node::loadMultiple($room_nids);
-
-      // Loop through and find the lowest price room.
-      foreach ($rooms as $room) {
-        if ($room->hasField('field_room_price') && !$room->get('field_room_price')->isEmpty()) {
-          $price = (float) $room->get('field_room_price')->value;
-          if ($lowest_price === NULL || $price < $lowest_price) {
-            $lowest_price = $price;
-            $lowest_room = $room;
-          }
+    if ($property_node) {
+      $price_summary = _srdesign_property_occupancy_price_summary($property_node);
+      foreach ($price_summary as $key => $value) {
+        if ($key === 'sort_nightly_total') {
+          continue;
         }
+        $variables[$key] = $value;
       }
 
-      if ($lowest_room) {
-        // ✅ Apply markup.
-        $final_price = $lowest_price + ($lowest_price * $markup_percentage / 100);
-        $variables['final_room_price'] = number_format($final_price, 0, '.', ',');
-
-        // ✅ Get bedrooms & bathrooms from lowest room.
-        $bedrooms = 0;
-        $bathrooms = 0;
-
-        if ($lowest_room->hasField('field_bedrooms') && !$lowest_room->get('field_bedrooms')->isEmpty()) {
-          $bedrooms = (int) $lowest_room->get('field_bedrooms')->value;
-        }
-        if ($lowest_room->hasField('field_bathrooms') && !$lowest_room->get('field_bathrooms')->isEmpty()) {
-          $bathrooms = (int) $lowest_room->get('field_bathrooms')->value;
-        }
-
-        $variables['total_bedrooms'] = $bedrooms;
-        $variables['total_bathrooms'] = $bathrooms;
-      }
-    }
-    else {
-      $variables['final_room_price'] = t('No rooms available');
-      $variables['total_bedrooms'] = 0;
-      $variables['total_bathrooms'] = 0;
-    }
-    // ✅Handle Flag for Anonymous Users in Property Listing
+      // ✅Handle Flag for Anonymous Users in Property Listing
       $account = \Drupal::currentUser();
       $flag_service = \Drupal::service('flag');
       $flag = $flag_service->getFlagById('favourite');
@@ -340,7 +755,8 @@ function srdesign_preprocess_views_view_fields(&$variables)
           // Authenticated user - use normal flag link
           $flag_link = $flag->getLinkTypePlugin()->getAsFlagLink($flag, $property_node);
           $variables['flag_link_custom'] = $flag_link;
-        } else {
+        }
+        else {
           // Anonymous user - create login redirect link
           $current_path = $property_node->toUrl('canonical')->toString();
           $url = \Drupal\Core\Url::fromRoute('user.login', [], [
@@ -350,7 +766,6 @@ function srdesign_preprocess_views_view_fields(&$variables)
             ],
           ])->toString();
 
-          // Build markup that mimics Flag's structure but points to login
           $login_heart = [
             '#type' => 'markup',
             '#markup' => '<div class="flag flag-favourite js-flag-favourite-' . $property_nid . ' action-flag">
@@ -368,6 +783,7 @@ function srdesign_preprocess_views_view_fields(&$variables)
           ];
 
           $variables['flag_link_custom'] = $login_heart;
+        }
       }
     }
   }
@@ -378,7 +794,8 @@ function srdesign_preprocess_views_view_fields(&$variables)
  * Implements hook_views_pre_render().
  * Handles property search sorting by price (asc/desc) from dropdown.
  */
-function srdesign_views_pre_render($view) {
+function srdesign_views_pre_render($view)
+{
   if ($view->id() === 'property_search') {
     $view->element['#cache']['contexts'][] = 'user';
     $view->element['#cache']['contexts'][] = 'user.roles';
@@ -394,6 +811,11 @@ function srdesign_views_pre_render($view) {
     $map_items = [];
 
     if (!empty($view->result)) {
+
+      // ---- Step 1: Collect all property IDs first ----
+      $properties = [];
+      $property_ids = [];
+
       foreach ($view->result as $row) {
         $property = NULL;
         $property_id = NULL;
@@ -405,14 +827,11 @@ function srdesign_views_pre_render($view) {
         if (!$property) {
           if (isset($row->nid)) {
             $property_id = $row->nid;
-          }
-          elseif (isset($row->_entity) && is_numeric($row->_entity)) {
+          } elseif (isset($row->_entity) && is_numeric($row->_entity)) {
             $property_id = $row->_entity;
-          }
-          elseif (isset($view->field['nid'])) {
+          } elseif (isset($view->field['nid'])) {
             $property_id = $view->field['nid']->getValue($row);
-          }
-          elseif (isset($row->node_field_data_nid)) {
+          } elseif (isset($row->node_field_data_nid)) {
             $property_id = $row->node_field_data_nid;
           }
 
@@ -422,22 +841,83 @@ function srdesign_views_pre_render($view) {
         }
 
         if ($property && $property->bundle() == 'property') {
-          if ($property->hasField('field_latitude') && !$property->get('field_latitude')->isEmpty() &&
-            $property->hasField('field_longitude') && !$property->get('field_longitude')->isEmpty()) {
-            $lat = (float) $property->get('field_latitude')->value;
-            $lng = (float) $property->get('field_longitude')->value;
+          $pid = $property->id();
+          $properties[$pid] = $property;
+          $property_ids[] = $pid;
+        }
+      }
 
-            if ($lat !== 0.0 || $lng !== 0.0) {
-              $map_items[] = [
-                'title' => $property->label(),
-                'url' => $property->toUrl('canonical', ['absolute' => TRUE])->toString(),
-                'address' => $property->get('field_display_address')->value,
-                'lat' => $lat,
-                'lng' => $lng,
-              ];
+      // ---- Step 2: Load all rooms for all properties in one query ----
+      $rooms_by_property = [];
+
+      if (!empty($property_ids)) {
+        $room_nids = \Drupal::entityTypeManager()
+          ->getStorage('node')
+          ->getQuery()
+          ->accessCheck(FALSE)
+          ->condition('type', 'room')
+          ->condition('status', 1)
+          ->condition('field_parent_id', $property_ids, 'IN')
+          ->execute();
+
+        if (!empty($room_nids)) {
+          $rooms = \Drupal\node\Entity\Node::loadMultiple($room_nids);
+
+          foreach ($rooms as $room) {
+            if (!$room->hasField('field_parent_id') || $room->get('field_parent_id')->isEmpty()) {
+              continue;
+            }
+
+            $field_parent_id = $room->get('field_parent_id');
+            $pid = (int) ($field_parent_id->target_id ?? $field_parent_id->value ?? 0);
+
+            if ($pid && in_array($pid, $property_ids)) {
+              $rooms_by_property[$pid][] = $room;
             }
           }
         }
+      }
+
+      // ---- Step 3: Build map items with lowest nightly (markup + VAT, rounded ₹100) ----
+      foreach ($properties as $pid => $property) {
+        if (
+          !$property->hasField('field_latitude') || $property->get('field_latitude')->isEmpty() ||
+          !$property->hasField('field_longitude') || $property->get('field_longitude')->isEmpty()
+        ) {
+          continue;
+        }
+
+        $lat = (float) $property->get('field_latitude')->value;
+        $lng = (float) $property->get('field_longitude')->value;
+
+        if ($lat === 0.0 && $lng === 0.0) {
+          continue;
+        }
+
+        $room_subset = $rooms_by_property[$pid] ?? [];
+        $summary = _srdesign_property_occupancy_price_summary_from_rooms($property, $room_subset);
+        $final_price = $summary['sidebar_single_night'] !== '' ? $summary['sidebar_single_night'] : '';
+
+        // --- Image (plain image field) ---
+        $image_url = '';
+        if ($property->hasField('field_primary_media') && !$property->get('field_primary_media')->isEmpty()) {
+          /** @var \Drupal\file\FileInterface|null $file */
+          $file = $property->get('field_primary_media')->entity;
+          if ($file instanceof \Drupal\file\FileInterface) {
+            $image_url = \Drupal::service('file_url_generator')
+              ->generateAbsoluteString($file->getFileUri());
+          }
+        }
+
+        $map_items[] = [
+          'title' => $property->label(),
+          'url' => $property->toUrl('canonical', ['absolute' => TRUE])->toString(),
+          'address' => $property->get('field_display_address')->value,
+          'lat' => $lat,
+          'lng' => $lng,
+          'image' => $image_url,
+          'price' => $final_price,  // e.g. "2,500" — JS adds ₹ symbol
+        ];
       }
     }
 
@@ -468,11 +948,11 @@ function srdesign_views_pre_render($view) {
     // Also create a mapping of row index to property ID
     $property_ids = [];
     $row_to_property_id = [];
-    
+
     foreach ($view->result as $index => $row) {
       $property = NULL;
       $property_id = NULL;
-      
+
       // Try to get entity from row (works for authenticated users)
       if (isset($row->_entity) && $row->_entity && is_object($row->_entity)) {
         $property = $row->_entity;
@@ -480,7 +960,7 @@ function srdesign_views_pre_render($view) {
           $property_id = $property->id();
         }
       }
-      
+
       // For anonymous users, try multiple ways to get the node ID
       if (!$property_id) {
         // Try nid property
@@ -500,12 +980,12 @@ function srdesign_views_pre_render($view) {
           $property_id = $row->node_field_data_nid;
         }
       }
-      
+
       // Load property if we have an ID but no entity
       if ($property_id && !$property) {
         $property = \Drupal\node\Entity\Node::load($property_id);
       }
-      
+
       if ($property && $property->bundle() == 'property') {
         $property_id = $property->id();
         $property_ids[] = $property_id;
@@ -529,59 +1009,46 @@ function srdesign_views_pre_render($view) {
 
     // Load all rooms
     $rooms = !empty($room_nids) ? \Drupal\node\Entity\Node::loadMultiple($room_nids) : [];
-    
-    // Group rooms by property_id and find minimum price for each
-    $room_prices = [];
+
+    // Group rooms by property_id (same lowest-nightly logic as listing cards).
+    $rooms_by_property = [];
     foreach ($rooms as $room) {
       if ($room->hasField('field_parent_id') && !$room->get('field_parent_id')->isEmpty()) {
         $property_id = NULL;
         $field_parent_id = $room->get('field_parent_id');
         if ($field_parent_id->target_id) {
           $property_id = (int) $field_parent_id->target_id;
-        } elseif ($field_parent_id->value) {
+        }
+        elseif ($field_parent_id->value) {
           $property_id = (int) $field_parent_id->value;
         }
-        
+
         if ($property_id && in_array($property_id, $property_ids)) {
-          if ($room->hasField('field_room_price') && !$room->get('field_room_price')->isEmpty()) {
-            $price = (float) $room->get('field_room_price')->value;
-            // Track minimum price for each property
-            if (!isset($room_prices[$property_id]) || $price < $room_prices[$property_id]) {
-              $room_prices[$property_id] = $price;
-            }
-          }
+          $rooms_by_property[$property_id][] = $room;
         }
       }
     }
 
-    // Calculate final prices and attach to view results
-    // Use the mapping we created to get property IDs reliably
+    // Calculate sort key: lowest single-occupancy nightly total (markup + VAT).
     foreach ($view->result as $index => &$row) {
       $property_id = isset($row_to_property_id[$index]) ? $row_to_property_id[$index] : NULL;
-      
+
       if ($property_id) {
-        // Load property to get markup
         $property = \Drupal\node\Entity\Node::load($property_id);
-        
+
         if ($property && $property->bundle() == 'property') {
-          $lowest_price = isset($room_prices[$property_id]) ? (float) $room_prices[$property_id] : NULL;
-          
-          // Get markup percentage
-          $markup = 0;
-          if ($property->hasField('field_markup_price') && !$property->get('field_markup_price')->isEmpty()) {
-            $markup = (float) $property->get('field_markup_price')->value;
-          }
-          
-          // Calculate: lowest_price + (lowest_price * markup / 100)
-          $final_price = $lowest_price !== NULL 
-            ? $lowest_price + ($lowest_price * $markup / 100) 
+          $subset = $rooms_by_property[$property_id] ?? [];
+          $summary = _srdesign_property_occupancy_price_summary_from_rooms($property, $subset);
+          $sort_total = $summary['sort_nightly_total'];
+          $row->calculated_price = ($sort_total !== NULL && $sort_total > 0)
+            ? (float) $sort_total
             : PHP_INT_MAX;
-          
-          $row->calculated_price = $final_price;
-        } else {
+        }
+        else {
           $row->calculated_price = PHP_INT_MAX;
         }
-      } else {
+      }
+      else {
         $row->calculated_price = PHP_INT_MAX;
       }
     }
@@ -627,8 +1094,6 @@ function srdesign_preprocess_menu(&$variables) {
   // Get current user.
   $account = \Drupal::currentUser();
   $variables['logged_in'] = $account->isAuthenticated();
-
-   // ✅ VERY IMPORTANT: vary menu cache per user
   $variables['#cache']['contexts'][] = 'user';
 
   // Filter menu items based on user permissions
@@ -649,20 +1114,9 @@ function srdesign_preprocess_menu(&$variables) {
 }
 
 /**
- * Filter menu items to hide "List Your Property" for non-admin users.
+ * Filter menu items - "List Your Property" visible to all (restriction removed).
  */
 function srdesign_preprocess_menu_filter(&$variables) {
-  $account = \Drupal::currentUser();
-  $admin_roles = ['administrator', 'site_admin', 'vendor'];
-  $is_admin = $account->hasPermission('access administration pages') || !empty(array_intersect($admin_roles, $account->getRoles()));
-  
-  // Hide "List Your Property" for non-admin users
-  if (!$is_admin && isset($variables['items'])) {
-    foreach ($variables['items'] as $key => $item) {
-      $title = $item['title'] ?? $item['#title'] ?? '';
-      if ($title == 'List Your Property') {
-        unset($variables['items'][$key]);
-      }
-    }
-  }
+  // Restriction removed: "List Your Property" now visible to all users.
+  // URL/destination per user type is controlled by vendor_management module.
 }

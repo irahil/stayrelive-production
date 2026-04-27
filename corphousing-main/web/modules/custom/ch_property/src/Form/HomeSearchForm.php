@@ -89,7 +89,7 @@ class HomeSearchForm extends FormBase
     $form['rooms'] = [
       '#type' => 'select',
       '#title' => $this->t('Travellers'),
-      '#default_value' => $request->get('rooms') ?? '1', // ✅ Preserve room count
+      '#default_value' => $request->get('rooms') ?? '1',
       '#attributes' => [
         'class' => ['select-rooms'],
       ],
@@ -114,46 +114,41 @@ class HomeSearchForm extends FormBase
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state)
-  {
-    $city = trim($form_state->getValue('city'));
-    $date = $form_state->getValue('form');
-    $rooms = $form_state->getValue('rooms');
+{
+  $city = trim($form_state->getValue('city'));
+  $date = $form_state->getValue('form');
+  $rooms = $form_state->getValue('rooms');
 
-    // Convert city name to term ID
-    $terms = \Drupal::entityTypeManager()
-      ->getStorage('taxonomy_term')
-      ->loadByProperties([
-        'name' => $city,
-        'vid' => 'city', // 👈 your vocabulary
-      ]);
-
-    if ($terms) {
-      $term = reset($terms);
-      $city_tid = $term->id();
-    }
-
-    $query = [
-      'field_city_target_id' => $city_tid ?? NULL,
-      'rooms' => $rooms,
-    ];
-
-    if (!empty($date)) {
-      $query['date'] = $date;
-    }
-
-    // Debug: Log the URL being generated
-  \Drupal::logger('ch_property')->debug('Redirecting to /property/search with query: @query', 
-    ['@query' => print_r($query, TRUE)]
-  );
-    $url = Url::fromUri('internal:/property/search', [
-      'query' => array_filter($query),
+  // Convert city name to term ID
+  $terms = \Drupal::entityTypeManager()
+    ->getStorage('taxonomy_term')
+    ->loadByProperties([
+      'name' => $city,
+      'vid' => 'city',
     ]);
 
-     // Debug the generated URL
-  \Drupal::logger('ch_property')->debug('Generated URL: @url', 
-    ['@url' => $url->toString()]
-  );
-
-    $form_state->setRedirectUrl($url);
+  if ($terms) {
+    $term = reset($terms);
+    $city_tid = $term->id();
   }
+
+  // ✅ If date is empty, generate default range (today → +30 days)
+  if (empty($date)) {
+    $start_date = date('jS M y');
+    $end_date = date('jS M y', strtotime('+30 days'));
+    $date = $start_date . ' to ' . $end_date;
+  }
+
+  $query = [
+    'field_city_target_id' => $city_tid ?? NULL,
+    'rooms' => $rooms,
+    'date' => $date,
+  ];
+
+  $url = Url::fromUri('internal:/property/search', [
+    'query' => array_filter($query),
+  ]);
+
+  $form_state->setRedirectUrl($url);
+}
 }

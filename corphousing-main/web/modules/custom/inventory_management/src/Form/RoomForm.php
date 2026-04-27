@@ -8,6 +8,72 @@ use Drupal\common_utilities\Utilities\commonUtil;
 
 class RoomForm extends FormBase {
 
+  /**
+   * Returns GST amount for a given rate and percentage.
+   */
+  private function calculateVatAmount($rate, $vat_percent) {
+    $rate = (float) $rate;
+    $vat_percent = (float) $vat_percent;
+    return round(($rate * $vat_percent) / 100, 2);
+  }
+
+  /**
+   * Validates an optional numeric field with range checks.
+   */
+  private function validateNumericField(FormStateInterface $form_state, $field_name, $label, $required = FALSE, $min = 0, $max = NULL) {
+    $value = $form_state->getValue($field_name);
+    if ($value === '' || $value === NULL) {
+      if ($required) {
+        $form_state->setErrorByName($field_name, $this->t('@label is required.', ['@label' => $label]));
+      }
+      return;
+    }
+    if (!is_numeric($value)) {
+      $form_state->setErrorByName($field_name, $this->t('Please enter a valid number for @label.', ['@label' => $label]));
+      return;
+    }
+    $numeric_value = (float) $value;
+    if ($numeric_value < $min) {
+      $form_state->setErrorByName($field_name, $this->t('@label cannot be less than @min.', ['@label' => $label, '@min' => $min]));
+      return;
+    }
+    if ($max !== NULL && $numeric_value > $max) {
+      $form_state->setErrorByName($field_name, $this->t('@label cannot be greater than @max.', ['@label' => $label, '@max' => $max]));
+    }
+  }
+
+  /**
+   * Sets value on every existing candidate field (keeps legacy duplicate fields in sync).
+   */
+  private function setFirstAvailableFieldValue($node, array $field_candidates, $value) {
+    foreach ($field_candidates as $field_name) {
+      if ($node->hasField($field_name)) {
+        $node->set($field_name, $value);
+      }
+    }
+  }
+
+  /**
+   * Returns TRUE when room is marked "Rate on request".
+   */
+  private function isRateOnRequestSelected(array $values): bool {
+    $raw_value = $values['rate_on_request_toggle']
+      ?? ($values['room_price']['rate_on_request_toggle'] ?? 0);
+    return (string) $raw_value === '1';
+  }
+
+  /**
+   * Apply radio-driven visibility to all pricing fields.
+   */
+  private function applyRateFieldsVisibility(array &$elements): void {
+    foreach ($elements as $key => &$element) {
+      if (!is_array($element) || strpos((string) $key, '#') === 0) {
+        continue;
+      }
+      $element['#states']['visible'][':input[name="rate_on_request_toggle"]'] = ['checked' => FALSE];
+    }
+  }
+
   public function getFormId() {
     return 'room_form';
   }
@@ -51,15 +117,6 @@ class RoomForm extends FormBase {
         '#title' => $this->t('Published Status'),
         '#options' => ['1' => 'Published'],
         '#default_value' => [],
-      ];
-      
-      $form['room_info']['title'] = [
-        '#type' => 'textfield',
-        '#title' => $this->t('Title'),
-        '#attributes' => [
-          'class' => ['form-full'],
-          'placeholder' => $this->t('Enter Room Title'),
-        ],
       ];
     }
 
@@ -148,7 +205,7 @@ class RoomForm extends FormBase {
         'file_validate_extensions' => ['png jpg jpeg'],
         'file_validate_size' => [25600000], // 25MB max per file
       ],
-      '#required' => TRUE,
+      '#required' => FALSE,
     ];
 */
     $arr_room_amenities = commonUtil::get_term_list('room_amenities');
@@ -211,38 +268,157 @@ class RoomForm extends FormBase {
       '#type' => 'fieldset',
       '#title' => $this->t('Room Price'),
     ];
+    $form['#attached']['library'][] = 'inventory_management/room_price';
+
+    $form['room_price']['rate_on_request_toggle'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Rate on request'),
+      '#default_value' => 0,
+      '#weight' => -10,
+    ];
 
     $form['room_price']['room_price_tax_wrapper'] = [
       '#type' => 'container',
       '#attributes' => ['class' => ['room-price-tax-wrapper']],
+      '#states' => [
+        'visible' => [
+          ':input[name="rate_on_request_toggle"]' => ['checked' => FALSE],
+        ],
+      ],
     ];
 
-    $form['room_price']['room_price_tax_wrapper']['price'] = [
+    $form['room_price']['room_price_tax_wrapper']['single_occupancy_heading'] = [
+      '#type' => 'item',
+      '#title' => $this->t('Single Occupancy'),
+      '#attributes' => ['class' => ['room-price-section-title']],
+    ];
+    $form['room_price']['room_price_tax_wrapper']['single_nightly_rate'] = [
       '#type' => 'number',
-      '#title' => $this->t('Average Price'),
+      '#title' => $this->t('Nightly Rate'),
+      '#required' => FALSE,
       '#min' => 0,
-      '#step' => 1,
-      '#required' => TRUE,
-      '#default_value' => 1,
+      '#step' => 0.01,
+      '#attributes' => ['class' => ['form-half']],
+    ];
+    $form['room_price']['room_price_tax_wrapper']['single_monthly_rate'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Monthly Rate'),
+      '#required' => FALSE,
+      '#min' => 0,
+      '#step' => 0.01,
+      '#attributes' => ['class' => ['form-half']],
+    ];
+
+    $form['room_price']['room_price_tax_wrapper']['double_occupancy_heading'] = [
+      '#type' => 'item',
+      '#title' => $this->t('Double Occupancy'),
+      '#attributes' => ['class' => ['room-price-section-title']],
+    ];
+    $form['room_price']['room_price_tax_wrapper']['double_nightly_rate'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Nightly Rate'),
+      '#required' => FALSE,
+      '#min' => 0,
+      '#step' => 0.01,
+      '#attributes' => ['class' => ['form-half']],
+    ];
+    $form['room_price']['room_price_tax_wrapper']['double_nightly_rate_vat_pt'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Nightly Rate GST %'),
+      '#min' => 0,
+      '#max' => 100,
+      '#step' => 0.01,
+      '#default_value' => 0,
+      '#attributes' => ['class' => ['form-half']],
+    ];
+    $form['room_price']['room_price_tax_wrapper']['double_nightly_rate_vat_am'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Nightly Rate GST Amount'),
+      '#default_value' => 0,
+      '#step' => 0.01,
       '#attributes' => [
         'class' => ['form-half'],
+        'readonly' => 'readonly',
+      ],
+    ];
+    $form['room_price']['room_price_tax_wrapper']['double_monthly_rate'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Monthly Rate'),
+      '#min' => 0,
+      '#step' => 0.01,
+      '#attributes' => ['class' => ['form-half']],
+    ];
+    $form['room_price']['room_price_tax_wrapper']['double_monthly_rate_vat_pt'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Monthly Rate GST %'),
+      '#min' => 0,
+      '#max' => 100,
+      '#step' => 0.01,
+      '#default_value' => 0,
+      '#attributes' => ['class' => ['form-half']],
+    ];
+    $form['room_price']['room_price_tax_wrapper']['double_monthly_rate_vat_am'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Monthly Rate GST Amount'),
+      '#default_value' => 0,
+      '#step' => 0.01,
+      '#attributes' => [
+        'class' => ['form-half'],
+        'readonly' => 'readonly',
       ],
     ];
 
-    $form['room_price']['room_price_tax_wrapper']['tax_details'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Tax Details (GST/VAT)'),
-      '#options' => [
-        '0' => "0%",
-        '5' => "5%",
-        '12' => "12%",
-        '18' => "18%",
-        '28' => "28%"
-      ],
+    $form['room_price']['room_price_tax_wrapper']['vat_heading'] = [
+      '#type' => 'item',
+      '#title' => $this->t('GST (%)'),
+      '#attributes' => ['class' => ['room-price-section-title']],
+    ];
+    $form['room_price']['room_price_tax_wrapper']['nightly_vat_percent'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Nightly Rate GST %'),
+      '#min' => 0,
+      '#max' => 100,
+      '#step' => 0.01,
+      '#default_value' => 0,
+      '#attributes' => ['class' => ['form-half']],
+    ];
+    $form['room_price']['room_price_tax_wrapper']['monthly_vat_percent'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Monthly Rate GST %'),
+      '#min' => 0,
+      '#max' => 100,
+      '#step' => 0.01,
+      '#default_value' => 0,
+      '#attributes' => ['class' => ['form-half']],
+    ];
+
+    $form['room_price']['room_price_tax_wrapper']['total_vat_heading'] = [
+      '#type' => 'item',
+      '#title' => $this->t('Total GST (Auto-calculated)'),
+      '#attributes' => ['class' => ['room-price-section-title']],
+    ];
+    $form['room_price']['room_price_tax_wrapper']['nightly_vat_amount'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Nightly Rate GST Amount'),
+      '#default_value' => 0,
+      '#step' => 0.01,
       '#attributes' => [
         'class' => ['form-half'],
+        'readonly' => 'readonly',
       ],
     ];
+    $form['room_price']['room_price_tax_wrapper']['monthly_vat_amount'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Monthly Rate GST Amount'),
+      '#default_value' => 0,
+      '#step' => 0.01,
+      '#attributes' => [
+        'class' => ['form-half'],
+        'readonly' => 'readonly',
+      ],
+    ];
+
+    $this->applyRateFieldsVisibility($form['room_price']['room_price_tax_wrapper']);
 
     // Submit button
     $form['submit'] = [
@@ -254,14 +430,22 @@ class RoomForm extends FormBase {
   }
 
   public function validateForm(array &$form, FormStateInterface $form_state) {
+    $values = $form_state->getValues();
     $contact_name = $form_state->getValue('contact_name');
     $contact_number = $form_state->getValue('contact_mobile');
 
     if (!is_numeric($form_state->getValue('number_of_units'))) {
       $form_state->setErrorByName('number_of_units', $this->t('Please enter a valid number for units.'));
     }
-    if (!is_numeric($form_state->getValue('price'))) {
-      $form_state->setErrorByName('price', $this->t('Please enter a valid number for price.'));
+    if (!$this->isRateOnRequestSelected($values)) {
+      $this->validateNumericField($form_state, 'single_nightly_rate', $this->t('Single Occupancy Nightly Rate'), TRUE, 0);
+      $this->validateNumericField($form_state, 'single_monthly_rate', $this->t('Single Occupancy Monthly Rate'), FALSE, 0);
+      $this->validateNumericField($form_state, 'double_nightly_rate', $this->t('Double Occupancy Nightly Rate'), TRUE, 0);
+      $this->validateNumericField($form_state, 'double_monthly_rate', $this->t('Double Occupancy Monthly Rate'), FALSE, 0);
+      $this->validateNumericField($form_state, 'double_nightly_rate_vat_pt', $this->t('Double Nightly GST %'), FALSE, 0, 100);
+      $this->validateNumericField($form_state, 'double_monthly_rate_vat_pt', $this->t('Double Monthly GST %'), FALSE, 0, 100);
+      $this->validateNumericField($form_state, 'nightly_vat_percent', $this->t('Nightly GST %'), FALSE, 0, 100);
+      $this->validateNumericField($form_state, 'monthly_vat_percent', $this->t('Monthly GST %'), FALSE, 0, 100);
     }
     // if ($form_state->getValue('breakfast_provides') == 'Chargeable' && !is_numeric($form_state->getValue('breakfast_price'))) {
     //   $form_state->setErrorByName('breakfast_price', $this->t('Please enter breakfast price.'));      
@@ -305,14 +489,10 @@ class RoomForm extends FormBase {
       return;
     }
 
-    if (!isset($values['title']) || $values['title'] == "") {
-      $arr_city = commonUtil::get_term_list('city');
-      $arr_room_type = commonUtil::get_term_list('room_type');
-
-      $city_id = $parent_node->get('field_city')->getString();
-      $values['title'] = $arr_room_type[$values['room_type']] . " in " . $arr_city[$city_id];
-    }
-
+    $arr_city = commonUtil::get_term_list('city');
+    $arr_room_type = commonUtil::get_term_list('room_type');
+    $city_id = $parent_node->get('field_city')->getString();
+    $values['title'] = $arr_room_type[$values['room_type']] . " in " . $arr_city[$city_id];
 
     // Build room node fields array
     $room_fields = [
@@ -336,12 +516,38 @@ class RoomForm extends FormBase {
       'field_room_contact_name' => $values['contact_name'] ?? '',
 
       // Room Price
-      'field_room_price' => $values['price'] ?? 0,
-      'field_tax_details' => $values['tax_details'] ?? '0',      
     ];
 
     // Save new room node
     $node = \Drupal\node\Entity\Node::create($room_fields);
+    $is_rate_on_request = $this->isRateOnRequestSelected($values);
+    $single_nightly_rate = $is_rate_on_request ? 0 : ($values['single_nightly_rate'] ?? 0);
+    $single_monthly_rate = $is_rate_on_request ? 0 : ($values['single_monthly_rate'] ?? 0);
+    $double_nightly_rate = $is_rate_on_request ? 0 : ($values['double_nightly_rate'] ?? 0);
+    $double_monthly_rate = $is_rate_on_request ? 0 : ($values['double_monthly_rate'] ?? 0);
+    $double_nightly_rate_vat_pt = $is_rate_on_request ? 0 : ($values['double_nightly_rate_vat_pt'] ?? 0);
+    $double_monthly_rate_vat_pt = $is_rate_on_request ? 0 : ($values['double_monthly_rate_vat_pt'] ?? 0);
+    $nightly_vat_percent = $is_rate_on_request ? 0 : ($values['nightly_vat_percent'] ?? 0);
+    $monthly_vat_percent = $is_rate_on_request ? 0 : ($values['monthly_vat_percent'] ?? 0);
+
+    $nightly_vat_amount = $this->calculateVatAmount($single_nightly_rate, $nightly_vat_percent);
+    $monthly_vat_amount = $this->calculateVatAmount($single_monthly_rate, $monthly_vat_percent);
+    $double_nightly_vat_am = $this->calculateVatAmount($double_nightly_rate, $double_nightly_rate_vat_pt);
+    $double_monthly_vat_am = $this->calculateVatAmount($double_monthly_rate, $double_monthly_rate_vat_pt);
+    $this->setFirstAvailableFieldValue($node, ['field_single_nightly_rate'], $single_nightly_rate);
+    $this->setFirstAvailableFieldValue($node, ['field_single_monthly_rate'], $single_monthly_rate);
+    $this->setFirstAvailableFieldValue($node, ['field_double_nightly_rate'], $double_nightly_rate);
+    $this->setFirstAvailableFieldValue($node, ['field_double_monthly_rate'], $double_monthly_rate);
+    $this->setFirstAvailableFieldValue($node, ['field_double_nightly_rate_vat_pt'], $double_nightly_rate_vat_pt);
+    $this->setFirstAvailableFieldValue($node, ['field_double_monthly_rate_vat_pt'], $double_monthly_rate_vat_pt);
+    $this->setFirstAvailableFieldValue($node, ['field_double_nightly_rate_vat_am'], $double_nightly_vat_am);
+    $this->setFirstAvailableFieldValue($node, ['field_double_monthly_rate_vat_am'], $double_monthly_vat_am);
+    // Single-occupancy GST %: primary storage uses field_*_rate_vat_ on this site; sync _vat_percent if present.
+    $this->setFirstAvailableFieldValue($node, ['field_nightly_rate_vat_', 'field_nightly_vat_percent'], $nightly_vat_percent);
+    $this->setFirstAvailableFieldValue($node, ['field_monthly_rate_vat_', 'field_monthly_vat_percent'], $monthly_vat_percent);
+    $this->setFirstAvailableFieldValue($node, ['field_nightly_vat_amount'], $nightly_vat_amount);
+    $this->setFirstAvailableFieldValue($node, ['field_monthly_vat_amount'], $monthly_vat_amount);
+    $this->setFirstAvailableFieldValue($node, ['field_rate_on_request'], $is_rate_on_request ? 1 : 0);
 
     $published = (isset($values['published']) && $values['published'][1] == "1" ) ? TRUE : FALSE;
     if ($published) {

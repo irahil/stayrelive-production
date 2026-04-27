@@ -1,541 +1,505 @@
 #block-srdesign-views-block-property-search-block-1 {
-  background-color: rgb(248, 248, 252);
-
-  .view-property-search {
-    gap: 30px;
-
-    @media (max-width: 1200px) {
-      gap: 20px;
-    }
-
-    @media (max-width: 992px) {
-      flex-direction: column;
-    }
-
-    .messages-list {
-      display: none;
-    }
-
-    // Wrapper for sidebar (map + filters)
-    .property-view-wrapper {
-      display: flex;
-      gap: 30px;
-      width: 100%;
-
-      @media (max-width: 1200px) {
-        gap: 20px;
-      }
-
-      @media (max-width: 992px) {
-        flex-direction: column;
-
-        .property-view-wrapper {
-          flex-direction: column;
+    background-color: rgb(248, 248, 252);
+    .view-property-search {
+        gap: 30px;
+        @media (max-width: 1200px) {
+            gap: 20px;
         }
-
-        .property-results {
-          order: 1;
-          width: 100%;
-        }
-
-        .property-sidebar {
-          order: 2;
-          width: 100%;
-        }
-      }
-    }
-
-    .property-sidebar {
-      width: 30%;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-
-      @media (max-width: 992px) {
-        width: 100%;
-      }
-
-      // Map section
-      .property-map {
-        background-color: $white;
-        border-radius: 12px;
-        overflow: hidden;
-        height: 250px;
-        border: 1px solid $stroke-border;
-        z-index: 0;
-
         @media (max-width: 992px) {
-          height: 300px;
+            flex-direction: column;
         }
-
-        @media (max-width: 768px) {
-          height: 250px;
+        .messages-list {
+            display: none;
         }
-      }
-
-      // Filters section
-      .property-filters {
-        .views-exposed-form {
-          position: relative;
-          padding-top: 70px;
-          flex-direction: column;
-          border-radius: 12px;
-          margin: 0;
-          background-color: $white;
-          padding-bottom: 24px;
-          border: 1px solid $stroke-border;
-
-          @media (max-width: 768px) {
-            margin: 0;
-          }
-
-          &::before {
-            content: "Filters";
-            position: absolute;
-            top: 24px;
-            left: 24px;
-            font-size: 18px;
-            font-weight: 600;
-            color: $black;
-
-            @media (max-width: 768px) {
-              // left: 40px;
-              padding: 0;
-            }
-          }
-
-          .fieldset__label {
-            color: $black;
-            font-size: 16px;
-            font-weight: 500;
-            font-family: $primary-font;
-            padding: 0;
-            margin-bottom: 10px;
-          }
-
-          .js-form-wrapper {
-            fieldset.fieldset {
-              margin: 0;
-              box-shadow: none;
-              border: none;
-
-              .fieldset__wrapper {
-                display: flex;
+        // Wrapper for sidebar (map + filters)
+        .property-view-wrapper {
+            display: flex;
+            gap: 30px;
+            width: 100%;
+            @media (max-width: 1200px) {
                 gap: 20px;
-                margin: 0;
-
-                label[for="edit-field-markup-price-value-min"],
-                label[for="edit-field-markup-price-value-max"] {
-                  display: none;
+            }
+            @media (max-width: 992px) {
+                flex-direction: column;
+                .property-view-wrapper {
+                    flex-direction: column;
                 }
-
-                .form-item {
-                  margin: 0;
+                .property-results {
+                    order: 1;
+                    width: 100%;
                 }
-              }
+                .property-sidebar {
+                    order: 2;
+                    width: 100%;
+                }
             }
-
-            .form-radios {
-              input[type="radio"] {
-                appearance: none;
-                -webkit-appearance: none;
-                -moz-appearance: none;
-                outline: none;
-                width: 1.125rem;
-                height: 1.125rem;
-                border: none;
-                border-radius: 0;
-                background-color: white;
-                cursor: pointer;
-                vertical-align: middle;
-                position: relative;
-                border: 1px solid $text-primary;
-              }
-
-              input[type="radio"]:checked {
-                background-color: $primary;
-                border-color: $primary;
-              }
-
-              input[type="radio"]:checked::after {
-                content: "";
-                position: absolute;
-                width: 6px;
-                height: 10px;
-                border: solid #fff;
-                border-width: 0 2px 2px 0;
-                transform: rotate(45deg);
-                top: 2px;
-                left: 6px;
-              }
-
-              .form-boolean--type-radio:checked {
-                background-image: none !important;
-                box-shadow: none !important;
-              }
+        }
+        .property-sidebar {
+            width: 30%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            @media (max-width: 992px) {
+                width: 100%;
             }
-          }
-
-          .js-form-item-field-property-type-target-id {
-            // margin-top: 20px;
-
-            label {
-              display: block;
-              font-size: 16px;
-              font-weight: 500;
-              color: $black;
-              font-family: $primary-font;
-              margin: 20px 0 22px 5px;
-              padding-top: 4px;
-              // display: block;
-              // font-size: 16px;
-              // font-weight: 500;
-              // color: $black;
-              // font-family: $primary-font;
-              // margin: 20px 0 22px 24px;
+            // Map section
+            .property-map {
+                background-color: $white;
+                border-radius: 12px;
+                overflow: hidden;
+                height: 250px;
+                border: 1px solid $stroke-border;
+                z-index: 0;
+                @media (max-width: 992px) {
+                    height: 300px;
+                }
+                @media (max-width: 768px) {
+                    height: 250px;
+                }
             }
-          }
-
-          .form-select.form-element.form-element--type-select {
-            margin-left: 24px;
-            width: 84%;
-          }
+            // Filters section
+            .property-filters {
+                .views-exposed-form {
+                    position: relative;
+                    padding-top: 70px;
+                    flex-direction: column;
+                    border-radius: 12px;
+                    margin: 0;
+                    background-color: $white;
+                    padding-bottom: 24px;
+                    border: 1px solid $stroke-border;
+                    @media (max-width: 768px) {
+                        margin: 0;
+                    }
+                    &::before {
+                        content: "Filters";
+                        position: absolute;
+                        top: 24px;
+                        left: 24px;
+                        font-size: 18px;
+                        font-weight: 600;
+                        color: $black;
+                        @media (max-width: 768px) {
+                            // left: 40px;
+                            padding: 0;
+                        }
+                    }
+                    .fieldset__label {
+                        color: $black;
+                        font-size: 16px;
+                        font-weight: 500;
+                        font-family: $primary-font;
+                        padding: 0;
+                        margin-bottom: 10px;
+                    }
+                    .js-form-wrapper {
+                        fieldset.fieldset {
+                            margin: 0;
+                            box-shadow: none;
+                            border: none;
+                            .fieldset__wrapper {
+                                display: flex;
+                                gap: 20px;
+                                margin: 0;
+                                label[for="edit-field-markup-price-value-min"],
+                                label[for="edit-field-markup-price-value-max"] {
+                                    display: none;
+                                }
+                                .form-item {
+                                    margin: 0;
+                                }
+                            }
+                        }
+                        .form-radios {
+                            input[type="radio"] {
+                                appearance: none;
+                                -webkit-appearance: none;
+                                -moz-appearance: none;
+                                outline: none;
+                                width: 1.125rem;
+                                height: 1.125rem;
+                                border: none;
+                                border-radius: 0;
+                                background-color: white;
+                                cursor: pointer;
+                                vertical-align: middle;
+                                position: relative;
+                                border: 1px solid $text-primary;
+                            }
+                            input[type="radio"]:checked {
+                                background-color: $primary;
+                                border-color: $primary;
+                            }
+                            input[type="radio"]:checked::after {
+                                content: "";
+                                position: absolute;
+                                width: 6px;
+                                height: 10px;
+                                border: solid #fff;
+                                border-width: 0 2px 2px 0;
+                                transform: rotate(45deg);
+                                top: 2px;
+                                left: 6px;
+                            }
+                            .form-boolean--type-radio:checked {
+                                background-image: none !important;
+                                box-shadow: none !important;
+                            }
+                        }
+                        #edit-field-city-target-id {
+                            max-height: 200px;
+                            overflow-y: auto;
+                            padding-right: 6px;
+                            &::-webkit-scrollbar {
+                                width: 6px;
+                            }
+                            &::-webkit-scrollbar-thumb {
+                                background: #ccc;
+                                border-radius: 10px;
+                            }
+                            &::-webkit-scrollbar-thumb:hover {
+                                background: #999;
+                            }
+                        }
+                        #edit-field-amenities-target-id {
+                            max-height: 200px;
+                            overflow-y: auto;
+                            padding-right: 6px;
+                            &::-webkit-scrollbar {
+                                width: 6px;
+                            }
+                            &::-webkit-scrollbar-thumb {
+                                background: #ccc;
+                                border-radius: 10px;
+                            }
+                            &::-webkit-scrollbar-thumb:hover {
+                                background: #999;
+                            }
+                        }
+                    }
+                    .js-form-item-field-property-type-target-id {
+                        // margin-top: 20px;
+                        label {
+                            display: block;
+                            font-size: 16px;
+                            font-weight: 500;
+                            color: $black;
+                            font-family: $primary-font;
+                            margin: 20px 0 22px 5px;
+                            padding-top: 4px;
+                            // display: block;
+                            // font-size: 16px;
+                            // font-weight: 500;
+                            // color: $black;
+                            // font-family: $primary-font;
+                            // margin: 20px 0 22px 24px;
+                        }
+                    }
+                    .form-select.form-element.form-element--type-select {
+                        margin-top: 10px;
+                        width: 98%;
+                    }
+                    .form-item--field-city-target-id {
+                        margin-bottom: 0;
+                    }
+                }
+                .form-actions {
+                    margin-top: 0;
+                }
+                input[type="submit"] {
+                    color: #fff;
+                    background-color: $primary;
+                    padding: 16px 21px;
+                    border-radius: 12px;
+                    text-decoration: none;
+                    border: none;
+                    font-size: 16px;
+                    font-weight: 600;
+                    // margin: 0 0 0 24px;
+                    &:hover {
+                        background-color: $secondary !important;
+                    }
+                    @media (max-width: 768px) {
+                        margin: -10px 0 25px 0;
+                    }
+                }
+            }
         }
-
-        .form-actions {
-          margin-top: 0;
+        .property-results {
+            width: 70%;
+            overflow: hidden;
+            @media (max-width: 992px) {
+                width: 100%;
+            }
+            .view-content {
+                .views-row {
+                    .property-card {
+                        display: flex;
+                        align-items: center;
+                        padding: 12px;
+                        margin-bottom: 12px;
+                        border-radius: 12px;
+                        background-color: $white;
+                        border: 1px solid $stroke-border;
+                        &:hover {
+                            border: 1px solid $primary;
+                            img {
+                                transform: scale(1.05);
+                            }
+                        }
+                        @media (max-width: 767px) {
+                            flex-direction: column;
+                        }
+                        .card-header {
+                            width: 40%;
+                            padding: 0;
+                            border-radius: 12px;
+                            border: none;
+                            background-color: transparent;
+                            overflow: hidden;
+                            @media (max-width: 767px) {
+                                width: 100%;
+                            }
+                            img {
+                                height: 200px;
+                                width: 100%;
+                                object-fit: cover;
+                                border-radius: 12px;
+                                transition: all 0.3s ease-in-out;
+                                &:hover {
+                                    transform: scale(1.05);
+                                }
+                            }
+                        }
+                        .card-body {
+                            width: 70%;
+                            position: relative;
+                            padding: 8px 24px;
+                            @media (max-width: 767px) {
+                                width: 100%;
+                                padding-top: 1rem;
+                            }
+                            h4 {
+                                a {
+                                    color: $secondary;
+                                    text-decoration: none;
+                                    font-size: 20px;
+                                    font-weight: 600;
+                                    font-family: $primary-font;
+                                    &:hover {
+                                        color: $primary;
+                                    }
+                                }
+                            }
+                            .town-city {
+                                opacity: 0.8;
+                            }
+                            .property-details {
+                                color: rgba(0, 0, 0, 0.6);
+                                padding: 12px 0;
+                                gap: 10px;
+                                display: flex;
+                                .amenities {
+                                    display: flex;
+                                    gap: 12px;
+                                    margin: 0;
+                                    padding: 0;
+                                    border-right: 1px solid rgba(0, 0, 0, 0.24);
+                                    padding-right: 10px !important;
+                                }
+                                @media (max-width: 1200px) {
+                                    padding: 10px 0;
+                                }
+                            }
+                            .price {
+                                font-size: 14px;
+                                color: $secondary;
+                                font-family: $primary-font;
+                                strong {
+                                    color: $black;
+                                    font-size: 18px;
+                                    font-family: $primary-font;
+                                }
+                                span {
+                                    opacity: 0.6;
+                                }
+                            }
+                            .property-rating {
+                                position: absolute;
+                                top: 20px;
+                                right: 20px;
+                                font-size: 12px;
+                                font-weight: 400;
+                                color: #5c6171;
+                                font-family: $primary-font;
+                                @media (max-width: 1200px) {
+                                    position: unset;
+                                    margin-top: 10px;
+                                }
+                                span {
+                                    color: $white;
+                                    padding: 4px 8px;
+                                    border-radius: 4px;
+                                    font-weight: 400;
+                                    margin-right: 8px;
+                                    background: linear-gradient(180deg, #5f39c6 0%, #392277 100%);
+                                }
+                            }
+                            .excludes-text {
+                                font-size: 14px;
+                                color: $secondary;
+                                opacity: 0.4;
+                                @media (max-width: 500px) {
+                                    margin-bottom: 10px;
+                                }
+                            }
+                            .booking-btn {
+                                position: absolute;
+                                right: 16px;
+                                bottom: 12px;
+                                color: $white;
+                                background-color: $primary;
+                                padding: 16px 21px;
+                                border-radius: 12px;
+                                text-decoration: none;
+                                font-family: $primary-font;
+                                font-weight: 600;
+                                @media (max-width: 1200px) {
+                                    right: 0;
+                                    bottom: 0;
+                                    font-size: 14px;
+                                    padding: 8px 12px;
+                                    border-radius: 8px;
+                                }
+                                @media (max-width: 500px) {
+                                    position: unset;
+                                    width: 100%;
+                                    display: block;
+                                    text-align: center;
+                                }
+                            }
+                            .form-group {
+                                position: absolute;
+                                right: 24px;
+                                bottom: 16px;
+                                @media (max-width: 1200px) {
+                                    right: 0;
+                                    bottom: 16px;
+                                }
+                                @media (max-width: 500px) {
+                                    position: static;
+                                    margin-top: 10px;
+                                }
+                                .form-action {
+                                    .request-button {
+                                        @extend .global-btn;
+                                        white-space: nowrap;
+                                        @media (max-width: 500px) {
+                                            width: 100%;
+                                            display: block;
+                                            text-align: center;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .view-empty {
+                font-size: 20px;
+                background-color: $white;
+                padding: 40px;
+                border-radius: 12px;
+                text-align: center;
+            }
+            // Pager aligned with property cards (left edge)
+            .property-results-pager {
+                margin-top: 24px;
+                .pager__items {
+                    justify-content: flex-start;
+                }
+            }
         }
-
-        input[type="submit"] {
-          color: #fff;
-          background-color: $primary;
-          padding: 16px 21px;
-          border-radius: 12px;
-          text-decoration: none;
-          border: none;
-          font-size: 16px;
-          font-weight: 600;
-          // margin: 0 0 0 24px;
-
-          &:hover {
-            background-color: $secondary !important;
-          }
-
-          @media (max-width: 768px) {
-            margin: -10px 0 25px 0;
-          }
-        }
-      }
     }
-
-    .property-results {
-      width: 70%;
-      overflow: hidden;
-
-      @media (max-width: 992px) {
-        width: 100%;
-      }
-
-      .view-content {
-        .views-row {
-          .property-card {
+    // pagination - aligned with property results
+    .property-results-pager {
+        margin-top: 24px;
+        .pager__items {
+            justify-content: flex-start;
+        }
+    }
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+    }
+    .pager {
+        &__items {
+            list-style: none;
             display: flex;
             align-items: center;
-            padding: 12px;
-            margin-bottom: 12px;
-            border-radius: 12px;
-            background-color: $white;
-            border: 1px solid $stroke-border;
-
+            gap: 4px;
+            margin: 0;
+            padding: 0;
+        }
+        &__item {
+            display: flex;
+        }
+        &__link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 40px;
+            padding: 0 12px;
+            text-decoration: none;
+            color: #666;
+            font-size: 14px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            background: transparent;
             &:hover {
-              border: 1px solid $primary;
-
-              img {
-                transform: scale(1.05);
-              }
+                background-color: #f5f5f5;
+                color: #333;
             }
-
-            @media (max-width: 767px) {
-              flex-direction: column;
+            &.is-active {
+                background-color: #e8eaff;
+                color: #4f46e5;
+                font-weight: 500;
+                pointer-events: none;
             }
-
-            .card-header {
-              width: 40%;
-              padding: 0;
-              border-radius: 12px;
-              border: none;
-              background-color: transparent;
-              overflow: hidden;
-
-              @media (max-width: 767px) {
-                width: 100%;
-              }
-
-              img {
-                height: 200px;
-                width: 100%;
-                object-fit: cover;
-                border-radius: 12px;
-                transition: all 0.3s ease-in-out;
-
+        }
+        &__item--action {
+            .pager__link {
+                min-width: auto;
+                color: #666;
                 &:hover {
-                  transform: scale(1.05);
+                    color: #333;
                 }
-              }
             }
-
-            .card-body {
-              width: 70%;
-              position: relative;
-              padding: 8px 24px;
-
-              @media (max-width: 767px) {
-                width: 100%;
-                padding-top: 1rem;
-              }
-
-              h4 {
-                a {
-                  color: $secondary;
-                  text-decoration: none;
-                  font-size: 20px;
-                  font-weight: 600;
-                  font-family: $primary-font;
-
-                  &:hover {
-                    color: $primary;
-                  }
-                }
-              }
-
-              .town-city {
-                opacity: 0.8;
-              }
-
-              .property-details {
-                color: rgba(0, 0, 0, 0.6);
-                padding: 12px 0;
-                gap: 10px;
-                display: flex;
-
-                .amenities {
-                  display: flex;
-                  gap: 12px;
-                  margin: 0;
-                  padding: 0;
-                  border-right: 1px solid rgba(0, 0, 0, 0.24);
-                  padding-right: 10px !important;
-                }
-
-                @media (max-width: 1200px) {
-                  padding: 10px 0;
-                }
-              }
-
-              .price {
-                font-size: 14px;
-                color: $secondary;
-                font-family: $primary-font;
-
-                strong {
-                  color: $black;
-                  font-size: 24px;
-                  font-family: $primary-font;
-                }
-
-                span {
-                  opacity: 0.6;
-                }
-              }
-
-              .property-rating {
-                position: absolute;
-                top: 20px;
-                right: 20px;
-                font-size: 12px;
-                font-weight: 400;
-                color: #5c6171;
-                font-family: $primary-font;
-
-                @media (max-width: 1200px) {
-                  position: unset;
-                  margin-top: 10px;
-                }
-
-                span {
-                  color: $white;
-                  padding: 4px 8px;
-                  border-radius: 4px;
-                  font-weight: 400;
-                  margin-right: 8px;
-                  background: linear-gradient(180deg, #5f39c6 0%, #392277 100%);
-                }
-              }
-
-              .excludes-text {
-                font-size: 14px;
-                color: $secondary;
-                opacity: 0.4;
-
-                @media (max-width: 500px) {
-                  margin-bottom: 10px;
-                }
-              }
-
-              .booking-btn {
-                position: absolute;
-                right: 16px;
-                bottom: 12px;
-                color: $white;
-                background-color: $primary;
-                padding: 16px 21px;
-                border-radius: 12px;
-                text-decoration: none;
-                font-family: $primary-font;
-                font-weight: 600;
-
-                @media (max-width: 1200px) {
-                  right: 0;
-                  bottom: 0;
-                  font-size: 14px;
-                  padding: 8px 12px;
-                  border-radius: 8px;
-                }
-
-                @media (max-width: 500px) {
-                  position: unset;
-                  width: 100%;
-                  display: block;
-                  text-align: center;
-                }
-              }
-
-              .form-group {
-                position: absolute;
-                right: 24px;
-                bottom: 16px;
-
-                @media (max-width: 1200px) {
-                  right: 0;
-                  bottom: 16px;
-                }
-
-                @media (max-width: 500px) {
-                  position: static;
-                  margin-top: 10px;
-                }
-
-                .form-action {
-                  .request-button {
-                    @extend .global-btn;
-                    white-space: nowrap;
-
-                    @media (max-width: 500px) {
-                      width: 100%;
-                      display: block;
-                      text-align: center;
-                    }
-                  }
-                }
-              }
+        }
+        &__item--number {
+            .pager__link {
+                min-width: 40px;
             }
-          }
         }
-      }
-
-      .view-empty {
-        font-size: 20px;
-        background-color: $white;
-        padding: 40px;
-        border-radius: 12px;
-        text-align: center;
-      }
-    }
-  }
-
-  // pagination
-  .visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0;
-  }
-
-  .pager {
-    &__items {
-      list-style: none;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      margin: 0;
-      padding: 0;
-    }
-
-    &__item {
-      display: flex;
-    }
-
-    &__link {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 40px;
-      height: 40px;
-      padding: 0 12px;
-      text-decoration: none;
-      color: #666;
-      font-size: 14px;
-      border-radius: 4px;
-      transition: all 0.2s ease;
-      background: transparent;
-
-      &:hover {
-        background-color: #f5f5f5;
-        color: #333;
-      }
-
-      &.is-active {
-        background-color: #e8eaff;
-        color: #4f46e5;
-        font-weight: 500;
-        pointer-events: none;
-      }
-    }
-
-    &__item--action {
-      .pager__link {
-        min-width: auto;
-        color: #666;
-
-        &:hover {
-          color: #333;
+        &__item--ellipsis {
+            .pager__link {
+                pointer-events: none;
+                color: #999;
+            }
         }
-      }
+        &__item-title {
+            &--forward,
+            &--backward {
+                font-size: 14px;
+            }
+        }
     }
-
-    &__item--number {
-      .pager__link {
-        min-width: 40px;
-      }
-    }
-
-    &__item--ellipsis {
-      .pager__link {
-        pointer-events: none;
-        color: #999;
-      }
-    }
-
-    &__item-title {
-
-      &--forward,
-      &--backward {
-        font-size: 14px;
-      }
-    }
-  }
 }

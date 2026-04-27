@@ -3,18 +3,46 @@
 use Drupal\Core\Url;
 use Drupal\Core\Session\AccountInterface;
 
+/**
+ * Implements hook_page_attachments().
+ */
 function vendor_management_page_attachments(array &$attachments) {
+
   $current_user = \Drupal::currentUser();
   $roles = $current_user->getRoles();
 
+  // 1️⃣ Anonymous user → Login page
   if ($current_user->isAnonymous()) {
-    $target_url = Url::fromUri('internal:/vendor/register')->toString();
+
+    $target_url = Url::fromRoute('user.login', [], [
+      'query' => ['destination' => '/vendor/register'],
+    ])->toString();
+
   }
-  elseif (in_array('vendor', $roles) || in_array('administrator', $roles)) {
+
+  // 2️⃣ Admin / Site Admin / Administrator → Inventory management
+  elseif (
+    in_array('administrator', $roles) ||
+    in_array('site_admin', $roles) ||
+    $current_user->hasPermission('access administration pages')
+  ) {
+
     $target_url = Url::fromUri('internal:/inventory-management/property/list')->toString();
+
   }
+
+  // 3️⃣ Approved Vendor → Inventory management
+  elseif (in_array('vendor', $roles)) {
+
+    $target_url = Url::fromUri('internal:/inventory-management/property/list')->toString();
+
+  }
+
+  // 4️⃣ Logged-in user but not vendor → Vendor registration form
   else {
+
     $target_url = Url::fromUri('internal:/vendor/register')->toString();
+
   }
 
   $js = "
@@ -30,6 +58,7 @@ function vendor_management_page_attachments(array &$attachments) {
     [
       '#tag' => 'script',
       '#value' => $js,
+      '#cache' => ['contexts' => ['user']],
     ],
     'custom_property_link_update',
   ];

@@ -49,17 +49,40 @@ class PropertyDetailsForm extends FormBase {
         '#type' => 'container',
         '#attributes' => ['class' => ['markup-type-wrapper']],
       ];
-      $form['property_basic_info']['markup_type_wrapper']['markup_price'] = [
-        '#type' => 'textfield',
-        '#title' => $this->t('Markup Price (%)'),
-        '#description' => $this->t('Enter a value between 0 and 100. Only numbers are allowed (e.g., enter "25" for 25%).'),
+
+      // Stack Markup type and Markup value vertically in their own group.
+      $form['property_basic_info']['markup_type_wrapper']['markup_type_value_group'] = [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['markup-type-value-group']],
+        '#weight' => 0,
+      ];
+
+      $form['property_basic_info']['markup_type_wrapper']['markup_type_value_group']['markup_type'] = [
+        '#type' => 'select',
+        '#title' => $this->t('Markup Price type'),
+        '#options' => [
+          'percent' => $this->t('%'),
+          'fixed' => $this->t('Fixed'),
+        ],
+        '#default_value' => 'percent',
+        '#required' => TRUE,
+        '#attributes' => ['class' => ['form-half']],
+        '#parents' => ['markup_type'],
+      ];
+
+      $form['property_basic_info']['markup_type_wrapper']['markup_type_value_group']['markup_price'] = [
+        '#type' => 'number',
+        '#title' => $this->t('Markup Price value'),
+        '#description' => $this->t('Enter the value. For %, use 0–100 (e.g. 25 for 25%). For Fixed, enter the amount.'),
         '#default_value' => 0,
+        '#min' => 0,
+        '#step' => 0.01,
         '#required' => TRUE,
         '#attributes' => [
           'class' => ['form-half'],
-          'placeholder' => $this->t('e.g., 25 for 25%'),
-          'pattern' => '^[0-9]+\.?[0-9]*$',
+          'placeholder' => $this->t('e.g., 25 for 25% or 500 for fixed'),
         ],
+        '#parents' => ['markup_price'],
       ];
     }
 
@@ -71,6 +94,7 @@ class PropertyDetailsForm extends FormBase {
       '#options' => $arr_property_type,
       '#required' => TRUE,
       '#attributes' => ['class' => ['form-half']],
+      '#weight' => 2,
     ];
 
     $arr_room_type = commonUtil::get_term_list('room_type');
@@ -556,7 +580,7 @@ class PropertyDetailsForm extends FormBase {
     
     // Validate Markup Price if user is admin
     if (commonUtil::isSiteAdmin()) {
-      $this->validateMarkupPrice($values, 'markup_price', $form_state);
+      $this->validateMarkupPrice($values, 'markup_price', 'markup_type', $form_state);
       
       // Validate property publishing - must have published rooms
       $this->validatePropertyPublishing($values, 'published', $form_state);
@@ -687,37 +711,31 @@ class PropertyDetailsForm extends FormBase {
 
   /**
    * Validate Markup Price field.
-   * Ensures it's numeric and within 0-100 range.
+   * For type "percent": numeric, 0–100. For type "fixed": numeric, >= 0.
    */
-  private function validateMarkupPrice(array $values, string $field_name, FormStateInterface $form_state): void {
-    $value = trim($values[$field_name] ?? '');
-    
-    // Markup price is required for admins
-    if (empty($value) && $value !== '0') {
-      $form_state->setErrorByName($field_name, $this->t('Markup Price is required. Please enter a value between 0 and 100.'));
+  private function validateMarkupPrice(array $values, string $field_name, string $type_field_name, FormStateInterface $form_state): void {
+    $value = trim((string) ($values[$field_name] ?? ''));
+    $type = $values[$type_field_name] ?? 'percent';
+
+    if ($value === '' && $value !== '0') {
+      $form_state->setErrorByName($field_name, $this->t('Markup value is required.'));
       return;
     }
-    
-    // Remove percentage sign if user entered it
-    $value = str_replace('%', '', $value);
-    $value = trim($value);
-    
-    // Check if it's numeric
+
     if (!is_numeric($value)) {
-      $form_state->setErrorByName($field_name, $this->t('Markup Price must be a valid number. Please enter only the number (e.g., 10 for 10%), not "10%".'));
+      $form_state->setErrorByName($field_name, $this->t('Markup value must be a valid number.'));
       return;
     }
-    
+
     $numeric_value = (float) $value;
-    
-    // Check range (0 to 100)
+
     if ($numeric_value < 0) {
-      $form_state->setErrorByName($field_name, $this->t('Markup Price cannot be negative. Please enter a value between 0 and 100.'));
+      $form_state->setErrorByName($field_name, $this->t('Markup value cannot be negative.'));
       return;
     }
-    
-    if ($numeric_value > 100) {
-      $form_state->setErrorByName($field_name, $this->t('Markup Price cannot exceed 100%. Please enter a value between 0 and 100.'));
+
+    if ($type === 'percent' && $numeric_value > 100) {
+      $form_state->setErrorByName($field_name, $this->t('Percentage cannot exceed 100.'));
       return;
     }
   }
@@ -1009,8 +1027,9 @@ class PropertyDetailsForm extends FormBase {
       'field_display_name' => $values['display_name'] ?? '',
       'field_vendor_id' => $field_vendor_id ?? NULL,
 
-      // Basic Info - Clean and format markup price value
+      // Basic Info - Markup type and value
       'field_markup_price' => $this->cleanMarkupPriceValue($values['markup_price'] ?? 0),
+      'field_markup_type' => $values['markup_type'] ?? 'percent',
       'field_property_type' => $values['property_type'] ?? NULL,
       'field_room_types' => array_filter($values['room_types'] ?? []),
       // 'field_room_types' => [$values['room_types']],

@@ -74,7 +74,12 @@
 				</div>
 
 				<div class="accordion" id="accordionProperty">
-					{% if content.field_description|render %}
+					{% if content.field_description|render
+						or (on_site_staffing_value is defined and on_site_staffing_value is not empty)
+						or (food_beverages_list is defined and food_beverages_list is not empty)
+						or node.field_cancellation_type.value or node.field_cancellation_policy_type.value
+						or node.field_early_checkout.value
+					%}
 						<div class="accordion-item">
 							<h2 class="accordion-header" id="headingOne">
 								<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
@@ -83,9 +88,14 @@
 							</h2>
 							<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionProperty">
 								<div class="accordion-body" id="overview">
-									{{ content.field_description }}
+									{% if content.field_description|render %}
+										<div class="overview-section overview-description">
+											<div class="overview-content">{{ content.field_description }}</div>
+										</div>
+									{% endif %}
 
-									<div class="overview-details">
+									<div class="overview-section overview-details-wrapper">
+										<div class="overview-details">
 										{% if content.field_total_bedrooms|render %}
 											<div class="d-flex gap-2">{{ content.field_total_bedrooms }}
 												Bedrooms</div>
@@ -116,6 +126,59 @@
 												Min Stay</div>
 										{% endif %}
 									</div>
+									</div>
+
+									{% if node.field_cancellation_type.value or node.field_cancellation_policy_type.value %}
+										{% set cancel_type = node.field_cancellation_type.value|default(node.field_cancellation_policy_type.value) %}
+										{% set refund_days = node.field_refundable_days.value|default(0)|number_format(0) %}
+										<div class="overview-section overview-description overview-cancellation">
+											<h4 class="overview-heading"><i class="fa-solid fa-circle-xmark overview-heading__icon" aria-hidden="true"></i>{{ 'Cancellation Policy'|t }}</h4>
+											<div class="overview-content">
+												{% if cancel_type == 'refundable' and refund_days|trim != '0' %}
+													{{ 'Free cancellation up to '|t }}{{ refund_days }} {{ 'days before check-in.'|t }}
+												{% elseif cancel_type == 'refundable' %}
+													{{ 'Refundable'|t }}
+												{% else %}
+													{{ 'Non-refundable'|t }}
+												{% endif %}
+											</div>
+										</div>
+									{% endif %}
+
+									{% if node.field_early_checkout.value %}
+										{% set early_checkout = node.field_early_checkout.value %}
+										{% set early_checkout_days = node.field_early_checkout_days.value|default(0)|number_format(0) %}
+										<div class="overview-section overview-description overview-early-checkout">
+											<h4 class="overview-heading"><i class="fa-solid fa-clock overview-heading__icon" aria-hidden="true"></i>{{ 'Early Checkout Policy'|t }}</h4>
+											<div class="overview-content">
+												{% if early_checkout == 'yes' and early_checkout_days|trim != '0' %}
+													{{ 'Early checkout allowed with intimation of '|t }}{{ early_checkout_days }} {{ 'days before.'|t }}
+												{% elseif early_checkout == 'yes' %}
+													{{ 'Early checkout allowed'|t }}
+												{% else %}
+													{{ 'Early checkout not allowed'|t }}
+												{% endif %}
+											</div>
+										</div>
+									{% endif %}
+
+									{% if on_site_staffing_value is defined and on_site_staffing_value is not empty %}
+										<div class="overview-section overview-description overview-on-site-staffing">
+											<h4 class="overview-heading"><i class="fa-solid fa-user-tie overview-heading__icon" aria-hidden="true"></i>{{ 'On-Site Staffing'|t }}</h4>
+											<div class="overview-content">
+												{{ on_site_staffing_value }}
+											</div>
+										</div>
+									{% endif %}
+
+									{% if food_beverages_list is defined and food_beverages_list is not empty %}
+										<div class="overview-section overview-description overview-food-beverages">
+											<h4 class="overview-heading"><i class="fa-solid fa-utensils overview-heading__icon" aria-hidden="true"></i>{{ 'Food & Beverages'|t }}</h4>
+											<div class="overview-content">
+												{{ food_beverages_list|join(', ') }}
+											</div>
+										</div>
+									{% endif %}
 								</div>
 							</div>
 						</div>
@@ -147,57 +210,39 @@
 						<div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree" data-bs-parent="#accordionProperty">
 							<div class="accordion-body" id="room-types">
 								<div class="row">
-									{% for room in related_rooms_full %}
-										<div class="col-md-6 mb-4">
-											<div class="card shadow-sm h-100 rounded-3">
-												<div
-													class="card-body">
-
-													{# Room Title #}
-													<h5 class="card-title mb-3">{{ room.label }}</h5>
-
-													{# Amenities #}
-													{% if room.field_room_amenities is not empty %}
-														<div class="room-amenities mb-3">
-															<ul class="room-amenities-list">
-																{% for amenity in room.field_room_amenities %}
-																	{% set label = amenity.entity.label %}
-																	{% set amenity_class = label|lower|trim|replace({' ':'-', '/':'-'}) %}
-																	<li class="{{ amenity_class }}">
-																		<i class="fas fa-check"></i>
-																		{{ label }}
-																	</li>
-																{% endfor %}
-															</ul>
-														</div>
-													{% endif %}
-
-													{# Description #}
-													{% if room.field_room_description.value %}
-														<div class="room-description">
-															{{ room.field_room_description.value|raw }}
-														</div>
-													{% endif %}
-
-													{# ✅ Room Price #}
-													{% if room.field_room_price.value %}
-														{% set room_price_raw = room.field_room_price.value %}
-														{% set room_price = (room_price_raw is iterable ? room_price_raw.0 : room_price_raw) + 0 %}
-														{% set markup_percentage_raw = node.field_markup_price.value %}
-														{% set markup_percentage = (markup_percentage_raw is iterable ? markup_percentage_raw.0 : markup_percentage_raw) + 0 %}
-														{% set total_price = room_price + (room_price * markup_percentage / 100) %}
-
-														<div class="room-price mb-3">
-															<strong>Price:</strong> ₹{{ total_price|number_format(0, '.', ',') }}
-														</div>
-													{% endif %}
-
+									{% if related_rooms_full is not empty %}
+										{% set labels = room_display_labels|default({}) %}
+										{% for room in related_rooms_full %}
+											<div class="col-md-6 mb-4">
+												<div class="card shadow-sm h-100 rounded-3">
+													<div class="card-body">
+														<h5 class="card-title mb-3">{{ labels[room.id]|default(room.label) }}</h5>
+														{% if room.field_room_amenities is not empty %}
+															<div class="room-amenities mb-3">
+																<ul class="room-amenities-list">
+																	{% for amenity in room.field_room_amenities %}
+																		{% set label = amenity.entity.label %}
+																		{% set amenity_class = label|lower|trim|replace({' ':'-', '/':'-'}) %}
+																		<li class="{{ amenity_class }}">
+																			<i class="fas fa-check"></i>
+																			{{ label }}
+																		</li>
+																	{% endfor %}
+																</ul>
+															</div>
+														{% endif %}
+														{% if room.field_room_description.value %}
+															<div class="room-description">
+																{{ room.field_room_description.value|raw }}
+															</div>
+														{% endif %}
+													</div>
 												</div>
 											</div>
-										</div>
+										{% endfor %}
 									{% else %}
 										<p>No rooms added for this property yet.</p>
-									{% endfor %}
+									{% endif %}
 								</div>
 							</div>
 						</div>
@@ -298,6 +343,7 @@
 				<div class="sidebar-sticky">
 					<div class="card">
 						<div class="card-body">
+							{% set pop = property_occupancy_prices|default({}) %}
 							{% if node.field_price.value %}
 								<div class="price">
 									<strong>₹{{ node.field_price.value|number_format(0, '.', ',') }}&nbsp;</strong>
@@ -307,35 +353,48 @@
 							{% endif %}
 
 							<form>
-								{% set markup_percentage_raw = node.field_markup_price.value %}
-								{% set markup_percentage = (markup_percentage_raw is iterable ? markup_percentage_raw.0 : markup_percentage_raw) + 0 %}
-								{% set first_room_price_raw = related_rooms[0].price %}
+								{% set markup_type = (node.field_markup_type.value is defined and node.field_markup_type.value is not empty) ? node.field_markup_type.value : 'percent' %}
+								{% set markup_value_raw = node.field_markup_price.value %}
+								{% set markup_value = (markup_value_raw is iterable ? markup_value_raw.0 : markup_value_raw) + 0 %}
+								{% set first_room_price_raw = related_rooms is not empty ? related_rooms[0].price : 0 %}
 								{% set first_room_price = (first_room_price_raw is iterable ? first_room_price_raw.0 : first_room_price_raw) + 0 %}
-								{% set first_total_price = first_room_price + (first_room_price * markup_percentage / 100) %}
+								{% set first_total_price = (markup_type == 'fixed') ? (first_room_price + markup_value) : (first_room_price + (first_room_price * markup_value / 100)) %}
+								{% set first_total_price_rounded = (first_total_price / 100)|round(0) * 100 %}
 
-								<div class="room-price-display" style="margin-bottom: 15px;">
-									<span id="room-price" style="font-weight: 600; font-size: 24px;">
-									₹{{ first_total_price|number_format(0, '.', ',') }}
-									</span>/night
-								</div>
+								{% if pop.has_rate_on_request|default(false) %}
+									<div class="room-price-display" style="margin-bottom: 15px;">
+										<strong>{{ 'Rate on request'|t }}</strong>
+									</div>
+								{% elseif pop.sidebar_single_night or pop.sidebar_single_month %}
+									{# Default: lowest nightly/monthly across rooms (pop). Per-room prices after Room Types change (JS). #}
+									<div id="property-sidebar-price-block" class="property-sidebar-occupancy-prices room-price-display" style="margin-bottom: 15px;">
+										<div class="property-sidebar-price-inner mb-3">
+											{% if pop.sidebar_single_night %}
+												<div class="mb-1 property-sidebar-line property-sidebar-line--night">{{ 'From'|t }} <strong><span id="room-price">₹{{ pop.sidebar_single_night }}</span></strong>/{{ 'nightly'|t }}</div>
+											{% endif %}
+											{% if pop.sidebar_single_month %}
+												<div class="property-sidebar-line property-sidebar-line--month">{{ 'From'|t }} <strong><span id="room-price-monthly">₹{{ pop.sidebar_single_month }}</span></strong>/{{ 'monthly'|t }}</div>
+											{% endif %}
+										</div>
+									</div>
+								{% else %}
+									<div class="room-price-display" style="margin-bottom: 15px;">
+										<span id="room-price" style="font-weight: 600; font-size: 24px;">
+											₹{{ first_total_price_rounded|number_format(0, '.', ',') }}
+										</span>/nightly
+									</div>
+								{% endif %}
 								<div class="form-group-date">
 									<div class="form-item custom-date">
 										<label for="check-in">Check In</label>
 										<div class="date-wrapper">
-											<input id="check-in" name="check_in" type="date"
-        									value="{{ content.field_available_from.0['#markup']|date('Y-m-d') }}"
-        									min="{{ 'now'|date('Y-m-d') }}"
-        									placeholder="Check In"
-        									oninput="document.getElementById('check-out').min = this.value">
+											<input id="check-in" name="check_in" type="date" value="{{ url_check_in ? url_check_in : 'now'|date('Y-m-d') }}" min="{{ 'now'|date('Y-m-d') }}" placeholder="Check In" oninput="document.getElementById('check-out').min = this.value">
 										</div>
 									</div>
 									<div class="form-item custom-date">
 										<label for="check-out">Check Out</label>
 										<div class="date-wrapper">
-											<input id="check-out" name="check_out" type="date"
-        									value="{{ content.field_available_from.0['#markup']|date('Y-m-d') }}"
-        									min="{{ 'now'|date('Y-m-d') }}"
-        									placeholder="Check Out">
+											<input id="check-out" name="check_out" type="date" value="{{ url_check_out ? url_check_out : 'now'|date('Y-m-d') }}" min="{{ 'now'|date('Y-m-d') }}" placeholder="Check Out">
 										</div>
 									</div>
 								</div>
@@ -343,14 +402,11 @@
 									<div class="form-item">
 										<label for="guests">Guests</label>
 										<select id="guests" name="guests">
-											<option>1</option>
-											<option>2</option>
-											<option>3</option>
-											<option>4</option>
-											<option>5</option>
-											<option>6</option>
-											<option>7</option>
-											<option>8</option>
+											{% for i in 1..5 %}
+												<option value="{{ i }}" {{ url_guests == i ? 'selected' : '' }}>
+													{{ i }}
+												</option>
+											{% endfor %}
 										</select>
 									</div>
 								</div>
@@ -359,16 +415,27 @@
 										<label>Room Types</label>
 										<select name="room_type" id="room-type">
 											{% if related_rooms is not empty %}
-											{% for room in related_rooms %}
-												{% set room_price_raw = room.price %}
-												{% set room_price = (room_price_raw is iterable ? room_price_raw.0 : room_price_raw) + 0 %}
-												{% set total_price = room_price + (room_price * markup_percentage / 100) %}
-												<option value="{{ room.nid }}" data-price="{{ total_price }}">
-												{{ room.label }}
-												</option>
-											{% endfor %}
+												{% set min_nid = pop.sidebar_minimum_room_nid|default(0) %}
+												{% set occ_sidebar = pop.sidebar_single_night or pop.sidebar_single_month %}
+												{% for room in related_rooms %}
+													{% set room_price_raw = room.price %}
+													{% set room_price = (room_price_raw is iterable ? room_price_raw.0 : room_price_raw) + 0 %}
+													{% set total_price = (markup_type == 'fixed') ? (room_price + markup_value) : (room_price + (room_price * markup_value / 100)) %}
+													{% set total_price_rounded = (total_price / 100)|round(0) * 100 %}
+													{% set rpop = room_occupancy_by_id[room.nid]|default({}) %}
+													{% set is_default_room = occ_sidebar and ((min_nid > 0 and room.nid == min_nid) or (min_nid < 1 and loop.first)) or (not occ_sidebar and loop.first) %}
+													<option
+														value="{{ room.nid }}"
+														data-price="{{ total_price_rounded }}"
+														data-sidebar-night="{{ rpop.sidebar_single_night|default('')|e('html_attr') }}"
+														data-sidebar-month="{{ rpop.sidebar_single_month|default('')|e('html_attr') }}"
+														data-rate-on-request="{{ rpop.rate_on_request|default(false) ? '1' : '0' }}"
+														{{ is_default_room ? ' selected' : '' }}>
+														{{ room.label }}
+													</option>
+												{% endfor %}
 											{% else %}
-											<option disabled selected>No rooms available</option>
+												<option disabled selected>No rooms available</option>
 											{% endif %}
 										</select>
 									</div>
@@ -377,19 +444,23 @@
 									<div class="form-action">
 										{% set property_name = node.label %}
 										{% set property_nid = node.id %}
-										
+
 										{% if logged_in %}
-											<a 
-												href="/form/request-booking?_wrapper_format=drupal_modal&property_nid={{ property_nid }}"
-												class="use-ajax request-book-button request-book-button-auth"
-												data-dialog-type="modal"
-												data-dialog-options='{"width": 664 }'
-												data-property-nid="{{ property_nid }}"
-												data-property-title="{{ property_name|e }}">
+											<a href="/form/request-booking?_wrapper_format=drupal_modal&property_nid={{ property_nid }}" class="use-ajax request-book-button request-book-button-auth" data-dialog-type="modal" data-dialog-options='{"width": 664 }' data-property-nid="{{ property_nid }}" data-property-title="{{ property_name|e }}">
 												Request to Book
 											</a>
 										{% else %}
-											<a href="/user/login?destination={{ path('<current>') }}%3Fopen_booking=1%26property_nid={{ property_nid }}" class="request-book-button">
+											{% set current_query = app.request.query.all %}
+
+											{% set destination_url = path('<current>') ~
+												'?open_booking=1' ~
+												'&property_nid=' ~ property_nid ~
+												'&check_in=' ~ url_check_in ~
+												'&check_out=' ~ url_check_out ~
+												'&guests=' ~ url_guests
+											%}
+
+											<a href="/user/login?destination={{ destination_url|url_encode }}" class="request-book-button">
 												Request to Book
 											</a>
 										{% endif %}
