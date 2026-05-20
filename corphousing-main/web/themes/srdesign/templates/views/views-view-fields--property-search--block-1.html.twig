@@ -98,7 +98,15 @@
       </ul>
       
       <div class="room-info fs-6">
-        {{ total_bedrooms|default(0) }} Bed, {{ total_bathrooms|default(0) }} Bath
+        {% set beds = total_bedrooms|default(0) + 0 %}
+        {% set baths = total_bathrooms|default(0) + 0 %}
+        {% if beds > 0 and baths > 0 %}
+          {{ beds }} Bed, {{ baths }} Bath
+        {% elseif beds > 0 %}
+          {{ beds }} Bed
+        {% elseif baths > 0 %}
+          {{ baths }} Bath
+        {% endif %}
       </div>
     </div>
     

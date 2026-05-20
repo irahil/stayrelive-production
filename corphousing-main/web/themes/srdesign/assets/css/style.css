@@ -14661,6 +14661,14 @@ body.map-modal-open {
     flex: none !important;
   }
 }
+@media (max-width: 768px) {
+  .main-wrapper.features-section .support-section .container .wrap .visual-stack .main-ui,
+  .main-wrapper.features-section .service-section .container .wrap .visual-stack .main-ui {
+    width: 115%;
+    max-width: 115%;
+    height: auto;
+  }
+}
 @media (max-width: 425px) {
   .main-wrapper.features-section .booking-flow .container .wrap .wrap-left,
   .main-wrapper.features-section .service-section .container .wrap .wrap-left,
@@ -15350,15 +15358,14 @@ body.map-modal-open {
 }
 @media (max-width: 768px) {
   .gcc-wrapper .gcc-page-contact-us {
-    width: 80%;
+    width: 100%;
     max-width: 100%;
   }
 }
 .gcc-wrapper .gcc-page-contact-us form.webform-submission-contact-form {
   position: relative;
   background: #fff;
-  padding-left: 30px;
-  padding-right: 30px;
+  padding: 36px 30px;
   border-radius: 24px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
   z-index: 2;
@@ -15369,23 +15376,21 @@ body.map-modal-open {
 }
 @media (max-width: 768px) {
   .gcc-wrapper .gcc-page-contact-us form.webform-submission-contact-form {
-    padding-left: 24px;
-    padding-right: 24px;
+    padding: 28px 20px;
     border-radius: 20px;
   }
 }
 @media (max-width: 425px) {
   .gcc-wrapper .gcc-page-contact-us form.webform-submission-contact-form {
-    padding-left: 22px;
-    padding-right: 22px;
+    padding: 24px 16px;
     border-width: 6px;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   }
 }
-@media (max-width: 425px) {
+@media (max-width: 375px) {
   .gcc-wrapper .gcc-page-contact-us form.webform-submission-contact-form {
-    padding-left: 18px;
-    padding-right: 18px;
-    border-width: 6px;
+    padding: 20px 14px;
   }
 }
 .gcc-wrapper .gcc-page-contact-us form.webform-submission-contact-form::before {
@@ -15494,7 +15499,7 @@ body.map-modal-open {
   border: none;
   justify-content: center;
   border-radius: 10px;
-  margin-left: 10px;
+  margin-left: 0;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -15515,6 +15520,7 @@ body.map-modal-open {
   .gcc-wrapper .gcc-page-contact-us #edit-flexbox-02 .form-submit {
     height: 50px;
     font-size: 16px;
+    border-radius: 12px;
   }
 }
 

@@ -104,7 +104,15 @@
       </ul>
 
       <div class="room-info">
-        {{ total_bedrooms|default(0) }} {{ 'Bed'|t }}, {{ total_bathrooms|default(0) }} {{ 'Bath'|t }}
+        {% set beds = total_bedrooms|default(0) + 0 %}
+        {% set baths = total_bathrooms|default(0) + 0 %}
+        {% if beds > 0 and baths > 0 %}
+          {{ beds }} {{ 'Bed'|t }}, {{ baths }} {{ 'Bath'|t }}
+        {% elseif beds > 0 %}
+          {{ beds }} {{ 'Bed'|t }}
+        {% elseif baths > 0 %}
+          {{ baths }} {{ 'Bath'|t }}
+        {% endif %}
       </div>
     </div>
 

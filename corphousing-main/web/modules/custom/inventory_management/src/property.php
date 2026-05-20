@@ -179,7 +179,7 @@ class property {
         continue;
       }
 
-      $node_vendor_id = (string) $node->get('field_vendor_id')->target_id;
+      $node_vendor_id = (string) $node->get('field_vendor_id')->value;
       if ($node_vendor_id === $vendor_id) {
         $filtered[] = $row;
       }
@@ -255,15 +255,38 @@ class property {
       }
     }
 
+    $original_query = $arg_data['query'];
     static::normalizePropertyViewExposedInput($arg_data['query']);
     static::syncPropertyViewExposedIdentifiers($view, $arg_data['query']);
     static::applyViewExposedInput($view, $arg_data['query']);
     $view->preExecute();
-    //$view->setOffset(1);
     $view->execute();
-    $rows = $view->total_rows;
 
-    return $rows;
+    // Apply the same vendor hard-guard as searchProperty() to ensure counts
+    // are scoped to the requested vendor, not the entire platform.
+    $vendor_filter = NULL;
+    if (isset($original_query['vendor_id']) && $original_query['vendor_id'] !== '' && $original_query['vendor_id'] !== NULL) {
+      $vendor_filter = $original_query['vendor_id'];
+    }
+    elseif (isset($original_query['field_vendor_id']) && $original_query['field_vendor_id'] !== '' && $original_query['field_vendor_id'] !== NULL) {
+      $vendor_filter = $original_query['field_vendor_id'];
+    }
+    elseif (isset($arg_data['query']['field_vendor_id_target_id']) && $arg_data['query']['field_vendor_id_target_id'] !== '' && $arg_data['query']['field_vendor_id_target_id'] !== NULL) {
+      $vendor_filter = $arg_data['query']['field_vendor_id_target_id'];
+    }
+
+    if ($vendor_filter !== NULL) {
+      $search_result = [];
+      foreach ($view->result as $rid => $row) {
+        foreach ($view->field as $fid => $field) {
+          $search_result[$rid][$fid] = $field->getValue($row);
+        }
+      }
+      $search_result = static::filterSearchResultsByVendor($search_result, $vendor_filter);
+      return count($search_result);
+    }
+
+    return $view->total_rows;
   }  
 
 }

@@ -191,6 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.carousel.setAttribute('tabindex', '0');
           }
 
+          
           dragStart(e) {
             this.isDragging = true;
             this.startX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
@@ -1373,11 +1374,37 @@ Drupal.behaviors.priceAmenitiesToggle = {
         });
       });
 
-      // Simple active state for city pills (visual only)
+      var DURATIONS = [7, 15, 30, 90, 365];
+      var DURATION_IDS = ['7n', '15n', '1m', '3m', '12m'];
+
+      function formatINR(amount) {
+        return '₹' + amount.toLocaleString('en-IN');
+      }
+      
+
+      function updateCityPrices(saRate, hotelRate) {
+        var saPrice = document.getElementById('gcc-sa-price');
+        var hotelPrice = document.getElementById('gcc-hotel-price');
+        if (saPrice) saPrice.textContent = formatINR(saRate);
+        if (hotelPrice) hotelPrice.textContent = formatINR(hotelRate);
+        DURATION_IDS.forEach(function (id, i) {
+          var saCell = document.getElementById('gcc-sa-' + id);
+          var hotelCell = document.getElementById('gcc-hotel-' + id);
+          if (saCell) saCell.textContent = formatINR(saRate * DURATIONS[i]);
+          if (hotelCell) hotelCell.textContent = formatINR(hotelRate * DURATIONS[i]);
+        });
+      }
+
+      // City tab click: update active state and recalculate prices
       cityTabs.forEach(function (tab) {
         tab.addEventListener('click', function () {
           cityTabs.forEach(function (t) { t.classList.remove('active'); });
           this.classList.add('active');
+          var saRate = parseInt(this.getAttribute('data-sa-rate'), 10);
+          var hotelRate = parseInt(this.getAttribute('data-hotel-rate'), 10);
+          if (saRate && hotelRate) {
+            updateCityPrices(saRate, hotelRate);
+          }
         });
       });
     });
