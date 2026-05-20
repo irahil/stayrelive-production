@@ -111,10 +111,12 @@ view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
                      <div class="field__label">Studio Apartment</div>
                   </div>
                </span>
-            {% else %}
+            {% elseif node.field_total_bedrooms.value != 0 %}
                <span><i class="fa-solid fa-bed"></i>{{ content.field_total_bedrooms }}</span>
             {% endif %}
-            <span><i class="fa-solid fa-bath"></i>{{ content.field_total_bathrooms }}</span>
+            {% if node.field_total_bathrooms.value != 0 %}
+               <span><i class="fa-solid fa-bath"></i>{{ content.field_total_bathrooms }}</span>
+            {% endif %}
             <span><i class="fa-solid fa-calendar-days"></i>{{ content.field_available_from }}</span>
          {% endif %}
       </div>
