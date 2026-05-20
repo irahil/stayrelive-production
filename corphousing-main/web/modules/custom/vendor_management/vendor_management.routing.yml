@@ -4,7 +4,7 @@ vendor_management.vendor_list:
     _controller: '\Drupal\vendor_management\Controller\VendorController::list'
     _title: 'List Vendors'
   requirements:
-    _role: 'authenticated'
+    _role: 'administrator+site_admin'
   options:
     _admin_route: TRUE
 

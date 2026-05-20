@@ -125,25 +125,26 @@
                   <div class="cmp-cell cmp-label">
                      <h3>Compare price across city</h3>
                      <div class="city-tabs">
-                        <button type="button" class="city-tab active">Mumbai</button>
-                        <button type="button" class="city-tab">Bangalore</button>
-                        <button type="button" class="city-tab">Delhi-NCR</button>
-                        <button type="button" class="city-tab">Chennai</button>
-                        <button type="button" class="city-tab">Hyderabad</button>
-                        <button type="button" class="city-tab">Pune</button>
+                        <button type="button" class="city-tab active" data-sa-rate="6300" data-hotel-rate="8500">Mumbai</button>
+                        <button type="button" class="city-tab" data-sa-rate="4300" data-hotel-rate="6800">Bangalore</button>
+                        <button type="button" class="city-tab" data-sa-rate="5000" data-hotel-rate="11500">Delhi-NCR</button>
+                        <button type="button" class="city-tab" data-sa-rate="3600" data-hotel-rate="6200">Chennai</button>
+                        <button type="button" class="city-tab" data-sa-rate="4200" data-hotel-rate="7800">Hyderabad</button>
+                        <button type="button" class="city-tab" data-sa-rate="1100" data-hotel-rate="6500">Pune</button>
                      </div>
                   </div>
+                  
                   <div class="cmp-cell cmp-serviced">
                      <div class="column-header">
                         <h4>SERVICED APARTMENTS</h4>
-                        <div class="price-range">₹4,700 — ₹6,800</div>
+                        <div class="price-range" id="gcc-sa-price">₹6,300</div>
                         <div class="avg-text">Avg. Per night</div>
                      </div>
                   </div>
                   <div class="cmp-cell cmp-hotel">
                      <div class="column-header">
                         <h4>HOTEL (★★★★)</h4>
-                        <div class="price-range">₹7,500</div>
+                        <div class="price-range" id="gcc-hotel-price">₹8,500</div>
                         <div class="avg-text">Avg. Per night</div>
                      </div>
                   </div>
@@ -151,28 +152,28 @@
                {# Data rows #}
                <div class="cmp-row">
                   <div class="cmp-cell cmp-label">7 Nights</div>
-                  <div class="cmp-cell cmp-serviced">₹13,500</div>
-                  <div class="cmp-cell cmp-hotel">₹21,000</div>
+                  <div class="cmp-cell cmp-serviced" id="gcc-sa-7n">₹44,100</div>
+                  <div class="cmp-cell cmp-hotel" id="gcc-hotel-7n">₹59,500</div>
                </div>
                <div class="cmp-row">
                   <div class="cmp-cell cmp-label">15 Nights</div>
-                  <div class="cmp-cell cmp-serviced">₹27,000</div>
-                  <div class="cmp-cell cmp-hotel">₹45,000</div>
+                  <div class="cmp-cell cmp-serviced" id="gcc-sa-15n">₹94,500</div>
+                  <div class="cmp-cell cmp-hotel" id="gcc-hotel-15n">₹1,27,500</div>
                </div>
                <div class="cmp-row">
                   <div class="cmp-cell cmp-label">1 Month</div>
-                  <div class="cmp-cell cmp-serviced">₹55,000</div>
-                  <div class="cmp-cell cmp-hotel">₹90,000</div>
+                  <div class="cmp-cell cmp-serviced" id="gcc-sa-1m">₹1,89,000</div>
+                  <div class="cmp-cell cmp-hotel" id="gcc-hotel-1m">₹2,55,000</div>
                </div>
                <div class="cmp-row">
                   <div class="cmp-cell cmp-label">3 Months</div>
-                  <div class="cmp-cell cmp-serviced">₹1,50,000</div>
-                  <div class="cmp-cell cmp-hotel">₹2,70,000</div>
+                  <div class="cmp-cell cmp-serviced" id="gcc-sa-3m">₹5,67,000</div>
+                  <div class="cmp-cell cmp-hotel" id="gcc-hotel-3m">₹7,65,000</div>
                </div>
                <div class="cmp-row cmp-last">
                   <div class="cmp-cell cmp-label">12 Months</div>
-                  <div class="cmp-cell cmp-serviced">₹5,50,000</div>
-                  <div class="cmp-cell cmp-hotel">₹10,80,000</div>
+                  <div class="cmp-cell cmp-serviced" id="gcc-sa-12m">₹22,99,500</div>
+                  <div class="cmp-cell cmp-hotel" id="gcc-hotel-12m">₹31,02,500</div>
                </div>
             </div>
          </div>
@@ -244,6 +245,7 @@
       </div>
    </div>
 </section>
+
 <section class="main-wrapper features-section">
    <header class="features-header">
       <p class="subtitle">Why Choose Us</p>

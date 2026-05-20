@@ -418,8 +418,12 @@ function _srdesign_property_occupancy_price_summary_from_rooms(NodeInterface $pr
   $best_double_monthly_total = NULL;
   $best_double_monthly_room = NULL;
   $has_rate_on_request = FALSE;
+  $any_room = NULL;
 
   foreach ($rooms as $room) {
+    if ($any_room === NULL) {
+      $any_room = $room;
+    }
     if (_srdesign_room_is_rate_on_request($room)) {
       $has_rate_on_request = TRUE;
       continue;
@@ -488,17 +492,6 @@ function _srdesign_property_occupancy_price_summary_from_rooms(NodeInterface $pr
       $out['final_single_nightly_vat'] = number_format($vat_n, 0, '.', ',');
     }
     $out['sidebar_single_night'] = number_format(_srdesign_round_nearest_hundred($nightly_total), 0, '.', ',');
-
-    $bedrooms = 0;
-    $bathrooms = 0;
-    if ($best_nightly_room->hasField('field_bedrooms') && !$best_nightly_room->get('field_bedrooms')->isEmpty()) {
-      $bedrooms = (int) $best_nightly_room->get('field_bedrooms')->value;
-    }
-    if ($best_nightly_room->hasField('field_bathrooms') && !$best_nightly_room->get('field_bathrooms')->isEmpty()) {
-      $bathrooms = (int) $best_nightly_room->get('field_bathrooms')->value;
-    }
-    $out['total_bedrooms'] = $bedrooms;
-    $out['total_bathrooms'] = $bathrooms;
   }
 
   if ($best_monthly_room !== NULL && $best_monthly_total !== NULL && $best_monthly_total > 0) {
@@ -544,6 +537,21 @@ function _srdesign_property_occupancy_price_summary_from_rooms(NodeInterface $pr
   if ($label_room !== NULL) {
     $out['sidebar_minimum_room_nid'] = (int) $label_room->id();
     $out['sidebar_minimum_room_label'] = _srdesign_room_type_display_label($label_room);
+  }
+
+  // Set bedrooms/bathrooms from best nightly room, or fall back to any room (e.g. rate-on-request).
+  $room_for_details = $best_nightly_room ?? $any_room;
+  if ($room_for_details !== NULL) {
+    $bedrooms = 0;
+    $bathrooms = 0;
+    if ($room_for_details->hasField('field_bedrooms') && !$room_for_details->get('field_bedrooms')->isEmpty()) {
+      $bedrooms = (int) $room_for_details->get('field_bedrooms')->value;
+    }
+    if ($room_for_details->hasField('field_bathrooms') && !$room_for_details->get('field_bathrooms')->isEmpty()) {
+      $bathrooms = (int) $room_for_details->get('field_bathrooms')->value;
+    }
+    $out['total_bedrooms'] = $bedrooms;
+    $out['total_bathrooms'] = $bathrooms;
   }
 
   return $out;
