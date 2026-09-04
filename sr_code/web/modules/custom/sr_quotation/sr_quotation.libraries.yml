@@ -23,6 +23,13 @@ quotation-pdf-preview:
   dependencies:
     - srdesign/srdesign
 
+currency-hider:
+  js:
+    js/currency-hider.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupal.once
+
 # dropzone_cropper:
 #   version: 1.x
 #   css:

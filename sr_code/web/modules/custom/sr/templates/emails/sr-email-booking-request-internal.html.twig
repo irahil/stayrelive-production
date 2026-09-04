@@ -1,142 +1,95 @@
-    <style type="text/css">
-        /* For better mobile experience and general resets */
-        body {
-            margin: 0;
-            padding: 0;
-            -webkit-text-size-adjust: 100%;
-            -ms-text-size-adjust: 100%;
-            font-family: 'Roboto', Arial, sans-serif;
-        }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>New Booking Request — Internal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    @media (prefers-color-scheme: dark) { .dark-bg { background-color: #ffffff !important; } }
+  </style>
+</head>
+<body style="margin:0; padding:0; background-color:#ffffff; font-family:'Roboto', Arial, sans-serif;">
+  <center style="width:100%; background-color:#ffffff;" class="dark-bg">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td align="center" style="padding:40px 0;">
+          <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff; border-radius:8px; overflow:hidden; border:1px solid #eeeeee;" class="dark-bg">
 
-        table {
-            border-collapse: collapse;
-        }
-
-        img {
-            border: 0;
-            height: auto;
-            line-height: 100%;
-            outline: none;
-            text-decoration: none;
-            -ms-interpolation-mode: bicubic;
-        }
-
-        a img {
-            border: 0;
-        }
-
-        .apple-link a {
-            color: #333333 !important;
-            text-decoration: none !important;
-        }
-
-        .button {
-            background-color: #007bff;
-            /* Example blue color */
-            color: #ffffff;
-            padding: 12px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            display: inline-block;
-            /* Essential for padding on anchor tags */
-        }
-    </style>
-
-<body style="margin: 0; padding: 0;">
-    <center style="width: 100%;">
-        <table role="presentation" align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
+            <!-- LOGO -->
             <tr>
-                <td valign="top" style="padding: 0;">
-                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="650" style="border-collapse: collapse; background-color: #ffffff; margin: 0 auto;">
-                        <tr>
-                            <td style="padding: 0;">
-                                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                                    <tr>
-                                        <td style="text-align: center; padding: 20px 0;">
-                                            <a href="https://www.stayrelive.com" target="_blank" style="text-decoration: none;">
-                                                <img src="https://stayrelive.com/sites/default/files/sr-logo.png" alt="CorpHousing Logo" width="auto" height="50" style="display: block; margin: 0 auto; border: 0;" />
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </table>
-
-                                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                                    <tr>
-                                        <td style="padding: 0;">
-                                            <img src="https://stayrelive.com/themes/srdesign/assets/images/home/hero-3.webp" alt="StayRelive Hero" width="650" height="300" style="display: block; border: 0; max-width: 100%; height: auto;" />
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td style="padding: 40px 30px; font-family: 'Roboto', Arial, sans-serif; font-size: 15px; line-height: 22px; color: #FFFFFF; background-color: #1590A0">
-                                <p style="margin-bottom: 20px;">Dear Team, </p>
-
-                                <p style="margin-bottom: 40px;">A new booking request has been received that requires processing and confirmation.</p>
-
-                                <h3 style="margin-bottom: 12px;">Booking Details:</h3>
-
-                                <p style="margin-bottom: 12px;">Booking ID: {{ booking_id }}</p>
-                                <p style="margin-bottom: 12px;">Time Stamp: {{ "now"|date("jS F Y H:i") }}</p>
-                                <p style="margin-bottom: 12px;">Property Name: {{ property_title }}</p>
-                                <p style="margin-bottom: 12px;">Location: {{ town_city }}</p>
-                                <p style="margin-bottom: 12px;">Number of Adults: {{ adults }}</p>
-                                <p style="margin-bottom: 40px;">Number of Kids: {{ kids }}</p>
-
-                                <h3 style="margin-bottom: 12px;">Contact Information:</h3>
-                                <p style="margin-bottom: 12px;">Customer Name: {{ username }}</p>
-                                <p style="margin-bottom: 12px;">
-                                    Contact Email:
-                                    <a href="mailto:{{ email }}" style="color: #FFFFFF; text-decoration: underline; font-weight: 500;">
-                                        {{ email }}
-                                    </a>
-                                    
-                                </p>
-                                <p style="margin-bottom: 12px;">
-                                    Contact Phone:
-                                    <a href="tel:{{ phone_number }}" style="color: #FFFFFF; text-decoration: underline; font-weight: 500;">
-                                        {{ phone_number }}
-                                    </a>
-                                </p>
-                                <p style="margin-bottom: 30px;">Additional Information: {{ additional_information }}</p>
-                                <p style="margin-bottom: 40px;">Thanks</p>
-
-                                <p style="margin-bottom: 18px;">*This is an internal communication. All customer data should be handled according to our data
-                                    protection and privacy policies*</p>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td style="padding: 30px; background-color: #f2f2f2; text-align: center; color: #333; font-family: 'Roboto', Arial, sans-serif;">
-                                <h2 style="margin-bottom: 20px; font-family: 'Roboto', Arial, sans-serif; font-size: 24px;">StayRelive</h2>
-
-                                <div style="margin-bottom: 20px;">
-                                    <a href="https://www.instagram.com/stayrelive" target="_blank" style="margin: 0 10px; display: inline-block;">
-                                        <img src="https://cdn-icons-png.flaticon.com/512/15707/15707749.png" alt="Instagram" width="32" height="32" style="border-radius: 40%; border: 0;" />
-                                    </a>
-                                    <a href="https://www.linkedin.com/company/stayrelive/" target="_blank" style="margin: 0 10px; display: inline-block;">
-                                        <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn" width="32" height="32" style="border-radius: 40%; border: 0;" />
-                                    </a>
-                                    <a href="https://www.facebook.com/StayRelive/" target="_blank" style="margin: 0 10px; display: inline-block;">
-                                        <img src="https://cdn-icons-png.flaticon.com/512/15047/15047435.png" alt="Facebook" width="32" height="32" style="border-radius: 40%; border: 0;" />
-                                    </a>
-                                    <a href="https://wa.me/916362730626" target="_blank" style="margin: 0 10px; display: inline-block;">
-                                        <img src="https://cdn-icons-png.flaticon.com/512/15707/15707820.png" alt="WhatsApp" width="32" height="32" style="border-radius: 40%; border: 0;" />
-                                    </a>
-                                    <a href="https://x.com/StayRelive" target="_blank" style="margin: 0 10px; display: inline-block;">
-                                        <img src="https://logowik.com/content/uploads/images/twitter-x5265.logowik.com.webp" alt="Twitter" width="32" height="32" style="border-radius: 50%; border: 0;" />
-                                    </a>
-                                </div>
-                                <hr style="margin: 30px auto 15px; border: none; border-top: 1px solid #ccc; width: 80%;" />
-
-                                <p style="margin: 0; font-size: 13px; color: #777;">&copy; 2026 StayRelive. All rights reserved.</p>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
+              <td align="center" style="padding:25px;">
+                <img src="https://stayrelive.com/sites/default/files/sr-logo.png" height="50" alt="StayRelive Logo" style="display:block;">
+              </td>
             </tr>
-        </table>
-    </center>
+
+            <!-- HERO IMAGE -->
+            <tr>
+              <td>
+                <img src="https://stayrelive.com/themes/srdesign/assets/images/home/hero-3.webp" width="600" alt="StayRelive" style="display:block; width:100%; height:auto;">
+              </td>
+            </tr>
+
+            <!-- MAIN CONTENT -->
+            <tr>
+              <td style="padding:40px 30px; background:#f9f9f9; color:#000000; font-size:16px; line-height:24px;">
+
+                <p style="margin:0 0 16px;">Dear <strong>Team</strong>,</p>
+                <p style="margin:0 0 24px;">A new booking request has been received that requires processing and confirmation.</p>
+
+                <p style="margin:0 0 12px; font-weight:600; font-size:17px;">Booking Details:</p>
+
+                <!-- Booking details box -->
+                <div style="border-left:4px solid #D6E4FF; background:#ffffff; padding:15px 20px; margin:0 0 24px;">
+                  <p style="margin:0 0 8px;"><strong>Booking ID:</strong> {{ booking_id }}</p>
+                  <p style="margin:0 0 8px;"><strong>Time Stamp:</strong> {{ "now"|date("jS F Y H:i") }}</p>
+                  <p style="margin:0 0 8px;"><strong>Property Name:</strong> {{ property_title }}</p>
+                  <p style="margin:0 0 8px;"><strong>Location:</strong> {{ town_city }}</p>
+                  <p style="margin:0 0 8px;"><strong>Number of Adults:</strong> {{ adults }}</p>
+                  <p style="margin:0;"><strong>Number of Kids:</strong> {{ kids }}</p>
+                </div>
+
+                <p style="margin:0 0 12px; font-weight:600; font-size:17px;">Contact Information:</p>
+
+                <!-- Contact details box -->
+                <div style="border-left:4px solid #D6E4FF; background:#ffffff; padding:15px 20px; margin:0 0 24px;">
+                  <p style="margin:0 0 8px;"><strong>Customer Name:</strong> {{ username }}</p>
+                  <p style="margin:0 0 8px;"><strong>Contact Email:</strong> <a href="mailto:{{ email }}" style="color:#1D1D1D; text-decoration:none; font-weight:600;">{{ email }}</a></p>
+                  <p style="margin:0 0 8px;"><strong>Contact Phone:</strong> <a href="tel:{{ phone_number }}" style="color:#1D1D1D; text-decoration:none;">{{ phone_number }}</a></p>
+                  <p style="margin:0;"><strong>Additional Information:</strong> {{ additional_information }}</p>
+                </div>
+
+                <p style="margin:0 0 8px;">Thanks,<br><strong>Team StayRelive</strong></p>
+
+                <hr style="border:none; border-top:1px solid #e0e0e0; margin:30px 0;">
+
+                <p style="margin:0; font-size:13px; color:#777777;">*This is an internal communication. All customer data should be handled according to our data protection and privacy policies.*</p>
+
+              </td>
+            </tr>
+
+            <!-- SOCIAL FOOTER -->
+            <tr>
+              <td align="center" style="padding:40px 30px; background:#f9f9f9; text-align:center;">
+                <h2 style="margin:0 0 20px; font-size:22px; color:#000000;">StayRelive</h2>
+                <table align="center" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td style="padding:0 8px;"><a href="https://www.instagram.com/stayrelive" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/1077/1077042.png" width="28" height="28" alt="Instagram"></a></td>
+                    <td style="padding:0 8px;"><a href="https://www.linkedin.com/company/stayrelive/" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/13266/13266142.png" width="28" height="28" alt="LinkedIn"></a></td>
+                    <td style="padding:0 8px;"><a href="https://www.facebook.com/StayRelive/" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/13266/13266170.png" width="28" height="28" alt="Facebook"></a></td>
+                    <td style="padding:0 8px;"><a href="https://wa.me/916362730626" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/466/466966.png" width="28" height="28" alt="WhatsApp"></a></td>
+                    <td style="padding:0 8px;"><a href="https://x.com/StayRelive" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/14417/14417460.png" width="28" height="28" alt="Twitter/X"></a></td>
+                  </tr>
+                </table>
+                <p style="margin:25px 0 0; font-size:12px; color:#999999;">&copy; {{ "now"|date("Y") }} StayRelive. All rights reserved.</p>
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </center>
 </body>
+</html>

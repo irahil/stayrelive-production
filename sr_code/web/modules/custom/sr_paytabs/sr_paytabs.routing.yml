@@ -1,0 +1,100 @@
+sr_paytabs.initiate:
+  path: '/payment/initiate/{booking_id}'
+  defaults:
+    _controller: '\Drupal\sr_paytabs\Controller\PayTabsController::initiatePayment'
+    _title: 'Confirm Payment'
+  requirements:
+    _role: 'authenticated'
+    booking_id: \d+
+  options:
+    no_cache: 'TRUE'
+
+sr_paytabs.return:
+  path: '/payment/return/{booking_id}'
+  defaults:
+    _controller: '\Drupal\sr_paytabs\Controller\PayTabsController::handleReturn'
+    _title: 'Payment Result'
+  requirements:
+    _access: 'TRUE'
+    booking_id: \d+
+  options:
+    no_cache: 'TRUE'
+
+sr_paytabs.ipn:
+  path: '/payment/ipn'
+  defaults:
+    _controller: '\Drupal\sr_paytabs\Controller\PayTabsController::handleIpn'
+    _title: 'Payment Notification'
+  requirements:
+    _access: 'TRUE'
+  methods: [POST]
+  options:
+    no_cache: 'TRUE'
+
+sr_paytabs.refund:
+  path: '/admin/booking/{booking_id}/refund'
+  defaults:
+    _controller: '\Drupal\sr_paytabs\Controller\PayTabsController::refundTransaction'
+    _title: 'Refund Booking'
+  requirements:
+    _role: 'administrator'
+    _csrf_token: 'TRUE'
+    booking_id: \d+
+  options:
+    no_cache: 'TRUE'
+
+sr_paytabs.dashboard:
+  path: '/admin/sr/payments'
+  defaults:
+    _controller: '\Drupal\sr_paytabs\Controller\PayTabsController::paymentsDashboard'
+    _title: 'Payments Dashboard'
+  requirements:
+    _role: 'administrator'
+  options:
+    _admin_route: TRUE
+
+sr_paytabs.settings:
+  path: '/admin/config/sr/paytabs'
+  defaults:
+    _form: '\Drupal\sr_paytabs\Form\PayTabsSettingsForm'
+    _title: 'PayTabs Settings'
+  requirements:
+    _role: 'administrator'
+  options:
+    _admin_route: TRUE
+
+sr_paytabs.payment_view:
+  path: '/admin/sr/payments/booking/{booking_id}'
+  defaults:
+    _controller: '\Drupal\sr_paytabs\Controller\PayTabsController::paymentView'
+    _title: 'Payment Detail'
+  requirements:
+    _role: 'administrator'
+    booking_id: \d+
+  options:
+    _admin_route: TRUE
+    no_cache: 'TRUE'
+
+sr_paytabs.resend_email:
+  path: '/admin/booking/{booking_id}/resend-email'
+  defaults:
+    _controller: '\Drupal\sr_paytabs\Controller\PayTabsController::resendEmail'
+    _title: 'Resend Confirmation Email'
+  requirements:
+    _role: 'administrator'
+    _csrf_token: 'TRUE'
+    booking_id: \d+
+  options:
+    no_cache: 'TRUE'
+
+sr_paytabs.query_status:
+  path: '/admin/booking/{booking_id}/query-status'
+  defaults:
+    _controller: '\Drupal\sr_paytabs\Controller\PayTabsController::queryTransactionStatus'
+    _title: 'Query Transaction Status'
+  requirements:
+    _role: 'administrator'
+    _csrf_token: 'TRUE'
+    booking_id: \d+
+  options:
+    no_cache: 'TRUE'

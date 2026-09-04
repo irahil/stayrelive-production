@@ -1,0 +1,5 @@
+payment_return:
+  version: VERSION
+  css:
+    theme:
+      css/payment-return.css: {}

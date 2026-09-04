@@ -12,6 +12,13 @@ sr.admin.import:
   description: 'Stayrelive manage commission'
   weight: 99
 
+sr.admin.rategain_settings:
+  parent: sr.admin
+  title: 'RateGain Settings'
+  route_name: sr.rategain_settings
+  description: 'Configure RateGain SmartDistribution API credentials.'
+  weight: 8
+
 sr.admin.approval:
   parent: sr.admin
   title: 'Approval Dashboard'

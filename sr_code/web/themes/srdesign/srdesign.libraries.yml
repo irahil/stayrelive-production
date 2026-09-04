@@ -21,3 +21,15 @@ srdesign:
     https://code.jquery.com/ui/1.13.0/jquery-ui.min.js: {}
   dependencies:
     - core/jquery
+
+rategain-tariff:
+  version: 1.x
+  css:
+    theme:
+      assets/css/custom/rategain-tariff.css: {}
+
+property-price-block:
+  version: 1.x
+  css:
+    theme:
+      assets/css/custom/property-price-block.css: {}

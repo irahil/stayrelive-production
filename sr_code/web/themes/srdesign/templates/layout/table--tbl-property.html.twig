@@ -44,7 +44,7 @@
       {% set delay = 100 %}
       {% for row in rows %}
         <div class='result-list'>
-          <a href='{{row.cells[0].content}}' class='property-map-link' data-location="property-{{row.cells[6].content}}">
+          <a href='{{row.cells[0].content}}' class='property-map-link' data-location="property-{{row.cells[6].content}}" target="_blank" rel="noopener">
             {{row.cells[1].content}}
             {{row.cells[2].content}}
             {{row.cells[3].content}}

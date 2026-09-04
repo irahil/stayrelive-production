@@ -260,10 +260,13 @@ class PendingApprovalController extends ControllerBase {
   public function approveUser(User $user) {
     $user->activate();
     $user->save();
-    $this->messenger()->addMessage($this->t('User %name has been approved.', ['%name' => $user->getAccountName()]));
 
-    // Redirect to the pending users list after approval
-    return $this->redirect('sr.pending_users_page'); // Adjust this to your correct route
+    \Drupal::service('plugin.manager.mail')->mail('sr', 'agent_approved', $user->getEmail(), $user->getPreferredLangcode(), [
+      'user' => $user,
+    ]);
+
+    $this->messenger()->addMessage($this->t('User %name has been approved.', ['%name' => $user->getAccountName()]));
+    return $this->redirect('sr.pending_users_page');
   }
 
   /**

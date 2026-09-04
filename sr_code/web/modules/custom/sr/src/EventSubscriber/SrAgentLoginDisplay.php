@@ -36,14 +36,27 @@ class SrAgentLoginDisplay implements EventSubscriberInterface {
       $session->start();
     }
     $ip_address = $request->getClientIp();
+    
+
+    // Skip geolocation for private/local IPs (dev environments).
+    if (filter_var($ip_address, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === FALSE) {
+      $session->set('country_code', 'testing');
+      return;
+    }
+
     try {
-      $geolocation_data = file_get_contents("http://ip-api.com/json/$ip_address");
+      $geolocation_data = @file_get_contents("http://ip-api.com/json/$ip_address");
+      if ($geolocation_data === FALSE) {
+        $session->set('country_code', 'testing');
+        return;
+      }
       $geo_info = json_decode($geolocation_data, TRUE);
       $country_code = isset($geo_info['countryCode']) ? strtolower($geo_info['countryCode']) : 'testing';
       $session->set('country_code', $country_code);
     }
     catch (\Exception $e) {
       \Drupal::logger('sr')->error('Failed to fetch country code: ' . $e->getMessage());
+      $session->set('country_code', 'testing');
     }
   }
 

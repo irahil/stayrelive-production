@@ -15,6 +15,7 @@ function sr_quotation_theme($existing, $type, $theme, $path) {
       'variables' => [
         'quotations' => [],
         'filters' => [],
+        'authors' => [],
         'add_link' => NULL,
       ],
       'template' => 'quotation-dashboard',

@@ -1,0 +1,7 @@
+profile_id: ''
+server_key: ''
+client_key: ''
+endpoint: 'https://secure.paytabs.sa'
+sandbox_mode: true
+callback_url_override: ''
+return_url_override: ''

@@ -39,9 +39,17 @@ class QuotationForm extends FormBase
       '#attributes' => [
         'placeholder' => $this->t('Enter Booker Name'),
         'class' => ['booker-name-field'],
-        'maxlength' => 255, 
+        'maxlength' => 255,
+        'list' => 'booker-name-list',
+        'autocomplete' => 'off',
       ],
       '#description' => $this->t(''),
+    ];
+
+    $form['booking_info']['booker_name_datalist'] = [
+      '#type' => 'inline_template',
+      '#template' => '<datalist id="booker-name-list">{% for name in options %}<option value="{{ name }}">{% endfor %}</datalist>',
+      '#context' => ['options' => $this->getBookerNameOptions()],
     ];
 
     $form['booking_info']['travel_partner'] = [
@@ -316,7 +324,7 @@ class QuotationForm extends FormBase
     ];
     $form['property_info']['description'] = [
       '#type' => 'textarea',
-      '#title' => $this->t('Property Description'),
+      '#title' => $this->t('Property name & Description'),
     ];
 
     $form['property_info']['location_screenshot'] = [
@@ -326,7 +334,7 @@ class QuotationForm extends FormBase
       '#dropzone_description' => $this->t('Drag & drop images or click to upload'),
       '#multiple' => TRUE,
       '#upload_location' => 'public://quotation_location_images/',
-      '#max_files' => 10,
+      '#max_files' => 30,
       '#extensions' => 'png jpg jpeg webp avif',
       '#dropzonejs' => [
         'thumbnailWidth' => 120,
@@ -394,13 +402,25 @@ class QuotationForm extends FormBase
       ],
       '#description' => $this->t(''),
     ];
+
+    $form['financials']['quote_value'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Quote Value'),
+      '#required' => FALSE,
+      '#attributes' => [
+        'class' => ['quote-value-field'],
+        'step' => '0.01',
+        'min' => '0',
+      ],
+      '#description' => $this->t('Enter the numeric quote value (e.g., 1500)'),
+    ];
+
     $form['financials']['taxes'] = [
-      '#type' => 'textfield',
+      '#type' => 'text_format',
       '#title' => $this->t('Taxes'),
-      '#maxlength' => 100,
+      '#format' => 'basic_html',
       '#attributes' => [
         'class' => ['taxes-field'],
-        'maxlength' => 100, 
       ],
       '#description' => $this->t(''),
     ];
@@ -414,15 +434,12 @@ class QuotationForm extends FormBase
       '#description' => $this->t(''),
     ];
     $form['financials']['addon_prices'] = [
-      '#type' => 'textarea',
+      '#type' => 'text_format',
       '#title' => $this->t('Add-on Prices'),
-      '#maxlength' => 300,
-      '#rows' => 4,
+      '#format' => 'basic_html',
       '#attributes' => [
         'class' => ['addon-prices-field'],
-        'maxlength' => 300,
       ],
-      '#description' => $this->t(''),
     ];
 
     // Financial Calculation Fields
@@ -582,8 +599,9 @@ class QuotationForm extends FormBase
         : 'Enter URL or Quoted Text';
 
       $form['extras']['supplier_reference_wrapper']['supplier_reference_text'] = [
-        '#type' => 'textfield',
+        '#type' => 'text_format',
         '#title' => $this->t($label),
+        '#format' => 'basic_html',
         '#required' => TRUE,
       ];
     }
@@ -617,7 +635,7 @@ apartment type; the design and detail may vary.'),
       '#dropzone_description' => $this->t('Drag & drop images or click to upload'),
       '#multiple' => TRUE,
       '#upload_location' => 'public://quotation_images/',
-      '#max_files' => 10,
+      '#max_files' => 30,
       '#extensions' => 'png jpg jpeg webp avif',
       '#dropzonejs' => [
         'thumbnailWidth' => 120,
@@ -665,6 +683,21 @@ apartment type; the design and detail may vary.'),
 
     // Otherwise, return normal currency option
     return $currency;
+  }
+
+  /**
+   * Get distinct booker names already used on previous quotations.
+   */
+  private function getBookerNameOptions()
+  {
+    return \Drupal::database()
+      ->select('sr_quotation', 'q')
+      ->fields('q', ['booker_name'])
+      ->condition('booker_name', '', '<>')
+      ->distinct()
+      ->orderBy('booker_name')
+      ->execute()
+      ->fetchCol();
   }
 
   /**
@@ -757,26 +790,44 @@ apartment type; the design and detail may vary.'),
       );
     }
 
-    // Validate taxes character limit
+    // Validate quote_value is numeric and non-negative
+    $quote_value = $form_state->getValue('quote_value', '');
+    if (!empty($quote_value) && !is_numeric($quote_value)) {
+      $form_state->setError(
+        $form['financials']['quote_value'],
+        $this->t('Quote Value must be a valid number.')
+      );
+    } elseif (!empty($quote_value) && $quote_value < 0) {
+      $form_state->setError(
+        $form['financials']['quote_value'],
+        $this->t('Quote Value must be zero or greater.')
+      );
+    }
+
+    // Validate taxes character limit (count visible text, not markup)
     $taxes = $form_state->getValue('taxes', '');
-    if (!empty($taxes) && mb_strlen($taxes) > 100) {
+    $taxes = is_array($taxes) ? ($taxes['value'] ?? '') : $taxes;
+    $taxes_text = trim(html_entity_decode(strip_tags($taxes), ENT_QUOTES));
+    if (mb_strlen($taxes_text) > 100) {
       $form_state->setError(
         $form['financials']['taxes'],
         $this->t(
           'Taxes must not exceed 100 characters. Current length: @length',
-          ['@length' => mb_strlen($taxes)]
+          ['@length' => mb_strlen($taxes_text)]
         )
       );
     }
 
-    // Validate addon_prices character limit
+    // Validate addon_prices character limit (count visible text, not markup)
     $addon_prices = $form_state->getValue('addon_prices', '');
-    if (!empty($addon_prices) && mb_strlen($addon_prices) > 300) {
+    $addon_prices = is_array($addon_prices) ? ($addon_prices['value'] ?? '') : $addon_prices;
+    $addon_prices_text = trim(html_entity_decode(strip_tags($addon_prices), ENT_QUOTES));
+    if (mb_strlen($addon_prices_text) > 300) {
       $form_state->setError(
         $form['financials']['addon_prices'],
         $this->t(
           'Add-on Prices must not exceed 300 characters. Current length: @length',
-          ['@length' => mb_strlen($addon_prices)]
+          ['@length' => mb_strlen($addon_prices_text)]
         )
       );
     }
@@ -881,8 +932,10 @@ apartment type; the design and detail may vary.'),
 
     // Combine Supplier Reference + Text into one DB field
     $supplier_reference_combined = $values['supplier_reference'] ?? '';
-    if (!empty($values['supplier_reference_text'])) {
-      $supplier_reference_combined .= ' | ' . $values['supplier_reference_text'];
+    $supplier_reference_text = $values['supplier_reference_text'] ?? '';
+    $supplier_reference_text = is_array($supplier_reference_text) ? ($supplier_reference_text['value'] ?? '') : $supplier_reference_text;
+    if (!empty($supplier_reference_text)) {
+      $supplier_reference_combined .= ' | ' . $supplier_reference_text;
     }
 
     // STRICT check ONLY correct field
@@ -952,6 +1005,13 @@ apartment type; the design and detail may vary.'),
     }
 
 
+    // Safely extract text_format values
+    $addon_prices = $values['addon_prices'] ?? [];
+    $cancellation_policy = $values['cancellation_policy'] ?? [];
+    $rules = $values['rules'] ?? [];
+    $note = $values['note'] ?? [];
+    $taxes = $values['taxes'] ?? [];
+
     // Save to DB (images field stores comma separated FIDs)
     \Drupal::database()->insert('sr_quotation')
       ->fields([
@@ -976,17 +1036,18 @@ apartment type; the design and detail may vary.'),
         'description' => $values['description'] ?? '',
         'location_screenshot' => !empty($location_screenshot_fids) ? implode(',', $location_screenshot_fids) : NULL,
         'quote' => $values['quote'] ?? '',
-        'taxes' => $values['taxes'] ?? '',
+        'quote_value' => !empty($values['quote_value']) ? (float) $values['quote_value'] : NULL,
+        'taxes' => is_array($taxes) ? ($taxes['value'] ?? '') : ($taxes ?? ''),
         'fx_rate' => $values['fx_rate'] ?? '',
-        'addon_prices' => $values['addon_prices'] ?? '',
+        'addon_prices' => is_array($addon_prices) ? ($addon_prices['value'] ?? '') : '',
         'currency' => $this->getFinalCurrencyValue($values),
         'amenities' => $amenities,
-        'cancellation_policy' => $values['cancellation_policy']['value'] ?? '',
+        'cancellation_policy' => is_array($cancellation_policy) ? ($cancellation_policy['value'] ?? '') : '',
         'images' => !empty($image_fids) ? implode(',', $image_fids) : '',
-        'rules' => $values['rules']['value'] ?? '',
-        'note' => $values['note']['value'] ?? '',
+        'rules' => is_array($rules) ? ($rules['value'] ?? '') : '',
+        'note' => is_array($note) ? ($note['value'] ?? '') : '',
         'confirmation_status' => $values['confirmation_status'] ?? '',
-        'supplier_reference' => $supplier_reference_combined,
+        'supplier_reference' => $supplier_reference_combined ?? '',
         'avg_nightly_rate' => $values['avg_nightly_rate'] ?? '',
         'extras_tax' => $values['extras_tax'] ?? '',
         'total_outlay' => $values['total_outlay'] ?? '',

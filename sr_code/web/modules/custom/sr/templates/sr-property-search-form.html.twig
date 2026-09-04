@@ -3,6 +3,7 @@
 {{ form.form_id }}
 <script type="text/javascript">
    {{ form.js_town_city | raw}}
+   {{ form.js_child_ages | raw}}
    {{ form.search_result.gm_param_value | raw}}
 </script>
 <section class="search-results">
@@ -13,25 +14,30 @@
                <div class="search-container row">
                   <div class="search-city">
                      <span class="icon-city">
-                     <i class="fa-solid fa-building-user"></i></span>
+                     <i class="fa-solid fa-building-user"  title="Select City"></i></span>
                      {{ form.city }}
                   </div>
                   <div class="search-date">
-                     <span class="icon-checkin"><i class="fa-solid fa-calendar-days"></i></span>
+                     <span class="icon-checkin"><i class="fa-solid fa-calendar-days"  title="Add Dates"></i></span>
                      {{ form.date }}
                      <span class="icon-checkout"><i class="fa-solid fa-magnifying-glass-location"></i></span>
                   </div>
+                  <div class="search-room">
+                     <span class="icon-room"><i class="fa-solid fa-bed" title="Rooms"></i></span>
+                     {{ form.rooms }}
+                  </div>
                   <div class="add-adults">
                      <a heaf="#" class="occupants-minus" onclick="fn_occupants('adult', '-');return false;">-</a>
-                     <span class="icon-adult"><i class="fa-solid fa-person"></i></span>
+                     <span class="icon-adult"><i class="fa-solid fa-person" title="Adults"></i></span>
                      {{ form.occupants.adult }}
                      <a href="#" class="occupants-plus" onclick="fn_occupants('adult', '+');return false;">+</a>
                   </div>
                   <div class="add-kids">
                      <a href="#" class="occupants-minus" onclick="fn_occupants('kid', '-');return false;">-</a>
-                     <span class="icon-kids"><i class="fa-solid fa-child"></i></span>
+                     <span class="icon-kids"><i class="fa-solid fa-child" title="Kids"></i></span>
                      {{ form.occupants.kid }}
                      <a href="#" class="occupants-plus" onclick="fn_occupants('kid', '+');return false;">+</a>
+                     <div class="child-ages-panel" id="child-ages-panel"></div>
                   </div>
                   <div class="search-submit">
                      {{ form.actions.submit }}
@@ -122,6 +128,9 @@
             </div>
             <div class="row filter-amenities">
                {{ form.amenities_list }}
+            </div>
+            <div class="row filter-property-type">
+               {{ form.property_type_list }}
             </div>
          </div>
          <div class="modal-footer sticky-bottom d-flex justify-content-center">

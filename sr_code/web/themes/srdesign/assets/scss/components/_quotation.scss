@@ -141,6 +141,21 @@
   }
 }
 
+// Make Pricing & Financials stand out so clients don't miss it
+.quote-wrapper.pricing-highlight {
+  border: 2px solid $primary;
+  background: rgba($primary, 0.04);
+
+  .pricing-values li {
+    font-size: toRem(20);
+    font-weight: bold;
+
+    span {
+      font-size: toRem(16);
+    }
+  }
+}
+
 // Dropdown arrow spacing for quotation dashboard
 .filter-item select {
   padding-right: 35px;
@@ -159,13 +174,13 @@
   }
 }
 
-.quote-wrapper {
-  .row {
-    .col-12 {
-      padding-left: 0 !important;
-    }
-  }
-}
+// .quote-wrapper {
+//   .row {
+//     .col-12 {
+//       padding-left: 0 !important;
+//     }
+//   }
+// }
 
 @media (max-width: 991px) {
   .icon-three {

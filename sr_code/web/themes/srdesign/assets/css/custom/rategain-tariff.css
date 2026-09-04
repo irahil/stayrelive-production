@@ -1,0 +1,194 @@
+.rg-tariff {
+  /* Matches $primary in assets/scss/_user-variables.scss — kept as a local
+     custom property since this file isn't part of the Sass build. */
+  --rg-primary: #0b8d9f;
+  margin: 2.5rem 0 0;
+  font-family: var(--bs-body-font-family, "Poppins", sans-serif);
+}
+.rg-tariff h4 { margin-bottom: 1rem; }
+
+/* Card: shared image/title panel on the left, one stacked row per rate on the right. */
+.rg-card {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+  background: #fff;
+}
+
+.rg-card-media {
+  flex: 0 0 260px;
+  max-width: 260px;
+  padding: 1rem;
+  border-right: 1px solid #eee;
+}
+.rg-card-media-image {
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+}
+/* Same darken-on-hover shading as the main property gallery's .card-overlay-hover. */
+.rg-card-media-image:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: #0b0a12;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  pointer-events: none;
+}
+.rg-card-media-image:hover:before {
+  opacity: 0.5;
+}
+.rg-card-media img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  display: block;
+  cursor: pointer;
+}
+
+.rg-card-media .rg-card-title { font-weight: 700; font-size: 1.05rem; margin: .6rem 0 .3rem; }
+.rg-card-media .rg-card-stars { color: var(--rg-primary); font-size: .8rem; }
+.rg-card-media .rg-card-stars i { margin-right: 1px; }
+
+.rg-card-facilities {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  margin: .6rem 0 0;
+  padding: 0;
+}
+.rg-card-facilities li {
+  background: #f2f6f7;
+  color: #555;
+  font-size: .72rem;
+  line-height: 1.4;
+  padding: .15rem .5rem;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.rg-card-rates { flex: 1 1 auto; min-width: 0; padding: 1.25rem; }
+
+.rg-card-rate-row {
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: .9rem;
+  margin-bottom: .9rem;
+}
+.rg-card-rates > .rg-card-rate-row:last-child { margin-bottom: 0; }
+.rg-card-rate-row--lowest { padding-top: 2.7rem; border-color: var(--rg-primary); overflow: hidden; }
+
+.rg-card-rate-ribbon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--rg-primary);
+  color: #fff;
+  font-size: .85rem;
+  font-weight: 700;
+  padding: .20rem .9rem;
+  display: flex;
+  align-items: center;
+  line-height: 1.2;
+}
+.rg-card-rate-ribbon i { margin-right: .3rem; }
+
+.rg-card-rate-details { flex: 1 1 auto; min-width: 0; padding-right: 1rem; }
+.rg-card-checklist { list-style: none; margin: 0; padding: 0; font-size: .85rem; }
+.rg-card-checklist li { margin-bottom: .35rem; display: flex; align-items: flex-start; gap: .4rem; }
+.rg-card-checklist li i { width: 1rem; text-align: center; margin-top: .2rem; }
+.rg-card-checklist .rg-check { color: #1a7a3c; font-weight: 500; }
+.rg-card-checklist .rg-check i { color: #1a7a3c; }
+.rg-card-checklist .rg-board { color: #192452; font-weight: 500; }
+.rg-card-checklist .rg-board i { color: #192452; margin-right: .2rem; }
+.rg-card-checklist .rg-strict { color: var(--rg-primary); }
+.rg-card-checklist .rg-strict i { color: var(--rg-primary); }
+.rg-card-checklist .rg-warn { color: #b9770e; font-weight: 500; }
+.rg-card-checklist .rg-warn i { color: #b9770e; }
+.rg-card-checklist .rg-urgent { color: #C53829; font-weight: 500; }
+.rg-card-checklist .rg-urgent i { color: #c0442c; }
+
+.rg-card-rate-price {
+  flex: 0 0 200px;
+  max-width: 200px;
+  padding: 0 1rem;
+  border-left: 1px solid #eee;
+  border-right: 1px solid #eee;
+  text-align: center;
+}
+.rg-card-price-was { font-size: .85rem; color: #999; text-decoration: line-through; line-height: 1.3; }
+.rg-card-price-now { font-size: 1.2rem; font-weight: 700; color: var(--rg-primary); line-height: 1.3; }
+.rg-card-price-sub { font-size: .75rem; color: #888; margin-top: .2rem; }
+.rg-card-price-savings { font-size: .75rem; font-weight: 600; color: #1a7a3c; margin-top: .3rem; }
+
+.rg-card-rate-action {
+  flex: 0 0 160px;
+  max-width: 160px;
+  padding-left: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: .4rem;
+}
+/* Matches .booking-details .btn (style.css) — the site's actual booking CTA style. */
+.rg-card-book {
+  width: 100%;
+  margin-bottom: 0;
+  background-color: #192452;
+  border-color: #192452;
+  color: rgb(214, 238, 242);
+}
+.rg-card-book:hover {
+  background-color: #0b8d9f;
+  border-color: #0b8d9f;
+  color: #fff !important;
+}
+.rg-card-price-cancel {
+  font-size: .78rem;
+  color: #1a7a3c;
+  font-weight: 600;
+  text-align: center;
+}
+
+@media (max-width: 1199px) {
+  .rg-card { flex-direction: column; }
+  .rg-card-media { max-width: 100%; flex: 0 0 auto; border-right: none; border-bottom: 1px solid #eee; }
+  .rg-card-rate-row { flex-direction: column; }
+  .rg-card-rate-row--lowest { padding-top: .9rem; overflow: visible; }
+  .rg-card-rate-ribbon {
+    position: static;
+    margin: -.9rem -.9rem .75rem;
+    border-radius: 7px 7px 0 0;
+  }
+  .rg-card-rate-details { padding-right: 0; margin-bottom: .75rem; }
+  .rg-card-rate-price {
+    flex: 0 0 auto;
+    max-width: 100%;
+    border-left: none;
+    border-right: none;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    padding: .75rem 0;
+    margin-bottom: .75rem;
+    text-align: center;
+  }
+  .rg-card-rate-action { flex: 0 0 auto; max-width: 100%; padding-left: 0; }
+}
+
+@media (max-width: 480px) {
+  .rg-card-media { padding: .75rem; }
+  .rg-card-rates { padding: .9rem; }
+  .rg-card-rate-row { padding: .75rem; }
+  .rg-card-rate-ribbon { font-size: .78rem; padding: .2rem .75rem; margin: -.75rem -.75rem .75rem; }
+}

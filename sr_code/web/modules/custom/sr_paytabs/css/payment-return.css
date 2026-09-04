@@ -1,0 +1,386 @@
+/**
+ * Payment result page (success / pending / failed).
+ * Ported from an approved boutique/editorial reference design.
+ * Every selector is scoped under .sr-payment-return so nothing here
+ * (e.g. .btn, .note, .actions) leaks into the rest of the site.
+ */
+
+.sr-payment-return {
+  --ink: #14183B;
+  --cream: #F0FFFF;
+  --panel: #FFFFFF;
+  --gold: #B8935B;
+  --gold-deep: #8F6E3F;
+  --green: #1F9D6D;
+  --green-soft: #E7F5EE;
+  --red: #D6293E;
+  --red-soft: #FBE9EB;
+  --amber: #B8860B;
+  --amber-soft: #FDF3DC;
+  --slate: #6B7280;
+  --slate-light: #9CA3AF;
+  --hair: #F0FFFF;
+
+  width: 100%;
+  padding: 56px 20px;
+  background: var(--cream);
+  font-family: 'DM Sans', sans-serif;
+  color: var(--ink);
+  box-sizing: border-box;
+}
+
+.sr-payment-return *,
+.sr-payment-return *::before,
+.sr-payment-return *::after {
+  box-sizing: border-box;
+}
+
+.sr-payment-return__inner {
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+/* ---- Hero ---- */
+.sr-payment-return .hero {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.sr-payment-return .check-badge {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  background: var(--green-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.sr-payment-return .check-badge.is-failed {
+  background: var(--red-soft);
+}
+
+.sr-payment-return .check-badge.is-pending {
+  background: var(--amber-soft);
+}
+
+.sr-payment-return .check-badge svg {
+  width: 28px;
+  height: 28px;
+}
+
+.sr-payment-return .check-badge::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1px solid var(--green);
+  opacity: .25;
+}
+
+.sr-payment-return .check-badge.is-failed::after {
+  border-color: var(--red);
+}
+
+.sr-payment-return .check-badge.is-pending::after {
+  border-color: var(--amber);
+}
+
+.sr-payment-return h1 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 500;
+  font-size: 2.1rem;
+  letter-spacing: -0.01em;
+  margin: 0 0 10px;
+}
+
+.sr-payment-return .hero p {
+  color: var(--slate);
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0 auto;
+  max-width: 380px;
+}
+
+/* ---- Property card ---- */
+.sr-payment-return .property {
+  background: var(--panel);
+  border: 1px solid var(--hair);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 28px;
+  box-shadow: 0 1px 2px rgba(20, 24, 59, 0.03);
+}
+
+.sr-payment-return .property img {
+  width: 88px;
+  height: 88px;
+  object-fit: cover;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.sr-payment-return .property-info h2 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 500;
+  font-size: 1.05rem;
+  margin: 0 0 2px;
+}
+
+.sr-payment-return .property-info .loc {
+  color: var(--slate);
+  font-size: 0.85rem;
+  margin: 0 0 8px;
+}
+
+.sr-payment-return .meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  font-size: 0.82rem;
+  color: var(--ink);
+}
+
+.sr-payment-return .meta-row span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.sr-payment-return .meta-row svg {
+  width: 14px;
+  height: 14px;
+  color: var(--slate-light);
+  flex-shrink: 0;
+}
+
+/* ---- Ticket stub (signature element) ---- */
+.sr-payment-return .stub {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--hair);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.sr-payment-return .stub-top {
+  padding: 20px 22px 16px;
+}
+
+.sr-payment-return .stub-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--slate-light);
+  margin-bottom: 4px;
+}
+
+.sr-payment-return .stub-ref {
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  font-weight: 600;
+  font-size: 1.6rem;
+  letter-spacing: .02em;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sr-payment-return .copy-btn {
+  background: none;
+  border: 1px solid var(--hair);
+  border-radius: 8px;
+  padding: 5px 8px;
+  cursor: pointer;
+  color: var(--slate);
+  display: flex;
+  align-items: center;
+  font-size: 0.7rem;
+  font-family: 'DM Sans', sans-serif;
+  gap: 4px;
+  transition: .15s;
+}
+
+.sr-payment-return .copy-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold-deep);
+}
+
+.sr-payment-return .copy-btn svg {
+  width: 13px;
+  height: 13px;
+}
+
+.sr-payment-return .perforation {
+  position: relative;
+  height: 0;
+  border-top: 1.5px dashed var(--hair);
+  margin: 0;
+}
+
+.sr-payment-return .perforation::before,
+.sr-payment-return .perforation::after {
+  content: '';
+  position: absolute;
+  top: -11px;
+  width: 22px;
+  height: 22px;
+  background: var(--cream);
+  border-radius: 50%;
+}
+
+.sr-payment-return .perforation::before { left: -11px; }
+.sr-payment-return .perforation::after { right: -11px; }
+
+.sr-payment-return .stub-bottom {
+  padding: 16px 22px 20px;
+}
+
+.sr-payment-return .detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 0;
+}
+
+.sr-payment-return .detail-row + .detail-row {
+  border-top: 1px solid var(--hair);
+}
+
+.sr-payment-return .detail-row .label {
+  color: var(--slate);
+  font-size: 0.88rem;
+}
+
+.sr-payment-return .detail-row .value {
+  font-weight: 600;
+  font-size: 0.92rem;
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+}
+
+.sr-payment-return .status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--green);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.sr-payment-return .status-pill.is-failed { color: var(--red); }
+.sr-payment-return .status-pill.is-pending { color: var(--amber); }
+
+.sr-payment-return .status-pill .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.sr-payment-return .amount .value {
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+
+/* ---- Note ---- */
+.sr-payment-return .note {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: #F4F1E9;
+  border: 1px solid var(--hair);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 0.86rem;
+  color: #5C5646;
+  line-height: 1.5;
+  margin-bottom: 28px;
+}
+
+.sr-payment-return .note svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--gold-deep);
+}
+
+/* ---- Actions ----
+ * Buttons use the site's real .btn/.btn-primary/.btn-outline-light classes
+ * (see custom/_buttons.scss) for padding/radius/font, so they match every
+ * other button on the site. Only layout and this page's specific color
+ * treatment are overridden below. */
+.sr-payment-return .actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.sr-payment-return .actions > .btn {
+  flex: 1;
+  min-width: 180px;
+}
+
+/* Page-specific color treatment — only colors are overridden, padding/
+ * radius/font still come from the site's real .btn classes. */
+.sr-payment-return .btn-primary {
+  background-color: #0b8d9f;
+  border-color: #0b8d9f;
+  color: #fff !important;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+
+.sr-payment-return .btn-primary:hover,
+.sr-payment-return .btn-primary:focus {
+  background-color: #097885;
+  border-color: #097885;
+}
+
+.sr-payment-return .btn-outline-light {
+  transition: background-color .15s ease, border-color .15s ease;
+}
+
+.sr-payment-return .btn-outline-light:hover,
+.sr-payment-return .btn-outline-light:focus {
+  background-color: rgba(11, 141, 159, 0.08);
+  border-color: #0b8d9f;
+}
+
+.sr-payment-return .footnote {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--slate-light);
+  line-height: 1.6;
+  padding: 0 10px;
+}
+
+.sr-payment-return .footnote strong {
+  color: var(--slate);
+  font-weight: 600;
+}
+
+/* ---- Verifying (auto-refresh) state ---- */
+.sr-payment-return .verifying {
+  text-align: center;
+}
+
+.sr-payment-return .verifying .attempt-count {
+  font-size: 0.85em;
+  color: var(--slate-light);
+}
+
+@media (max-width: 420px) {
+  .sr-payment-return { padding: 32px 16px; }
+  .sr-payment-return h1 { font-size: 1.7rem; }
+  .sr-payment-return .actions { flex-direction: column; }
+}

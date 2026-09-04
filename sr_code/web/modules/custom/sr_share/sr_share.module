@@ -10,6 +10,40 @@ function sr_share_preprocess_block(&$variables) {
   }
 }
 
+/**
+ * Implements hook_cron().
+ * Safety net for PdfController::generatePdf() — it deletes each image it
+ * downloads into pdf_temp right after building the PDF, but a request that
+ * dies mid-generation (timeout, fatal error) would leave its images behind
+ * with nothing else to ever clean them up. Sweep anything older than an hour.
+ */
+function sr_share_cron() {
+  $temp_dir = 'public://pdf_temp';
+  $realpath = \Drupal::service('file_system')->realpath($temp_dir);
+
+  if (!$realpath || !is_dir($realpath)) {
+    return;
+  }
+
+  $cutoff = \Drupal::time()->getRequestTime() - 3600;
+  $deleted = 0;
+
+  foreach (new \DirectoryIterator($realpath) as $file) {
+    if ($file->isDot() || !$file->isFile()) {
+      continue;
+    }
+    if ($file->getMTime() < $cutoff) {
+      if (@unlink($file->getPathname())) {
+        $deleted++;
+      }
+    }
+  }
+
+  if ($deleted > 0) {
+    \Drupal::logger('sr_share')->notice('Cron swept @count orphaned file(s) from pdf_temp.', ['@count' => $deleted]);
+  }
+}
+
 
 /**
  * Implements hook_form_alter() to set destination for anonymous users.
@@ -56,8 +90,16 @@ function sr_share_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_
  * Implements hook_user_login().
  */
 function sr_share_user_login(UserInterface $account) {
-  $session = \Drupal::service('session');
   $request = \Drupal::request();
+
+  // Callers doing a silent, in-request re-login (e.g. PayTabsController::handleReturn()
+  // restoring the session after PayTabs' cross-site POST dropped the cookie) set this
+  // attribute to opt out of post-login redirects — the caller owns the response here.
+  if ($request->attributes->get('sr_silent_login')) {
+    return;
+  }
+
+  $session = \Drupal::service('session');
 
   // Retrieve the flag_node_id and destination from the session.
   $flag_node_id = $session->get('flag_node_id');

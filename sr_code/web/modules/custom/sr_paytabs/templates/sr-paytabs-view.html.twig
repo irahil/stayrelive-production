@@ -1,0 +1,262 @@
+{% set status_colors = {
+  'payment_confirmed': '#155724',
+  'payment_pending':   '#856404',
+  'payment_initiated': '#004085',
+  'payment_failed':    '#721c24',
+  'refunded':          '#5a3e00',
+  'cancelled':         '#383d41',
+} %}
+{% set status_bg = {
+  'payment_confirmed': '#d4edda',
+  'payment_pending':   '#fff3cd',
+  'payment_initiated': '#cce5ff',
+  'payment_failed':    '#f8d7da',
+  'refunded':          '#fff3cd',
+  'cancelled':         '#e2e3e5',
+} %}
+{% set txn_colors = {
+  'approved':  '#155724',
+  'declined':  '#721c24',
+  'initiated': '#004085',
+  'refunded':  '#856404',
+} %}
+{% set txn_bg = {
+  'approved':  '#d4edda',
+  'declined':  '#f8d7da',
+  'initiated': '#cce5ff',
+  'refunded':  '#fff3cd',
+} %}
+{% set txn_labels = {
+  'approved':  'Payment Approved',
+  'declined':  'Payment Declined',
+  'initiated': 'Payment Initiated',
+  'refunded':  'Refund Processed',
+} %}
+{% set severity_labels = {0:'Emergency',1:'Alert',2:'Critical',3:'Error',4:'Warning',5:'Notice',6:'Info',7:'Debug'} %}
+{% set severity_colors = {0:'#721c24',1:'#721c24',2:'#721c24',3:'#721c24',4:'#856404',5:'#004085',6:'#155724',7:'#383d41'} %}
+
+<div class="layout-container sr-payment-view" style="max-width:1100px;">
+
+  {# ── Back + Header ── #}
+  <div style="margin-bottom:20px;">
+    <a href="/admin/sr/payments" style="text-decoration:none;color:#0071b8;">← Back to Payments Dashboard</a>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:24px;">
+    <h2 style="margin:0;">Booking #{{ booking.id }}</h2>
+    {% if booking.status %}
+      <span style="padding:4px 12px;border-radius:4px;font-size:.85em;font-weight:600;
+        color:{{ status_colors[booking.status] ?? '#383d41' }};
+        background:{{ status_bg[booking.status] ?? '#e2e3e5' }};">
+        {{ booking.status|replace({'_': ' '})|title }}
+      </span>
+    {% endif %}
+    <a href="/booking/{{ booking.id }}" class="button button--small" target="_blank" style="margin-left:auto;">View Booking →</a>
+  </div>
+
+  {# ── Summary cards ── #}
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px;">
+    <div style="background:#f5f5f5;padding:14px 18px;border-radius:4px;text-align:center;">
+      <span style="display:block;font-size:1.6em;font-weight:bold;">{{ booking.currency }} {{ booking.price|number_format(2) }}</span>
+      <span style="font-size:.85em;color:#555;">Booking Amount</span>
+    </div>
+    <div style="background:#f5f5f5;padding:14px 18px;border-radius:4px;text-align:center;">
+      <span style="display:block;font-size:1.6em;font-weight:bold;">{{ transactions|length }}</span>
+      <span style="font-size:.85em;color:#555;">Payment Attempts</span>
+    </div>
+    {% if booking.checkin %}
+    <div style="background:#f5f5f5;padding:14px 18px;border-radius:4px;text-align:center;">
+      <span style="display:block;font-size:1.1em;font-weight:bold;">{{ booking.checkin }}</span>
+      <span style="font-size:.85em;color:#555;">Check-in</span>
+    </div>
+    {% endif %}
+    {% if booking.checkout %}
+    <div style="background:#f5f5f5;padding:14px 18px;border-radius:4px;text-align:center;">
+      <span style="display:block;font-size:1.1em;font-weight:bold;">{{ booking.checkout }}</span>
+      <span style="font-size:.85em;color:#555;">Check-out</span>
+    </div>
+    {% endif %}
+    {% if booking.nights %}
+    <div style="background:#f5f5f5;padding:14px 18px;border-radius:4px;text-align:center;">
+      <span style="display:block;font-size:1.6em;font-weight:bold;">{{ booking.nights }}</span>
+      <span style="font-size:.85em;color:#555;">Nights</span>
+    </div>
+    {% endif %}
+  </div>
+
+  {# ── Guest & Property ── #}
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;">
+    <div style="background:#fff;border:1px solid #ddd;border-radius:4px;padding:16px 20px;">
+      <h4 style="margin:0 0 12px;font-size:.95em;text-transform:uppercase;letter-spacing:.05em;color:#555;">Guest Details</h4>
+      <table style="width:100%;border-collapse:collapse;font-size:.9em;">
+        <tr><td style="padding:4px 0;color:#777;width:90px;">Name</td><td><strong>{{ booking.name }}</strong></td></tr>
+        <tr><td style="padding:4px 0;color:#777;">Email</td><td><a href="mailto:{{ booking.email }}">{{ booking.email }}</a></td></tr>
+        {% if booking.phone %}<tr><td style="padding:4px 0;color:#777;">Phone</td><td>{{ booking.phone }}</td></tr>{% endif %}
+        {% if booking.adults %}<tr><td style="padding:4px 0;color:#777;">Adults</td><td>{{ booking.adults }}</td></tr>{% endif %}
+        {% if booking.children %}<tr><td style="padding:4px 0;color:#777;">Children</td><td>{{ booking.children }}</td></tr>{% endif %}
+      </table>
+    </div>
+    <div style="background:#fff;border:1px solid #ddd;border-radius:4px;padding:16px 20px;">
+      <h4 style="margin:0 0 12px;font-size:.95em;text-transform:uppercase;letter-spacing:.05em;color:#555;">Property Details</h4>
+      {% if property is not empty %}
+      <table style="width:100%;border-collapse:collapse;font-size:.9em;">
+        <tr><td style="padding:4px 0;color:#777;width:90px;">Property</td><td><a href="/node/{{ property.nid }}" target="_blank"><strong>{{ property.title }}</strong></a></td></tr>
+        {% if property.source %}<tr><td style="padding:4px 0;color:#777;">Source</td><td>{{ property.source|capitalize }}</td></tr>{% endif %}
+        {% if property.city %}<tr><td style="padding:4px 0;color:#777;">City</td><td>{{ property.city }}</td></tr>{% endif %}
+        {% if property.country %}<tr><td style="padding:4px 0;color:#777;">Country</td><td>{{ property.country|upper }}</td></tr>{% endif %}
+        {% if property.address %}<tr><td style="padding:4px 0;color:#777;">Address</td><td>{{ property.address }}</td></tr>{% endif %}
+      </table>
+      {% else %}
+        <p style="color:#999;font-size:.9em;">Property not found.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  {# ── Payment Timeline ── #}
+  <h3 style="margin-bottom:16px;font-size:1em;text-transform:uppercase;letter-spacing:.05em;color:#333;">Payment Timeline</h3>
+
+  {% if transactions is empty %}
+    <p style="color:#999;font-size:.9em;margin-bottom:24px;">No payment transactions recorded for this booking.</p>
+  {% else %}
+    <div style="position:relative;padding-left:28px;margin-bottom:32px;">
+      <div style="position:absolute;left:10px;top:0;bottom:0;width:2px;background:#e0e0e0;"></div>
+
+      {% for txn in transactions %}
+        {% set is_refund = '-REFUND' in txn.cart_id %}
+        {% set s = txn.payment_status %}
+        <div style="position:relative;margin-bottom:20px;">
+          <div style="position:absolute;left:-24px;top:4px;width:14px;height:14px;border-radius:50%;
+            background:{{ txn_colors[s] ?? '#555' }};border:2px solid #fff;box-shadow:0 0 0 2px {{ txn_colors[s] ?? '#555' }};"></div>
+
+          <div style="background:#fff;border:1px solid #ddd;border-radius:4px;padding:12px 16px;">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px;">
+              <span style="font-weight:600;font-size:.9em;
+                color:{{ txn_colors[s] ?? '#333' }};
+                background:{{ txn_bg[s] ?? '#eee' }};
+                padding:2px 10px;border-radius:3px;">
+                {% if is_refund %}Refund Processed{% else %}{{ txn_labels[s] ?? s|capitalize }}{% endif %}
+              </span>
+              <span style="font-size:.8em;color:#777;">{{ txn.created|date('d M Y, H:i:s') }}</span>
+              {% if txn.tran_ref %}
+                <span style="font-size:.8em;color:#555;margin-left:auto;">Ref: <code>{{ txn.tran_ref }}</code></span>
+              {% endif %}
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:6px;font-size:.85em;">
+              <div><span style="color:#777;">Cart ID:</span> <code style="font-size:.9em;">{{ txn.cart_id }}</code></div>
+              <div><span style="color:#777;">Amount:</span> <strong>{{ txn.currency }} {{ txn.amount|number_format(2) }}</strong></div>
+              {% if txn.response_status %}
+                <div><span style="color:#777;">Response:</span> {{ txn.response_status }}
+                  {% if txn.response_code %} ({{ txn.response_code }}){% endif %}
+                </div>
+              {% endif %}
+              {% if txn.response_message %}
+                <div><span style="color:#777;">Reason:</span>
+                  <span style="color:{{ txn_colors[s] ?? '#333' }};font-weight:500;">{{ txn.response_message }}</span>
+                </div>
+              {% endif %}
+              <div><span style="color:#777;">Updated:</span> {{ txn.updated|date('d M Y, H:i:s') }}</div>
+            </div>
+
+            {% if txn.raw_response %}
+              <details style="margin-top:10px;">
+                <summary style="cursor:pointer;font-size:.8em;color:#0071b8;">Raw PayTabs Response</summary>
+                <pre style="background:#f8f9fa;border:1px solid #e0e0e0;border-radius:3px;padding:10px;font-size:.78em;overflow-x:auto;margin-top:6px;white-space:pre-wrap;word-break:break-all;">{{ txn.raw_response }}</pre>
+              </details>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {# ── System Logs (dblog) ── #}
+  {% if logs is not empty %}
+    <h3 style="margin-bottom:12px;font-size:1em;text-transform:uppercase;letter-spacing:.05em;color:#333;">System Logs</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:.85em;margin-bottom:28px;">
+      <thead>
+        <tr style="background:#f5f5f5;">
+          <th style="padding:8px 10px;text-align:left;border-bottom:2px solid #ddd;width:160px;">Time</th>
+          <th style="padding:8px 10px;text-align:left;border-bottom:2px solid #ddd;width:80px;">Level</th>
+          <th style="padding:8px 10px;text-align:left;border-bottom:2px solid #ddd;width:110px;">Channel</th>
+          <th style="padding:8px 10px;text-align:left;border-bottom:2px solid #ddd;">Message</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in logs %}
+          <tr style="border-bottom:1px solid #eee;">
+            <td style="padding:7px 10px;color:#777;">{{ log.time|date('d M Y, H:i:s') }}</td>
+            <td style="padding:7px 10px;">
+              <span style="color:{{ severity_colors[log.severity] ?? '#333' }};font-size:.85em;font-weight:600;">
+                {{ severity_labels[log.severity] ?? log.severity }}
+              </span>
+            </td>
+            <td style="padding:7px 10px;color:#555;font-family:monospace;font-size:.85em;">{{ log.type }}</td>
+            <td style="padding:7px 10px;">{{ log.message }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div style="background:#fff3cd;border:1px solid #ffc107;border-radius:4px;padding:10px 14px;margin-bottom:28px;font-size:.85em;color:#856404;">
+      No system logs found. Enable the <strong>Database Logging</strong> module (dblog) to capture PayTabs log entries.
+    </div>
+  {% endif %}
+
+  {# ── Actions ── #}
+  <h3 style="margin-bottom:14px;font-size:1em;text-transform:uppercase;letter-spacing:.05em;color:#333;">Actions</h3>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px;">
+
+    {% if refund_url %}
+      <a href="{{ refund_url }}"
+         class="button button--danger"
+         style="background:#dc3545;color:#fff;border-color:#dc3545;"
+         onclick="return confirm('Process a full refund for booking #{{ booking.id }}? This cannot be undone.')">
+        💳 Process Refund
+      </a>
+    {% endif %}
+
+    {% if resend_url %}
+      <a href="{{ resend_url }}"
+         class="button"
+         onclick="return confirm('Re-send the confirmation email to {{ booking.email }}?')">
+        ✉ Re-send Confirmation Email
+      </a>
+    {% endif %}
+
+    {% if query_url %}
+      <a href="{{ query_url }}" class="button">
+        🔄 Query Live Status from PayTabs
+      </a>
+    {% endif %}
+
+    <a href="/booking/{{ booking.id }}" class="button button--small" target="_blank">
+      📋 View Full Booking
+    </a>
+
+    <a href="/admin/sr/payments" class="button button--small">
+      ← Back to Dashboard
+    </a>
+  </div>
+
+  {# ── Suggestions panel ── #}
+  <details style="margin-bottom:24px;">
+    <summary style="cursor:pointer;font-weight:600;padding:10px 14px;background:#f5f5f5;border-radius:4px;font-size:.9em;">
+      ℹ️ What do the PayTabs response codes mean?
+    </summary>
+    <div style="padding:14px;border:1px solid #ddd;border-top:none;border-radius:0 0 4px 4px;font-size:.85em;">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead><tr style="background:#f9f9f9;"><th style="padding:6px 10px;text-align:left;">Code</th><th style="padding:6px 10px;text-align:left;">Meaning</th><th style="padding:6px 10px;text-align:left;">Action</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:5px 10px;"><code>A</code></td><td>Approved</td><td>Booking confirmed, email sent</td></tr>
+          <tr style="background:#fafafa;"><td style="padding:5px 10px;"><code>D</code></td><td>Declined</td><td>Card rejected — guest should retry with different card</td></tr>
+          <tr><td style="padding:5px 10px;"><code>P</code></td><td>Pending</td><td>Awaiting bank confirmation — use Query Live Status</td></tr>
+          <tr style="background:#fafafa;"><td style="padding:5px 10px;"><code>H</code></td><td>Hold</td><td>Under review — contact PayTabs support</td></tr>
+          <tr><td style="padding:5px 10px;"><code>V</code></td><td>Void</td><td>Transaction voided</td></tr>
+          <tr style="background:#fafafa;"><td style="padding:5px 10px;"><code>E</code></td><td>Error</td><td>Gateway error — check raw response and retry</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+</div>

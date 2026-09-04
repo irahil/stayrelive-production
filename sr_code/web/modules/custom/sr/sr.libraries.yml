@@ -16,11 +16,21 @@ sr_autocomplete_lib:
   dependencies:
     - core/jquery
     - core/drupal
+sr_search_loader:
+  version: VERSION
+  css:
+    theme:
+      css/sr_search_loader.css: {}
+  js:
+    js/sr_search_loader.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
 sr_gmap_lib:
   version: VERSION
   js:
     js/sr_map.js: {}
-    https://maps.googleapis.com/maps/api/js?key=AIzaSyBd7hoeq3JClkyQ2MQ33_jqPbzRhuB1WiA&callback=initMap: { type: external, attributes: { async: true } }
+    https://maps.googleapis.com/maps/api/js?key=AIzaSyBd7hoeq3JClkyQ2MQ33_jqPbzRhuB1WiA&libraries=places&callback=initMap: { type: external, attributes: { async: true } }
   dependencies:
     - core/jquery
     - core/drupal

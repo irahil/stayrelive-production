@@ -93,6 +93,7 @@ class BookingEditForm extends FormBase {
       'pending_booking' => 'Pending Booking',
       'confirmed' => 'Confirmed Booking',
       'canceled_booking' => 'Canceled Booking',
+      'reserved_unpaid' => 'Reserved (Payment Deferred)',
     );
 
     $from_date = new DrupalDateTime($from_date);

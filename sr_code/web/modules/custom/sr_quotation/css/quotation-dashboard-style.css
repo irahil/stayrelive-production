@@ -12,6 +12,16 @@
   margin: 0 auto;
   border-radius: 12px;
 }
+
+.finalized-badge {
+  display: inline-block;
+  color: #8a6d00;
+  background: #fff3cd;
+  border: 1px solid #ffe08a;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-weight: 600;
+}
 .quotation-dashboard-page .dashboard-card-header .dashboard-actions {
   display: flex;
   margin-bottom: 1.5rem;
@@ -102,11 +112,11 @@
     height: 3rem !important;
   }
 }
-.quotation-table td.col-id,
+/* .quotation-table td.col-id,
 .quotation-table td.col-location,
 .quotation-table td.col-author {
   white-space: nowrap;
-}
+} */
 
 /* Manage column */
 .manage-link {
@@ -374,6 +384,21 @@
   background: #c9302c;
 }
 /* delete alert modal styles end  */
+
+.btn-finalize {
+  flex: 1;
+  padding: 10px;
+  background: #0074b8;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 14px;
+  display: inline-block;
+}
+
+.btn-finalize:hover {
+  background: #005a8a;
+}
 
 /* Prevent wrapping */
 .quotation-table th.col-checkin,

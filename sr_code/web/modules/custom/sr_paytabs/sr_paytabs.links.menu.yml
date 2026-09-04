@@ -1,0 +1,13 @@
+sr_paytabs.dashboard:
+  title: 'Payments Dashboard'
+  description: 'View all PayTabs payment transactions and booking summaries.'
+  parent: sr.admin
+  route_name: sr_paytabs.dashboard
+  weight: 9
+
+sr_paytabs.settings:
+  title: 'PayTabs Settings'
+  description: 'Configure PayTabs payment gateway credentials and region.'
+  parent: sr.admin
+  route_name: sr_paytabs.settings
+  weight: 10

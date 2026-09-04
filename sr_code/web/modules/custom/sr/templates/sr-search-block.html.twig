@@ -19,28 +19,33 @@
             <div class="search-container row d-flex justify-content-center">
                <div class="search-city search-city-default-check">
                   <span class="icon-city">
-                  <i class="fa-solid fa-building-user"></i></span>
+                  <i class="fa-solid fa-building-user" title="Select City"></i></span>
                   {{ form.form_build_id }}
                   {{ form.form_token }}
                   {{ form.form_id }}
                   {{ form.filter.town_city }}
                </div>
                <div class="search-date">
-                  <span class="icon-checkin"><i class="fa-solid fa-calendar-days"></i></span>
+                  <span class="icon-checkin"><i class="fa-solid fa-calendar-days" title="Add Dates"></i></span>
                   {{ form.filter.date }}
                   <span class="icon-checkout"><i class="fa-solid fa-magnifying-glass-location"></i></span>
                </div>
+               <div class="search-room">
+                  <span class="icon-room"><i class="fa-solid fa-bed" title="Rooms"></i></span>
+                  {{ form.filter.rooms }}
+               </div>
                <div class="add-adults">
                   <a heaf="#" class="occupants-minus" onclick="fn_occupants('adult', '-');return false;">-</a>
-                  <span class="icon-adult"><i class="fa-solid fa-person"></i></span>
+                  <span class="icon-adult"><i class="fa-solid fa-person" title="Adults"></i></span>
                   {{ form.filter.occupants.adult }}
                   <a heaf="#" class="occupants-plus" onclick="fn_occupants('adult', '+');return false;">+</a>
                </div>
                <div class="add-kids">
                   <a heaf="#" class="occupants-minus" onclick="fn_occupants('kid', '-');return false;">-</a>
-                  <span class="icon-kids"><i class="fa-solid fa-child"></i></span>
+                  <span class="icon-kids"><i class="fa-solid fa-child" title="Kids"></i></span>
                   {{ form.filter.occupants.kid }}
                   <a heaf="#" class="occupants-plus" onclick="fn_occupants('kid', '+');return false;">+</a>
+                  <div class="child-ages-panel" id="child-ages-panel"></div>
                </div>
                <div class="search-submit">
                   {{ form.filter.actions.submit }}

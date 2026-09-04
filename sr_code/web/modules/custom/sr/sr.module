@@ -80,6 +80,25 @@ function sr_theme($existing, $type, $theme, $path)
       'template' => 'emails/sr-email-contact-us-form-user',
       'path' => \Drupal::service('extension.list.module')->getPath('sr') . '/templates',
     ],
+    'sr_email_agent_pending_approval' => [
+      'variables' => [
+        'username' => NULL,
+        'user_id' => NULL,
+        'email' => NULL,
+      ],
+      'template' => 'emails/sr-email-agent-pending-approval',
+      'path' => \Drupal::service('extension.list.module')->getPath('sr') . '/templates',
+    ],
+    'sr_email_agent_approved' => [
+      'variables' => [
+        'username' => NULL,
+        'user_id' => NULL,
+        'email' => NULL,
+        'login_url' => NULL,
+      ],
+      'template' => 'emails/sr-email-agent-approved',
+      'path' => \Drupal::service('extension.list.module')->getPath('sr') . '/templates',
+    ],
   ];
 }
 
@@ -102,7 +121,7 @@ function sr_form_user_register_form_alter(&$form, \Drupal\Core\Form\FormStateInt
   // Get the current route name
   $current_route_name = \Drupal::routeMatch()->getRouteName();
 
-  if (in_array(strtolower($country_code), ['ae', 'cz']) || $current_route_name == "agent_registration.register") {
+  if (in_array(strtolower($country_code), ['ae', 'sa', 'cz']) || $current_route_name == "agent_registration.register") {
     $form['field_is_agent']['widget']['value']['#default_value'] = 1;
   } else {
     $fields_to_hide = [
@@ -208,10 +227,34 @@ function sr_mail($key, &$message, $params)
         '@name' => $user->getDisplayName(),
         '@site' => \Drupal::config('system.site')->get('name'),
       ]);
-      $message['body'][] = t("Hi @name,\n\nThank you for registering as an agent. Your account is pending admin approval. You will receive another email once it's approved.\n\n-- @site Team", [
-        '@name' => $user->getDisplayName(),
+      $build = [
+        '#theme' => 'sr_email_agent_pending_approval',
+        '#username' => Html::escape($user->getDisplayName()),
+        '#user_id' => $user->id(),
+        '#email' => Html::escape($user->getEmail()),
+      ];
+      $message['body'][] = \Drupal::service('renderer')->renderPlain($build);
+      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8';
+      $message['headers']['From'] = $site_name . '<' . $from . '>';
+      $message['headers']['Reply-To'] = $from;
+      break;
+    case 'agent_approved':
+      $user = $params['user'];
+      $message['subject'] = t('Your agent account at @site has been approved', [
         '@site' => \Drupal::config('system.site')->get('name'),
       ]);
+      $login_url = Url::fromRoute('user.login', [], ['absolute' => TRUE])->toString();
+      $build = [
+        '#theme' => 'sr_email_agent_approved',
+        '#username' => Html::escape($user->getDisplayName()),
+        '#user_id' => $user->id(),
+        '#email' => Html::escape($user->getEmail()),
+        '#login_url' => $login_url,
+      ];
+      $message['body'][] = \Drupal::service('renderer')->renderPlain($build);
+      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8';
+      $message['headers']['From'] = $site_name . '<' . $from . '>';
+      $message['headers']['Reply-To'] = $from;
       break;
     case 'contact_user_ack':
       $message['subject'] = $params['subject'] ?? 'No Subject';

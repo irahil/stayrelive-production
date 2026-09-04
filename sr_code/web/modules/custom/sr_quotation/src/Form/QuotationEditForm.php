@@ -137,15 +137,23 @@ class QuotationEditForm extends QuotationForm
 
     if (!isset($currency_options[$record['currency']])) {
       $form['financials']['currency']['#default_value'] = 'Other';
-      $form['financials']['currency_other_wrapper']['currency_other']['#default_value'] = $record['currency'];
+      $form['financials']['currency_other_wrapper']['currency_other'] = [
+        '#type' => 'textfield',
+        '#title' => $this->t('Enter Custom Currency'),
+        '#required' => TRUE,
+        '#default_value' => $record['currency'],
+      ];
     } else {
       $form['financials']['currency']['#default_value'] = $record['currency'];
     }
 
     $form['financials']['quote']['#default_value'] = $record['quote'];
+    $form['financials']['quote_value']['#default_value'] = $record['quote_value'] ?? '';
     $form['financials']['taxes']['#default_value'] = $record['taxes'];
+    $form['financials']['taxes']['#format'] = 'basic_html';
     $form['financials']['fx_rate']['#default_value'] = $record['fx_rate'];
     $form['financials']['addon_prices']['#default_value'] = $record['addon_prices'] ?? '';
+    $form['financials']['addon_prices']['#format'] = 'basic_html';
 
     // Set default values for new financial fields
     $form['financials']['avg_nightly_rate']['#default_value'] = $record['avg_nightly_rate'] ?? '';
@@ -219,8 +227,9 @@ class QuotationEditForm extends QuotationForm
         : 'Enter URL or Quoted Text';
 
       $form['extras']['supplier_reference_wrapper']['supplier_reference_text'] = [
-        '#type' => 'textfield',
+        '#type' => 'text_format',
         '#title' => $this->t($label),
+        '#format' => 'basic_html',
         '#required' => TRUE,
         '#default_value' => trim($supplier_text), // This will be empty if no text exists
       ];
@@ -406,63 +415,76 @@ class QuotationEditForm extends QuotationForm
 
   // Combine Supplier Reference + Text into one DB field (exact same as add form)
   $supplier_reference_combined = $values['supplier_reference'] ?? '';
-  if (!empty($values['supplier_reference_text'])) {
-    $supplier_reference_combined .= ' | ' . $values['supplier_reference_text'];
+  $supplier_reference_text = $values['supplier_reference_text'] ?? '';
+  $supplier_reference_text = is_array($supplier_reference_text) ? ($supplier_reference_text['value'] ?? '') : $supplier_reference_text;
+  if (!empty($supplier_reference_text)) {
+    $supplier_reference_combined .= ' | ' . $supplier_reference_text;
   }
 
   $currency = ($values['currency'] === 'Other' && !empty($values['currency_other']))
     ? $values['currency_other']
     : $values['currency'];
 
-  Database::getConnection()
-    ->update('sr_quotation')
-    ->fields([
-      'booker_name' => $values['booker_name'],
-      'travel_partner' => $values['travel_partner'],
-      'checkin_date' => $values['check_in_date'],
-      'checkout_date' => $values['check_out_date'],
-      'checkin_time' => $values['check_in_time'],
-      'checkout_time' => $values['check_out_time'],
-      'nights' => $values['nights'],
-      'enquired_location' => $values['enquired_location'] ?? '',
-      'unit_type' => $values['unit_type'],
-      'room_type' => $values['room_type'],
-      'room_category' => $values['room_category'] ?? '',
-      'bathrooms' => $values['bathrooms'],
-      'apartment_size' => $values['apartment_size'],
-      'adults' => $values['adults'],
-      'kids' => $values['kids'],
-      'location' => $values['location'],
-      'distance' => $values['distance'],
-      'map_link' => $values['map_link'],
-      'description' => $values['description'],
-      'location_screenshot' => $this->getLocationScreenshotFid($values, $existing_location_screenshots ?? NULL),
-      'currency' => $currency,
-      'quote' => $values['quote'],
-      'taxes' => $values['taxes'],
-      'fx_rate' => $values['fx_rate'],
-      'addon_prices' => $values['addon_prices'] ?? '',
-      'amenities' => $amenities,
-      'cancellation_policy' => $values['cancellation_policy']['value'] ?? '',
-      'rules' => $values['rules']['value'] ?? '',
-      'note' => $values['note']['value'] ?? '',
-      'supplier_reference' => $supplier_reference_combined,
-      'confirmation_status' => $values['confirmation_status'],
-      'avg_nightly_rate' => $values['avg_nightly_rate'] ?? '',
-      'extras_tax' => $values['extras_tax'] ?? '',
-      'total_outlay' => $values['total_outlay'] ?? '',
-      'markup_client_percentage' => $values['markup_client_percentage'] ?? '',
-      'markup_client_value' => $values['markup_client_value'] ?? '',
-      'total_profit' => $values['total_profit'] ?? '',
-      'commission_sr_percentage' => $values['commission_sr_percentage'] ?? '',
-      'commission_sr_value' => $values['commission_sr_value'] ?? '',
-      'images' => implode(',', $final_fids),
-    ])
-    ->condition('id', $id)
-    ->execute();
+  try {
+    Database::getConnection()
+      ->update('sr_quotation')
+      ->fields([
+        'booker_name' => $values['booker_name'],
+        'travel_partner' => $values['travel_partner'],
+        'checkin_date' => $values['check_in_date'],
+        'checkout_date' => $values['check_out_date'],
+        'checkin_time' => $values['check_in_time'],
+        'checkout_time' => $values['check_out_time'],
+        'nights' => $values['nights'],
+        'enquired_location' => $values['enquired_location'] ?? '',
+        'unit_type' => $values['unit_type'],
+        'room_type' => $values['room_type'],
+        'room_category' => $values['room_category'] ?? '',
+        'bathrooms' => $values['bathrooms'],
+        'apartment_size' => $values['apartment_size'],
+        'adults' => $values['adults'],
+        'kids' => $values['kids'],
+        'location' => $values['location'],
+        'distance' => $values['distance'],
+        'map_link' => $values['map_link'],
+        'description' => $values['description'],
+        'location_screenshot' => $this->getLocationScreenshotFid($values, $existing_location_screenshots ?? NULL),
+        'currency' => $currency,
+        'quote' => $values['quote'],
+        'quote_value' => !empty($values['quote_value']) ? (float) $values['quote_value'] : NULL,
+        'taxes' => is_array($values['taxes']) ? ($values['taxes']['value'] ?? '') : ($values['taxes'] ?? ''),
+        'fx_rate' => $values['fx_rate'],
+        'addon_prices' => $values['addon_prices']['value'] ?? '',
+        'amenities' => $amenities,
+        'cancellation_policy' => $values['cancellation_policy']['value'] ?? '',
+        'rules' => $values['rules']['value'] ?? '',
+        'note' => $values['note']['value'] ?? '',
+        'supplier_reference' => $supplier_reference_combined,
+        'confirmation_status' => $values['confirmation_status'],
+        'avg_nightly_rate' => $values['avg_nightly_rate'] ?? '',
+        'extras_tax' => $values['extras_tax'] ?? '',
+        'total_outlay' => $values['total_outlay'] ?? '',
+        'markup_client_percentage' => $values['markup_client_percentage'] ?? '',
+        'markup_client_value' => $values['markup_client_value'] ?? '',
+        'total_profit' => $values['total_profit'] ?? '',
+        'commission_sr_percentage' => $values['commission_sr_percentage'] ?? '',
+        'commission_sr_value' => $values['commission_sr_value'] ?? '',
+        'images' => implode(',', $final_fids),
+      ])
+      ->condition('id', $id)
+      ->execute();
 
-  \Drupal::messenger()->addMessage($this->t('Quotation updated successfully.'));
-  $form_state->setRedirect('sr_quotation.list');
+    \Drupal::messenger()->addMessage($this->t('Quotation updated successfully.'));
+    $form_state->setRedirect('sr_quotation.list');
+  }
+  catch (\Exception $e) {
+    \Drupal::logger('sr_quotation')->error('Quotation update failed for ID @id: @message | Trace: @trace', [
+      '@id' => $id,
+      '@message' => $e->getMessage(),
+      '@trace' => $e->getTraceAsString(),
+    ]);
+    \Drupal::messenger()->addError($this->t('Failed to update quotation. The error has been logged. Please contact the administrator.'));
+  }
 }
 
   /**

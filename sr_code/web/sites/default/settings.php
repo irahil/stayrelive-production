@@ -34,7 +34,8 @@ $settings['update_free_access'] = FALSE;
 $settings['trusted_host_patterns'] = [
   '^localhost$',
   '^127\.0\.0\.1$',
-  '^stayrelive\.test$',
+  '^stayrelive\.com$',
+  '^www\.stayrelive\.com$',
 ];
 
 /**
@@ -48,11 +49,4 @@ if (file_exists(__DIR__ . '/settings.local.php')) {
  * Load services configuration.
  */
 $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
-
-// SHOW ERRORS
-$config['system.logging']['error_level'] = 'verbose';
-
-
-
-
 

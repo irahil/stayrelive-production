@@ -179,7 +179,7 @@
 					<tr>
 						<td rowspan="3">
 
-							<h6 class="title-text" style="font-size: 25px; color: #192452; font-family: 'Merriweather', serif; font-weight: normal;">Booking Information</h6>
+							<h6 class="title-text" style="font-size: 25px; color: #192452; font-family: 'Merriweather', serif; font-weight: normal;">Query details</h6>
 
 						</td>
 						<td></td>
@@ -214,29 +214,23 @@
 
 					<tr>
 						<td>
-							<span class="pdf-label">Check-in Time:</span>
+							<span class="pdf-label">Check-in:</span>
 							<br>
-							<span class="pdf-value">{{ data.checkin_time }}</span>
+							<span class="pdf-value">
+							{% if data.checkin_date|default('')|trim %}{{ data.checkin_date }}{% endif %}
+							{% if data.checkin_date|default('')|trim and data.checkin_time|default('')|trim %} at {% endif %}
+							{% if data.checkin_time|default('')|trim %}{{ data.checkin_time }}{% endif %}
+							</span>
 						</td>
 						<td>
-							<span class="pdf-label">Check-out Time:</span>
+							<span class="pdf-label">Check-out:</span>
 							<br>
-							<span class="pdf-value">{{ data.checkout_time }}</span>
+							<span class="pdf-value">
+							{% if data.checkout_date|default('')|trim %}{{ data.checkout_date }}{% endif %}
+							{% if data.checkout_date|default('')|trim and data.checkout_time|default('')|trim %} at {% endif %}
+							{% if data.checkout_time|default('')|trim %}{{ data.checkout_time }}{% endif %}
+							</span>
 						</td>
-					</tr>
-
-					<tr>
-						<td>
-							<span class="pdf-label">Check-in Date:</span>
-							<br>
-							<span class="pdf-value">{{ data.checkin_date }}</span>
-						</td>
-						<td>
-							<span class="pdf-label">Check-out Date:</span>
-							<br>
-							<span class="pdf-value">{{ data.checkout_date }}</span>
-						</td>
-
 					</tr>
 
 					<tr>
@@ -409,7 +403,7 @@
 					<td>
 						<span class="pdf-label">Taxes:</span>
 						<br>
-						<span class="pdf-value">{{ data.taxes }}</span>
+						<span class="pdf-value">{{ data.taxes|raw }}</span>
 					</td>
 				</tr>
 
@@ -430,7 +424,7 @@
 					<td>
 						<span class="pdf-label">Add-ons:</span>
 						<br>
-						<span class="pdf-value">{{ data.addon_prices ?: 'N/A' }}</span>
+						<span class="pdf-value">{{ (data.addon_prices ?: 'N/A')|raw }}</span>
 					</td>
 					<td></td>
 				</tr>

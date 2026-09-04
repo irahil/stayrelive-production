@@ -7,6 +7,14 @@ sr.search:
     _permission: 'access content'
   options:
     no_cache: 'TRUE'
+sr.town_city_autocomplete:
+  path: 'sr/town-city/autocomplete'
+  defaults:
+    _controller: '\Drupal\sr\Controller\SrController::townCityAutocomplete'
+  requirements:
+    _permission: 'access content'
+  options:
+    no_cache: 'TRUE'
 sr.booking:
   path: 'property/booking'
   defaults:
@@ -57,6 +65,16 @@ sr.commission.manage:
     _title: 'Commission'
   requirements:
     _role: 'sr_admin'
+  options:
+    _admin_route: TRUE
+
+sr.rategain_settings:
+  path: '/admin/config/sr/rategain'
+  defaults:
+    _form: '\Drupal\sr\Form\RateGainSettingsForm'
+    _title: 'RateGain Settings'
+  requirements:
+    _role: 'administrator'
   options:
     _admin_route: TRUE
 
@@ -135,3 +153,13 @@ sr.export_csv:
     _title: 'Export CSV'
   requirements:
     _permission: 'access content'
+
+
+sr.property_details:
+  path: '/property/details/{property_source}/{property_id}/{property_code}/{brand_code}/{country_code}'
+  defaults:
+    _controller: '\Drupal\sr\Controller\SrController::propertyDetails'
+  requirements:
+    _permission: 'access content'
+  options:
+    no_cache: 'TRUE'

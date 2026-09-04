@@ -1,0 +1,10 @@
+name: 'SR PayTabs'
+type: module
+description: 'PayTabs PT2 payment gateway integration for StayRelive instant apartment booking'
+package: StayRelive
+core_version_requirement: ^10
+dependencies:
+  - drupal:system
+  - booking:booking
+  - sr:sr
+  - common_utilities:common_utilities

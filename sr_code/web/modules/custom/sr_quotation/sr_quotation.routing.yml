@@ -13,6 +13,20 @@ sr_quotation.edit:
     _title: 'Edit Quotation'
   requirements:
     _permission: 'edit quotation'
+    _custom_access: '\Drupal\sr_quotation\Controller\QuotationController::editAccess'
+
+sr_quotation.finalize:
+  path: '/quotation/{id}/finalize'
+  defaults:
+    _controller: '\Drupal\sr_quotation\Controller\QuotationController::finalize'
+    _title: 'Finalize Quotation'
+  requirements:
+    _permission: 'edit quotation'
+    _custom_access: '\Drupal\sr_quotation\Controller\QuotationController::editAccess'
+  options:
+    parameters:
+      id:
+        type: integer
 
 sr_quotation.list:
   path: '/quotation'
