@@ -75,6 +75,15 @@ function initMap() {
     clearTimeout(timer);
   });
 
+  // The map only measures its container once, at construction time. If that
+  // happens before the page's responsive layout has settled (a race with
+  // CSS/webfont loading), it locks onto a stale, wrong width. Re-measuring
+  // once everything has finished loading corrects it.
+  window.addEventListener('load', function () {
+    google.maps.event.trigger(map, 'resize');
+    map.setCenter(latlngbounds.getCenter());
+  });
+
 }
 window.initMap = initMap;
 jQuery(document).ready(function($) {

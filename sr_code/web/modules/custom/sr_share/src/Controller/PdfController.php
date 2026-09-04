@@ -21,9 +21,10 @@ class PdfController extends ControllerBase {
     $node = \Drupal::entityTypeManager()->getStorage('node')->load($node->id());
 
     $images_html = '';
+    $downloaded_files = [];
     if ($node->hasField('field_media') && !$node->get('field_media')->isEmpty()) {
       $serialized_data = $node->get('field_media')->value;
-      $images_html = $this->processFirstFourImages($serialized_data);
+      $images_html = $this->processFirstFourImages($serialized_data, $downloaded_files);
     }
 
     $mpdf = $this->initializeMpdf();
@@ -32,12 +33,17 @@ class PdfController extends ControllerBase {
     $response = new Response($mpdf->Output('', 'S'));
     $response->headers->set('Content-Type', 'application/pdf');
     $response->headers->set('Content-Disposition', 'attachment; filename="' . $this->cleanFilename($node->getTitle()) . '_' . time() . '.pdf"');
-    
+
     $response->setMaxAge(0);
     $response->setSharedMaxAge(0);
     $response->headers->addCacheControlDirective('no-cache', true);
     $response->headers->addCacheControlDirective('must-revalidate', true);
     $response->headers->addCacheControlDirective('no-store', true);
+
+    // Images in pdf_temp are only needed while mPDF is reading them above —
+    // nothing else ever cleaned them up, so every PDF generated left its
+    // downloaded images behind permanently, growing the directory forever.
+    $this->deleteTempFiles($downloaded_files);
 
     return $response;
   }
@@ -232,22 +238,23 @@ class PdfController extends ControllerBase {
     }
   }
 
-  protected function processFirstFourImages($serialized_data) {
+  protected function processFirstFourImages($serialized_data, array &$downloaded_files) {
     $images_html = '';
     $downloaded_count = 0;
     $max_images = 4;
-    
+
     try {
       $data = unserialize($serialized_data);
-      
+
       if (is_array($data)) {
         foreach ($data as $item) {
           if ($downloaded_count >= $max_images) break;
-          
+
           if (isset($item['type']) && $item['type'] === 'image' && isset($item['url'])) {
             $local_path = $this->downloadImage($item['url']);
             if ($local_path) {
               $images_html .= '<img style="width: 42%; height: auto; border: 1px solid #ccc; padding:10px; margin: 10px; border-radius: 4px;" src="' . $local_path . '" />';
+              $downloaded_files[] = $local_path;
               $downloaded_count++;
             }
           }
@@ -256,21 +263,21 @@ class PdfController extends ControllerBase {
     } catch (\Exception $e) {
       \Drupal::logger('sr_share')->error('Image processing error: @error', ['@error' => $e->getMessage()]);
     }
-    
+
     return $images_html;
   }
 
   protected function downloadImage($url) {
     $file_system = \Drupal::service('file_system');
     $http_client = new Client(['verify' => false, 'timeout' => 10]);
-    
+
     try {
         $temp_dir = 'public://pdf_temp';
         $file_system->prepareDirectory($temp_dir, FileSystemInterface::CREATE_DIRECTORY);
-        
+
         $filename = md5($url . time()) . '.' . pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);
         $destination = $temp_dir . '/' . $filename;
-        
+
         $response = $http_client->get($url, [
             'headers' => [
                 'Cache-Control' => 'no-cache',
@@ -278,7 +285,7 @@ class PdfController extends ControllerBase {
             ]
         ]);
         $file_system->saveData((string)$response->getBody(), $destination, FileSystemInterface::EXISTS_REPLACE);
-        
+
         return $file_system->realpath($destination);
     } catch (RequestException $e) {
         \Drupal::logger('sr_share')->error('Image download failed: @url - @error', [
@@ -286,6 +293,24 @@ class PdfController extends ControllerBase {
             '@error' => $e->getMessage()
         ]);
         return false;
+    }
+  }
+
+  /**
+   * Deletes the images downloaded into pdf_temp for one PDF generation.
+   */
+  protected function deleteTempFiles(array $paths) {
+    foreach ($paths as $path) {
+      try {
+        if ($path && is_file($path)) {
+          @unlink($path);
+        }
+      } catch (\Exception $e) {
+        \Drupal::logger('sr_share')->error('Failed to delete temp PDF image @path: @error', [
+          '@path' => $path,
+          '@error' => $e->getMessage(),
+        ]);
+      }
     }
   }
 

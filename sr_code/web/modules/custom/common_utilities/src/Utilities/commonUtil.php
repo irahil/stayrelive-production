@@ -61,7 +61,7 @@ class commonUtil {
     public static function formatCurrency($price) {
         $formatted_price = 0;
         if ($price > 0) {
-            $formatted_price = number_format($price, 2, ".", ",");
+            $formatted_price = number_format(ceil((float)$price), 0, ".", ",");
         }
         return $formatted_price;
     }
@@ -828,5 +828,17 @@ class commonUtil {
         }
         return $vendor_name;
     }
+
+    public static function convertAmenitiesUtil($param_amenities = array()) {
+    $arr_amenities = array();
+    if (is_array($param_amenities) && count($param_amenities)>0) {
+      foreach($param_amenities as $val_amenities) {
+        if ($val_amenities > 0) {
+          array_push($arr_amenities, $val_amenities);
+        }
+      }
+    }
+    return implode(",", $arr_amenities);
+  }
 
 }

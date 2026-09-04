@@ -126,6 +126,65 @@ function srdesign_preprocess_node(&$variables) {
     }
     $variables['parent_link'] = $parent_link;
     $variables['node_title'] = $current_title;
+
+    // Full tariff list (every room type, every rate option) for the new
+    // section below the map — separate from the sidebar's APIPriceForm,
+    // which only shows one collapsed "cheapest" quote per room.
+    $variables['rategain_room_rates'] = [];
+    if ($node->get('field_property_source')->value == 'rategain' && $node->get('field_reference_id')->value) {
+      $extra_info = $node->get('field_extra_info')->value ? unserialize($node->get('field_extra_info')->value) : [];
+
+      if (!empty($extra_info['property_id']) && !empty($extra_info['property_code'])) {
+        $request = \Drupal::request();
+        $date_range = explode(' to ', $request->query->get('date_range') ?? '');
+
+        $query = [
+          'property_id'   => $extra_info['property_id'],
+          'property_code' => $extra_info['property_code'],
+          'brand_code'    => $extra_info['brand_code']   ?? '',
+          'country_code'  => $extra_info['country_code'] ?? '',
+          'checkin'       => $date_range[0] ?? '',
+          'checkout'      => $date_range[1] ?? '',
+          'adult'         => $request->query->get('adult') ?? '',
+          'kid'           => $request->query->get('kid')   ?? '',
+          'child_age'     => $request->query->get('child_age') ?? '',
+        ];
+
+        $arr_request_param = [
+          'country_code' => '', 'pid' => '',
+          'price_min' => '', 'price_max' => '',
+          'bathroom' => '', 'bedroom' => '',
+          'date_range' => '', 'town_city' => '',
+          'adult' => '', 'kid' => '', 'child_age' => '',
+          'amenities' => '', 'sort' => '',
+        ];
+        $base_booking_param = [];
+        foreach ($arr_request_param as $key_param => $val_param) {
+          $query_value = $request->query->get($key_param);
+          $base_booking_param[$key_param] = ($query_value != '') ? urldecode(trim($query_value)) : '';
+        }
+        $base_booking_param['pid'] = $node->id();
+
+        $variables['rategain_room_rates'] = \Drupal\sr\Rategain::buildRoomRateList($query, $base_booking_param);
+
+        // Flag the cheapest rate per room so the template can badge it,
+        // matching the "lowest price" highlight guests expect from
+        // comparison-style booking UIs.
+        foreach ($variables['rategain_room_rates'] as &$room) {
+          if (empty($room['rates'])) {
+            continue;
+          }
+          $lowest_index = 0;
+          foreach ($room['rates'] as $index => $rate) {
+            if ($rate['price'] < $room['rates'][$lowest_index]['price']) {
+              $lowest_index = $index;
+            }
+          }
+          $room['rates'][$lowest_index]['is_lowest'] = TRUE;
+        }
+        unset($room);
+      }
+    }
   }
 }
 

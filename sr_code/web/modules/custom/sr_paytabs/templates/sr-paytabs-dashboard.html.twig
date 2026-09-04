@@ -1,0 +1,127 @@
+<div class="layout-container">
+
+  {# ── Summary cards ── #}
+  <div class="system-status-report__counters" style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:24px;">
+    <div class="system-status-report__counter" style="background:#f5f5f5;padding:16px 24px;border-radius:4px;min-width:140px;text-align:center;">
+      <span style="display:block;font-size:2em;font-weight:bold;">{{ stats.total }}</span>
+      <span>Total Transactions</span>
+    </div>
+    <div style="background:#d4edda;padding:16px 24px;border-radius:4px;min-width:140px;text-align:center;">
+      <span style="display:block;font-size:2em;font-weight:bold;color:#155724;">{{ stats.approved }}</span>
+      <span>Approved</span>
+    </div>
+    <div style="background:#f8d7da;padding:16px 24px;border-radius:4px;min-width:140px;text-align:center;">
+      <span style="display:block;font-size:2em;font-weight:bold;color:#721c24;">{{ stats.declined }}</span>
+      <span>Declined</span>
+    </div>
+    <div style="background:#fff3cd;padding:16px 24px;border-radius:4px;min-width:140px;text-align:center;">
+      <span style="display:block;font-size:2em;font-weight:bold;color:#856404;">{{ stats.refunded }}</span>
+      <span>Refunded</span>
+    </div>
+    <div style="background:#cce5ff;padding:16px 24px;border-radius:4px;min-width:140px;text-align:center;">
+      <span style="display:block;font-size:2em;font-weight:bold;color:#004085;">{{ stats.initiated }}</span>
+      <span>Pending</span>
+    </div>
+    <div style="background:#343a40;padding:16px 24px;border-radius:4px;min-width:160px;text-align:center;">
+      <span style="display:block;font-size:1.6em;font-weight:bold;color:#fff;">USD {{ stats.total_collected|number_format(2) }}</span>
+      <span style="color:#ccc;">Total Collected</span>
+    </div>
+  </div>
+
+  {# ── Filters ── #}
+  <form class="views-exposed-form form--inline" method="get" action="">
+    <div class="form-item js-form-item form-item--select">
+      <label class="form-item__label" for="filter-status">Status</label>
+      <select id="filter-status" name="status" class="form-element form-element--type-select">
+        <option value="">All</option>
+        {% for s in ['approved', 'declined', 'refunded', 'initiated'] %}
+          <option value="{{ s }}" {% if filters.status == s %}selected{% endif %}>{{ s|capitalize }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-item js-form-item form-item--select">
+      <label class="form-item__label" for="filter-source">Source</label>
+      <select id="filter-source" name="source" class="form-element form-element--type-select">
+        <option value="">All</option>
+        {% for src in ['plumguide', 'ratehawk', 'stayrelive', 'homelike', 'spacest', 'interhome'] %}
+          <option value="{{ src }}" {% if filters.source == src %}selected{% endif %}>{{ src|capitalize }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-item js-form-item form-item--date">
+      <label class="form-item__label" for="filter-from">From</label>
+      <input id="filter-from" type="date" name="from" value="{{ filters.from }}" class="form-element form-element--type-date">
+    </div>
+    <div class="form-item js-form-item form-item--date">
+      <label class="form-item__label" for="filter-to">To</label>
+      <input id="filter-to" type="date" name="to" value="{{ filters.to }}" class="form-element form-element--type-date">
+    </div>
+    <div class="form-actions js-form-wrapper">
+      <button type="submit" class="button button--primary">Filter</button>
+      <a href="/admin/sr/payments" class="button">Reset</a>
+    </div>
+  </form>
+
+  {# ── Transactions table ── #}
+  {% if transactions is empty %}
+    <p class="messages messages--warning">No transactions found.</p>
+  {% else %}
+    <table class="views-table cols-0" style="width:100%;">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Booking</th>
+          <th>Guest</th>
+          <th>Property</th>
+          <th>Source</th>
+          <th>Amount</th>
+          <th>Tran Ref</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for txn in transactions %}
+          <tr class="{% if loop.odd %}odd{% else %}even{% endif %}">
+            <td>{{ txn.id }}</td>
+            <td><a href="/booking/{{ txn.booking_id }}">#{{ txn.booking_id }}</a></td>
+            <td>
+              {{ txn.guest_name }}<br>
+              <small>{{ txn.guest_email }}</small>
+            </td>
+            <td>{{ txn.property_title ?: '—' }}</td>
+            <td>{{ txn.property_source ?: '—' }}</td>
+            <td><strong>{{ txn.currency }} {{ txn.amount|number_format(2) }}</strong></td>
+            <td><small>{{ txn.tran_ref ?: '—' }}</small></td>
+            <td>
+              {% if txn.payment_status == 'approved' %}
+                <span style="color:#155724;background:#d4edda;padding:2px 8px;border-radius:3px;font-size:.85em;">Approved</span>
+              {% elseif txn.payment_status == 'declined' %}
+                <span style="color:#721c24;background:#f8d7da;padding:2px 8px;border-radius:3px;font-size:.85em;">Declined</span>
+              {% elseif txn.payment_status == 'refunded' %}
+                <span style="color:#856404;background:#fff3cd;padding:2px 8px;border-radius:3px;font-size:.85em;">Refunded</span>
+              {% else %}
+                <span style="color:#004085;background:#cce5ff;padding:2px 8px;border-radius:3px;font-size:.85em;">{{ txn.payment_status|capitalize }}</span>
+              {% endif %}
+            </td>
+            <td><small>{{ txn.created|date('d M Y H:i') }}</small></td>
+            <td style="white-space:nowrap;">
+              <a href="/admin/sr/payments/booking/{{ txn.booking_id }}"
+                 class="button button--small">View</a>
+              {% if txn.payment_status == 'approved' and txn.refund_url %}
+                <a href="{{ txn.refund_url }}"
+                   class="button button--small button--danger"
+                   style="margin-left:4px;"
+                   onclick="return confirm('Refund booking #{{ txn.booking_id }}?')">Refund</a>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+
+  {{ pager }}
+
+</div>

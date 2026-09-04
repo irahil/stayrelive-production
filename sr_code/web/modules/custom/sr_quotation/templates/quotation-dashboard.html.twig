@@ -71,6 +71,7 @@
 								<th class="col-id">ID</th>
 								<th class="col-title">Title</th>
 								<th class="col-location">Location / Details</th>
+								<th class="col-status">Status</th>
 								<th class="col-pdf">Preview</th>
 								{# 🆕 New column for preview/download #}
 							</tr>
@@ -88,15 +89,24 @@
 											</button>
 
 											<div class="dropdown-menu">
+												{% if item.can_edit %}
 												<a href="{{ path('sr_quotation.edit', {'id': item.id}) }}" class="dropdown-item">
 													<i class="fas fa-edit"></i>
 													{{ 'Edit'|t }}
 												</a>
+												{% endif %}
 
 												<a href="{{ path('sr_quotation.duplicate', {'id': item.id}) }}" class="dropdown-item">
 													<i class="fas fa-copy"></i>
 													{{ 'Duplicate'|t }}
 												</a>
+
+												{% if not item.finalized and item.can_edit %}
+												<a href="{{ path('sr_quotation.finalize', {'id': item.id}) }}" class="dropdown-item" onclick="openFinalizeModal('{{ path('sr_quotation.finalize', {'id': item.id}) }}'); return false;">
+													<i class="fas fa-lock"></i>
+													{{ 'Finalize'|t }}
+												</a>
+												{% endif %}
 
 												<a href="{{ path('sr_quotation.delete', {'id': item.id}) }}" class="dropdown-item delete-item" onclick="openDeleteModal('{{ path('sr_quotation.delete', {'id': item.id}) }}'); return false;">
 													<i class="fas fa-trash-alt"></i>
@@ -107,10 +117,22 @@
 									</td>
 
 									<!-- 👇 NEW FORMATTED ID -->
-									<td class="col-id">{{ item.formatted_id }}</td>
+									<td class="col-id">
+										{{ item.formatted_id }}
+										{% if item.booker_name %}
+											<br><small><strong>{{ 'Booker'|t }}:</strong> {{ item.booker_name }}</small>
+										{% endif %}
+									</td>
 
 									<td class="col-title">{{ item.title }}</td>
 									<td class="col-location">{{ item.location_details|raw }}</td>
+
+									<td class="col-status">
+										{{ item.status }}
+										{% if item.finalized %}
+											<br><small class="finalized-badge"><i class="fas fa-lock"></i> {{ 'Finalized'|t }}</small>
+										{% endif %}
+									</td>
 
 									<td class="col-pdf">
 										<div class="pdf-actions">
@@ -149,6 +171,23 @@
 		</div>
 	</div>
 
+	<div id="finalizeModal" class="delete-modal-overlay">
+		<div class="delete-modal">
+			<h3>{{ 'Confirm Finalize'|t }}</h3>
+			<p>{{ 'Are you sure you want to finalize this quotation? Once finalized, only administrators will be able to edit it.'|t }}</p>
+
+			<div class="delete-modal-actions">
+				<button class="btn-cancel" onclick="closeFinalizeModal()">
+					{{ 'Cancel'|t }}
+				</button>
+
+				<a id="finalizeConfirmBtn" href="#" class="btn-finalize">
+					{{ 'Finalize'|t }}
+				</a>
+			</div>
+		</div>
+	</div>
+
 	<script>
 		document.addEventListener("click", function (e) {
 const toggle = e.target.closest(".dropdown-toggle");
@@ -179,9 +218,19 @@ function closeDeleteModal() {
 document.getElementById('deleteModal').style.display = 'none';
 }
 
+function openFinalizeModal(url) {
+document.getElementById('finalizeModal').style.display = 'flex';
+document.getElementById('finalizeConfirmBtn').setAttribute('href', url);
+}
+
+function closeFinalizeModal() {
+document.getElementById('finalizeModal').style.display = 'none';
+}
+
 document.addEventListener('click', function (e) { // Close popup if clicking outside modal
 if (e.target.classList.contains('delete-modal-overlay')) {
 closeDeleteModal();
+closeFinalizeModal();
 }
 });
 	</script>

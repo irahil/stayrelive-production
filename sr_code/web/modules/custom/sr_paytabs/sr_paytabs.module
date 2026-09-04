@@ -1,0 +1,231 @@
+<?php
+
+/**
+ * @file
+ * SR PayTabs module hooks.
+ */
+
+/**
+ * Implements hook_cron().
+ * Reconciles any payment_initiated transactions older than 15 minutes
+ * by querying PayTabs directly — catches IPN failures or delays.
+ */
+function sr_paytabs_cron() {
+  _sr_paytabs_process_rategain_deferred_bookings();
+
+  $config     = \Drupal::config('sr_paytabs.settings');
+  $server_key = $config->get('server_key');
+  $profile_id = $config->get('profile_id');
+  $endpoint   = rtrim($config->get('endpoint') ?: 'https://secure.paytabs.sa', '/');
+  $verify_ssl = !(bool) $config->get('sandbox_mode');
+
+  if (empty($server_key) || empty($profile_id)) {
+    return;
+  }
+
+  $cutoff = \Drupal::time()->getRequestTime() - 900; // 15 minutes ago
+
+  $transactions = \Drupal::database()->select('sr_payment_transactions', 't')
+    ->fields('t')
+    ->condition('payment_status', 'initiated')
+    ->condition('tran_ref', '', '<>')
+    ->condition('updated', $cutoff, '<')
+    ->orderBy('created', 'ASC')
+    ->range(0, 20)
+    ->execute()
+    ->fetchAll();
+
+  if (empty($transactions)) {
+    return;
+  }
+
+  foreach ($transactions as $txn) {
+    try {
+      $response = \Drupal::httpClient()->post($endpoint . '/payment/query', [
+        'json'            => ['profile_id' => (int) $profile_id, 'tran_ref' => $txn->tran_ref],
+        'headers'         => ['authorization' => $server_key],
+        'http_errors'     => FALSE,
+        'verify'          => $verify_ssl,
+        'timeout'         => 8,
+        'connect_timeout' => 4,
+      ]);
+
+      $data            = json_decode($response->getBody()->getContents(), TRUE);
+      $response_status = $data['payment_result']['response_status'] ?? '';
+      $error_code      = $data['code'] ?? '';
+      $error_message   = $data['message'] ?? '';
+
+      // PayTabs code 113 / ErrorCode 2000 = Transaction not found.
+      // This means the user opened the payment page but never submitted their card.
+      if ($error_code == 113 || str_contains((string) $error_message, '2000')) {
+        \Drupal::database()->update('sr_payment_transactions')
+          ->fields([
+            'payment_status'   => 'abandoned',
+            'response_message' => 'User abandoned the PayTabs payment page',
+            'raw_response'     => json_encode($data),
+            'updated'          => \Drupal::time()->getRequestTime(),
+          ])
+          ->condition('id', $txn->id)
+          ->execute();
+
+        $booking = \Drupal::entityTypeManager()->getStorage('booking')->load($txn->booking_id);
+        if ($booking && !in_array($booking->get('field_status')->getString(), ['payment_confirmed', 'payment_failed'])) {
+          $booking->set('field_status', 'payment_failed');
+          $booking->save();
+        }
+
+        \Drupal::logger('sr_paytabs')->notice('Cron marked booking @id as abandoned — tran @ref not found on PayTabs', [
+          '@id'  => $txn->booking_id,
+          '@ref' => $txn->tran_ref,
+        ]);
+        continue;
+      }
+
+      if (empty($response_status) || in_array($response_status, ['P', 'H'])) {
+        continue; // still genuinely pending — check again next cron run
+      }
+
+      $payment_status = ($response_status === 'A') ? 'approved' : 'declined';
+      $booking_status = ($response_status === 'A') ? 'payment_confirmed' : 'payment_failed';
+
+      \Drupal::database()->update('sr_payment_transactions')
+        ->fields([
+          'payment_status'   => $payment_status,
+          'response_status'  => $response_status,
+          'response_code'    => $data['payment_result']['response_code']    ?? '',
+          'response_message' => $data['payment_result']['response_message'] ?? '',
+          'raw_response'     => json_encode($data),
+          'updated'          => \Drupal::time()->getRequestTime(),
+        ])
+        ->condition('id', $txn->id)
+        ->execute();
+
+      $booking = \Drupal::entityTypeManager()->getStorage('booking')->load($txn->booking_id);
+      if ($booking && $booking->get('field_status')->getString() !== 'payment_confirmed') {
+        $booking->set('field_status', $booking_status);
+        $booking->save();
+
+        if ($booking_status === 'payment_confirmed') {
+          \Drupal::service('sr.services')->emailBooking($txn->booking_id);
+        }
+      }
+
+      \Drupal::logger('sr_paytabs')->notice('Cron reconciled booking @id: @status (tran @ref)', [
+        '@id'     => $txn->booking_id,
+        '@status' => $payment_status,
+        '@ref'    => $txn->tran_ref,
+      ]);
+    }
+    catch (\Exception $e) {
+      \Drupal::logger('sr_paytabs')->error('Cron query failed for tran @ref: @msg', [
+        '@ref' => $txn->tran_ref,
+        '@msg' => $e->getMessage(),
+      ]);
+    }
+  }
+}
+
+/**
+ * Auto-cancels unpaid RateGain bookings, and marks reminders due.
+ *
+ * RateGain bookings made more than
+ * Drupal\sr\Form\BookingForm::RATEGAIN_PAYMENT_DUE_THRESHOLD_DAYS days before
+ * arrival are saved with field_status = 'reserved_unpaid' instead of being
+ * forced to pay immediately (see BookingForm::submitForm()). This sweep:
+ *  - flags bookings for a payment reminder once arrival is within
+ *    REMINDER_LEAD_DAYS of the cutoff.
+ *  - auto-cancels any still-unpaid booking once arrival reaches the cutoff.
+ */
+function _sr_paytabs_process_rategain_deferred_bookings() {
+  $cancel_threshold_days   = \Drupal\sr\Form\BookingForm::RATEGAIN_PAYMENT_DUE_THRESHOLD_DAYS;
+  $reminder_lead_days      = 3;
+  $reminder_threshold_days = $cancel_threshold_days + $reminder_lead_days;
+
+  $storage = \Drupal::entityTypeManager()->getStorage('booking');
+  $ids = $storage->getQuery()
+    ->condition('field_status', 'reserved_unpaid')
+    ->accessCheck(FALSE)
+    ->execute();
+
+  if (empty($ids)) {
+    return;
+  }
+
+  $today = strtotime('today');
+  $state = \Drupal::state();
+
+  foreach ($storage->loadMultiple($ids) as $booking) {
+    $from_date = $booking->get('field_from_date')->value;
+    if (empty($from_date)) {
+      continue;
+    }
+
+    $days_to_arrival = (int) floor((strtotime($from_date) - $today) / 86400);
+
+    if ($days_to_arrival <= $cancel_threshold_days) {
+      $booking->set('field_status', 'canceled_booking');
+      $booking->save();
+
+      \Drupal::service('sr.services')->emailBooking($booking->id());
+      \Drupal::logger('sr_paytabs')->notice('Cron auto-cancelled unpaid RateGain booking @id — arrival in @days day(s), no payment received.', [
+        '@id'   => $booking->id(),
+        '@days' => $days_to_arrival,
+      ]);
+      continue;
+    }
+
+    if ($days_to_arrival <= $reminder_threshold_days) {
+      $state_key = 'sr_paytabs.reminder_sent.' . $booking->id();
+      if (!$state->get($state_key, FALSE)) {
+        \Drupal::service('sr.services')->emailBookingReminder($booking->id());
+        \Drupal::logger('sr_paytabs')->notice('Cron: RateGain booking @id needs a payment reminder — arrival in @days day(s).', [
+          '@id'   => $booking->id(),
+          '@days' => $days_to_arrival,
+        ]);
+        $state->set($state_key, TRUE);
+      }
+    }
+  }
+}
+
+function sr_paytabs_theme() {
+  return [
+    'sr_paytabs_return' => [
+      'variables' => [
+        'is_success'     => FALSE,
+        'is_pending'     => FALSE,
+        'booking_id'     => NULL,
+        'booking'        => NULL,
+        'property'       => NULL,
+        'property_image' => NULL,
+        'checkin'        => NULL,
+        'checkout'       => NULL,
+        'transaction'    => NULL,
+        'attempt'        => 0,
+        'return_tok'     => NULL,
+      ],
+      'template' => 'sr-paytabs-return',
+    ],
+    'sr_paytabs_dashboard' => [
+      'variables' => [
+        'stats'        => [],
+        'transactions' => [],
+        'filters'      => [],
+        'pager'        => [],
+      ],
+      'template' => 'sr-paytabs-dashboard',
+    ],
+    'sr_paytabs_view' => [
+      'variables' => [
+        'booking'      => [],
+        'property'     => [],
+        'transactions' => [],
+        'logs'         => [],
+        'refund_url'   => NULL,
+        'resend_url'   => NULL,
+        'query_url'    => NULL,
+      ],
+      'template' => 'sr-paytabs-view',
+    ],
+  ];
+}

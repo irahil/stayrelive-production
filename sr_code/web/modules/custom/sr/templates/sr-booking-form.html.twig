@@ -15,10 +15,21 @@
          {{ form.form_build_id }}
          {{ form.form_token }}
          {{ form.form_id }}
+         {{ form.property_id }}
+         {{ form.booking.rg_price }}
+         {{ form.booking.rg_currency }}
+         {{ form.booking.rg_room_selection }}
          {{ form.booking.name }}
          {{ form.booking.email }}
          {{ form.booking.phone_code }}
          {{ form.booking.phone_number }}
+         {% if form.booking.address_line1 is defined %}
+         {{ form.booking.address_line1 }}
+         {{ form.booking.address_city }}
+         {{ form.booking.address_state_code }}
+         {{ form.booking.address_country_code }}
+         {{ form.booking.address_postal_code }}
+         {% endif %}
          {{ form.booking.adults }}
          {{ form.booking.kids }}
          {{ form.booking.remarks }}
@@ -32,11 +43,16 @@
                <p class="apt-location">{{ form.property_summary.address }}</p>
             </a>
             <p class="apt-details">{{ form.property_summary.bedrooms }} Bedrooms & {{ form.property_summary.bathrooms }} Bathroom</p>
-            <p class="apt-details">Adults : {{form.booking.occupants_markup.adults }} | Kids : {{form.booking.occupants_markup.kids }}</p>
+            <p class="apt-details">Adults : {{form.booking.occupants_markup.adults }} | Kids : {{form.booking.occupants_markup.kids }}{{ form.booking.occupants_markup.child_age }}</p>
             <div class="apt-details">
                <div class="date-from-box">From : {{ form.booking.dates_markup.from }} To : {{ form.booking.dates_markup.to }}</div>
             </div>
             <p class="apt-details">{{ form.booking.price_markup.currency }} {{ form.booking.price_markup.final_price }} for total number of {{ form.booking.price_markup.days }} day(s).</p>
+            {% if form.booking.cancellation_markup['#markup'] %}
+            <p class="apt-details apt-cancellation{{ 'Non-refundable' in form.booking.cancellation_markup['#markup'] ? ' apt-cancellation--strict' : '' }}">
+               <i class="fa-solid fa-calendar-xmark"></i> {{ form.booking.cancellation_markup }}
+            </p>
+            {% endif %}
          </div>
       </div>
    </div>

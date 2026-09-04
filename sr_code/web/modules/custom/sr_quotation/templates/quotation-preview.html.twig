@@ -7,82 +7,101 @@
       </div>
    </div>
 </div>
+
 <section class="why-we">
    <div class="container">
       <div class="row">
          <div class="col-12">
             <div class="quote-wrapper  mb-5">
                <div class="row">
-                  <h4 class="icon-one">Booking Information</h4>
-                  <div class="col-md-4">
-                     <ul class="list-columns">
-                        {% if data.booker_name|default('')|trim %}
-                        <li><span>Booker Name</span> {{ data.booker_name }}</li>
-                        {% endif %}
-                        {% if data.travel_partner|default('')|trim %}
-                        <li><span>Enquired by</span> {{ data.travel_partner }}</li>
-                        {% endif %}
-                        {% if data.checkin_date|default('')|trim %}
-                        <li><span>Check-in Date</span> {{ data.checkin_date }}</li>
-                        {% endif %}
-                        {% if data.checkout_date|default('')|trim %}
-                        <li><span>Check-out Date</span> {{ data.checkout_date }}</li>
-                        {% endif %}
-                     </ul>
-                  </div>
-                  <div class="col-md-4">
-                     <ul class="list-columns">
-                        {% if data.checkin_time|default('')|trim %}
-                        <li><span>Check-In Time</span> {{ data.checkin_time }}</li>
-                        {% endif %}
-                        {% if data.checkout_time|default('')|trim %}
-                        <li><span>Check-out Time</span> {{ data.checkout_time }}</li>
-                        {% endif %}
-                        {% if data.nights is not empty %}
-                        <li><span>Number of Nights</span> {{ data.nights }}</li>
-                        {% endif %}
-                        {% if data.enquired_location|default('')|trim %}
-                        <li><span>Enquired Location</span> {{ data.enquired_location }}</li>
-                        {% endif %}
-                     </ul>
-                  </div>
+                  <h4 class="icon-one">Query details</h4>
                   <div class="col-md-4">
                      <ul class="list-columns">
                         {% if data.quotation_id|default('')|trim %}
                         <li class="agent-detail">
-                           <span class="agent-icon"><i class="fas fa-file-alt"></i></span>
                            <span class="agent-text">
-                              <span class="label">Quotation ID</span>
+                              <span class="label">Quotation Id</span>
                               <span class="field-value">{{ data.quotation_id }}</span>
                            </span>
                         </li>
                         {% endif %}
-                        {% if data.agent_name|default('')|trim %}
+                        {% if data.booker_name|default('')|trim %}
                         <li class="agent-detail">
-                           <span class="agent-icon agent-logo-icon"></span>
                            <span class="agent-text">
-                              <span class="label">StayRelive Agent Name</span>
-                              <span class="field-value">{{ data.agent_name }}</span>
+                              <span class="label">Booker name</span>
+                              <span class="field-value">{{ data.booker_name }}</span>
                            </span>
                         </li>
                         {% endif %}
-                        {% if data.agent_phone|default('')|trim %}
+                        {% if data.travel_partner|default('')|trim %}
                         <li class="agent-detail">
-                           <span class="agent-icon"><i class="fa fa-phone"></i></span>
                            <span class="agent-text">
-                              <span class="label">StayRelive Agent Contact No</span>
-                              <span class="field-value">{{ data.agent_phone }}</span>
+                              <span class="label">Enquired by</span>
+                              <span class="field-value">{{ data.travel_partner }}</span>
                            </span>
                         </li>
                         {% endif %}
-                        {% if data.agent_email|default('')|trim %}
+                     </ul>
+                  </div>
+                  <div class="col-md-4">
+                     <ul class="list-columns">
+                        {% if data.checkin_date|default('')|trim or data.checkin_time|default('')|trim %}
+                        <li><span>Check-in</span> 
+                        {% if data.checkin_date|default('')|trim %}{{ data.checkin_date }}{% endif %}
+                        {% if data.checkin_date|default('')|trim and data.checkin_time|default('')|trim %} at {% endif %}
+                        {% if data.checkin_time|default('')|trim %}{{ data.checkin_time }}{% endif %}
+                        </li>
+                        {% endif %}
+                        {% if data.checkout_date|default('')|trim or data.checkout_time|default('')|trim %}
+                        <li><span>Check-out</span> 
+                        {% if data.checkout_date|default('')|trim %}{{ data.checkout_date }}{% endif %}
+                        {% if data.checkout_date|default('')|trim and data.checkout_time|default('')|trim %} at {% endif %}
+                        {% if data.checkout_time|default('')|trim %}{{ data.checkout_time }}{% endif %}
+                        </li>
+                        {% endif %}
+                     </ul>
+                  </div>
+                  <div class="col-md-4">
+                     <ul class="list-columns">
+                        {% if data.enquired_location|default('')|trim %}
                         <li class="agent-detail">
-                           <span class="agent-icon"><i class="far fa-envelope"></i></span>
                            <span class="agent-text">
-                              <span class="label">StayRelive Agent Email</span>
-                              <span class="field-value">{{ data.agent_email }}</span>
+                              <span class="label">Enquired Location</span>
+                              <span class="field-value">{{ data.enquired_location }}</span>
                            </span>
                         </li>
+                        {% endif %}
+                        {% if data.nights is not empty %}
+                        <li><span> No of nights</span> {{ data.nights }}</li>
+                        {% endif %}
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="col-12 ">
+            <div class="quote-wrapper pricing-highlight mb-5">
+               <h4 class="icon-three">Pricing & Financials</h4>
+               <div class="row">
+                  <div class="col-12">
+                     <ul class="list-columns two-columns pricing-values">
+                        {% if data.quote is not empty %}
+                        <li><span>Quote</span> {{ data.quote }}</li>
+                        {% endif %}
+                        {% if data.taxes is not empty %}
+                        <li><span>Taxes</span> {{ data.taxes|raw }}</li>
+                        {% endif %}
+                        {% if data.fx_rate is not empty %}
+                        <li><span>FX Rate</span> {{ data.fx_rate }}</li>
+                        {% endif %}
+                        {% if data.currency|default('')|trim %}
+                        <li><span>Currency</span> {{ data.currency }}</li>
+                        {% endif %}
+                        {% if data.addon_prices|default('')|trim %}
+                        <li><span>Add on Prices</span> {{ data.addon_prices|raw }}</li>
+                        {% endif %}
+                        {% if data.extras_tax|default('')|trim %}
+                        <li><span>Extras (Tax)</span> {{ data.extras_tax }}</li>
                         {% endif %}
                      </ul>
                   </div>
@@ -126,33 +145,7 @@
                         <li><span>Map Link</span> <a href="{{ data.map_link }}" target="_blank"  class="text-break" rel="noopener noreferrer">{{ data.map_link }}</a></li>
                         {% endif %}
                         {% if data.property_description|default('')|trim %}
-                        <li><span>Property Description</span> {{ data.property_description }}</li>
-                        {% endif %}
-                     </ul>
-                  </div>
-               </div>
-            </div>
-         </div>
-         <div class="col-12 ">
-            <div class="quote-wrapper mb-5">
-               <h4 class="icon-three">Pricing & Financials</h4>
-               <div class="row">
-                  <div class="col-12">
-                     <ul class="list-columns two-columns">
-                        {% if data.quote is not empty %}
-                        <li><span>Quote</span> {{ data.quote }}</li>
-                        {% endif %}
-                        {% if data.taxes is not empty %}
-                        <li><span>Taxes</span> {{ data.taxes }}</li>
-                        {% endif %}
-                        {% if data.fx_rate is not empty %}
-                        <li><span>FX Rate</span> {{ data.fx_rate }}</li>
-                        {% endif %}
-                        {% if data.currency|default('')|trim %}
-                        <li><span>Currency</span> {{ data.currency }}</li>
-                        {% endif %}
-                        {% if data.addon_prices|default('')|trim %}
-                        <li><span>Add on Prices</span> {{ data.addon_prices }}</li>
+                        <li><span>Property name & Description</span> {{ data.property_description }}</li>
                         {% endif %}
                      </ul>
                   </div>
@@ -192,10 +185,14 @@
                   <div class="col-12">
                      <div class="property-images">
                         {% for image_url in image_urls %}
-                        <img src="{{ image_url }}" alt="Property Image" />
+                        <a data-glightbox data-gallery="quotation-gallery" href="{{ image_url }}">
+                           <img src="{{ image_url }}" alt="Property Image" />
+                        </a>
                         {% endfor %}
                         {% for image_url in location_screenshot_urls %}
-                        <img src="{{ image_url }}" alt="Location Screenshot" />
+                        <a data-glightbox data-gallery="quotation-gallery" href="{{ image_url }}">
+                           <img src="{{ image_url }}" alt="Location Screenshot" />
+                        </a>
                         {% endfor %}
                      </div>
                      <p class="image-disclaimer small m-3">

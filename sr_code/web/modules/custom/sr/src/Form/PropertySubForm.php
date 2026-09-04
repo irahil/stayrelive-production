@@ -22,7 +22,7 @@ class PropertySubForm extends FormBase {
     'price_min' => '', 'price_max' => '',
     'bathroom' => '', 'bedroom' => '',
     'date_range' => '', 'town_city' => '',
-    'adult' => '', 'kid' => '',
+    'adult' => '', 'kid' => '', 'child_age' => '',
     'amenities' => '', 'sort' => '',
   );
 

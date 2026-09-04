@@ -1,5 +1,5 @@
 .quotation-form-sections .form-section {
-  margin-bottom: 2.5rem;
+  margin: 2.5rem 0;
   border: 5px solid #cce5ee;
   border-radius: 15px;
   padding: 20px;
@@ -56,7 +56,11 @@
 }
 
 .form-grid.one-col {
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.form-grid .full-width {
+  grid-column: 1 / -1;
 }
 
 .form-actions {

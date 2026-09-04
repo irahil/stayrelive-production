@@ -1,0 +1,92 @@
+/* The price block (drupal_block('sr_property_price_block')) is rendered
+   through Drupal's generic block + form theming, which wraps the actual
+   <aside class="col-xl-5 order-md-last"> in extra divs
+   (.price.block-sr-property-price-block > .wrapper123 > form). Those
+   wrapper divs are the real direct children of .row, so Bootstrap's grid
+   width/flex rules land on them instead of the aside, breaking the
+   col-xl-7 / col-xl-5 split. display:contents removes their boxes from
+   layout so the aside becomes the row's effective flex child. */
+.price.block-sr-property-price-block,
+.price.block-sr-property-price-block > .wrapper123,
+.price.block-sr-property-price-block > .wrapper123 > form {
+  display: contents;
+}
+
+/* On a parent property with sub-properties, this same block instead renders
+   PropertySubForm's "Room Types" list (a <fieldset class="SectionContainer">,
+   no aside). display:contents above promotes the fieldset itself to be the
+   row's effective flex child; with no explicit width it shrinks to fit only
+   its image, wrapping the "Room Types" heading. Give it a fixed
+   sidebar-appropriate width. auto-fit lets the shared
+   .search-sub-results-container (also used by a separate full-width listing
+   elsewhere, hence scoped here) show one full-width card when there's only
+   one room type and pair cards up into 2 columns once there are several,
+   without leaving a blank reserved column either way. align-self: flex-start
+   stops the fieldset from stretching to match the tall sibling .row (property
+   description/amenities/map), which otherwise left a large blank area below
+   a short card grid. */
+.price.block-sr-property-price-block .SectionContainer {
+  flex: 0 0 auto;
+  width: 480px;
+  align-self: flex-start;
+}
+.price.block-sr-property-price-block .search-sub-results-container {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
+  gap: 16px;
+  width: 100%;
+  height: auto !important;
+}
+.price.block-sr-property-price-block .fieldset__wrapper {
+  height: auto !important;
+}
+
+/* .node__content uses col-lg-9 (75% of .row), sized on the assumption that
+   the other 3 columns are a sidebar living inside the same .row. In this
+   Room Types layout the sidebar is a separate flex sibling of .row instead
+   (see display:contents above), so that reserved 25% just sits empty and
+   .row itself doesn't grow to fill the space next to the fixed-width
+   sidebar. Scoped with :has() to this fieldset case only, so the normal
+   PriceForm aside layout (col-xl-7/col-xl-5, already correct) is untouched. */
+.row:has(+ .price.block-sr-property-price-block .SectionContainer) {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.row:has(+ .price.block-sr-property-price-block .SectionContainer) .node__content.col-lg-9 {
+  flex: 0 0 90%;
+  max-width: 90%;
+  width: 90%;
+}
+
+/* Pins each card's "Request to book" button to the same baseline across a
+   row, regardless of how many lines the room title/details above it wrap
+   to — grid's default align-items: stretch already gives each
+   .result-sub-list the row's full height, margin-top: auto on the button
+   pushes it to the bottom of that space. */
+.price.block-sr-property-price-block .result-sub-list {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.price.block-sr-property-price-block .request-book {
+  margin-top: auto;
+}
+
+/* This card lives outside Bootstrap's normal grid (promoted by
+   display:contents above), so it doesn't inherit the main content column's
+   own col-lg-* stacking. Match that same lg breakpoint here so it stacks
+   full-width below the property description on tablet/mobile instead of
+   staying squeezed beside it at every screen size. .container.d-flex itself
+   has no flex-wrap, so its children (.row and this promoted fieldset) are
+   forced to stay on one line regardless of width — without wrap, a 100%-wide
+   fieldset just overflows/overlaps instead of dropping to a new line. */
+@media (max-width: 991.98px) {
+  .container.d-flex[data-sticky-container] {
+    flex-wrap: wrap;
+  }
+  .price.block-sr-property-price-block .SectionContainer {
+    width: 100%;
+  }
+  .price.block-sr-property-price-block .search-sub-results-container {
+    grid-template-columns: 1fr !important;
+  }
+}

@@ -78,19 +78,20 @@ view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
 ]
 %}
 {{ attach_library('claro/classy.node') }}
+{{ attach_library('srdesign/property-price-block') }}
 <script type="text/javascript">
    {{ arr_google_maps | raw}}
 </script>
 <section class="apartment-photos">
    <div class="container-fluid p-0">
-      <div class="row">
+      <div class="row g-0">
          {{ content.field_media }}
       </div>
    </div>
 </section>
-<div class="container" data-sticky-container>
-<div class="row d-md-flex flex-xl-nowrap">
-<div{{ content_attributes.addClass('node__content col-xl-7 order-md-1') }}>
+<div class="container d-flex" data-sticky-container>
+<div class="row d-md-flex flex-lg-nowrap">
+<div{{ content_attributes.addClass('node__content col-lg-9 order-md-1') }}>
 <div class="property-container">
    <div class="apartment-info">
       {% if parent_link != "" %}
@@ -98,6 +99,9 @@ view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
       {% endif %}
       <h3>{{ node_title }}</h3>
       <h3>{{ content.field_town_city }}</h3>
+      {% if node.field_property_source.value == 'rategain' %}
+        <p>RateGain property</p>
+      {% endif %}
       <ul class="nav location-map">
          <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="#n-gmap">{{ content.field_display_address }}</a>
@@ -111,13 +115,15 @@ view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
                      <div class="field__label">Studio Apartment</div>
                   </div>
                </span>
-            {% elseif node.field_total_bedrooms.value != 0 %}
+            {% elseif node.field_total_bedrooms.value is not empty and node.field_total_bedrooms.value != 0 %}
                <span><i class="fa-solid fa-bed"></i>{{ content.field_total_bedrooms }}</span>
             {% endif %}
-            {% if node.field_total_bathrooms.value != 0 %}
+            {% if node.field_total_bathrooms.value is not empty and node.field_total_bathrooms.value != 0 %}
                <span><i class="fa-solid fa-bath"></i>{{ content.field_total_bathrooms }}</span>
             {% endif %}
-            <span><i class="fa-solid fa-calendar-days"></i>{{ content.field_available_from }}</span>
+            {% if node.field_available_from.value is not empty %}
+               <span><i class="fa-solid fa-calendar-days"></i>{{ content.field_available_from }}</span>
+            {% endif %}
          {% endif %}
       </div>
    </div>
@@ -129,4 +135,98 @@ view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
       <h4>Neighbourhood</h4>
       <div id="google_map"></div>
    </div>
+</div>
+</div>
+
+{{ drupal_block('sr_property_price_block') }}
+</div>
+
+{% if rategain_room_rates is not empty %}
+{{ attach_library('srdesign/rategain-tariff') }}
+<div class="container">
+<div class="row">
+  <div class="col-12 col-xl-9">
+   <div class="rg-tariff pt-5">
+     <h4>Available Rates</h4>
+     {% for room in rategain_room_rates %}
+       <div class="rg-card">
+         <div class="rg-card-media">
+           <div class="rg-card-media-image">
+             {% for img in room.images %}
+               {% if loop.first %}
+                 <a href="{{ img }}" data-glightbox data-gallery="room-{{ room.room_code }}">
+                   <img src="{{ img }}" alt="{{ room.name }}" loading="lazy" />
+                 </a>
+               {% else %}
+                 <a href="{{ img }}" data-glightbox data-gallery="room-{{ room.room_code }}"></a>
+               {% endif %}
+             {% endfor %}
+           </div>
+           <h5 class="rg-card-title">{{ room.name }}</h5>
+           {% if room.star_rating %}
+             <div class="rg-card-stars">
+               {% for i in 1..room.star_rating %}<i class="fa-solid fa-star"></i>{% endfor %}
+             </div>
+           {% endif %}
+           {% if room.facilities is not empty %}
+             <ul class="rg-card-facilities">
+               {% for facility in room.facilities %}
+                 <li>{{ facility }}</li>
+               {% endfor %}
+             </ul>
+           {% endif %}
+         </div>
+         <div class="rg-card-rates">
+           {% for rate in room.rates %}
+             <div class="rg-card-rate-row{{ rate.is_lowest ? ' rg-card-rate-row--lowest' : '' }}">
+               {% if rate.is_lowest %}
+                 <div class="rg-card-rate-ribbon"><i class="fa-solid fa-tag"></i> Lowest price available!</div>
+               {% endif %}
+               {% set rg_is_free_cancel = rate.cancellation starts with 'Free cancellation' %}
+               {% set rg_is_non_refundable = 'Non-refundable' in rate.cancellation %}
+               {% set rg_board_icon = 'breakfast' in rate.board_name|lower ? 'fa-utensils' : 'fa-bed' %}
+               <div class="rg-card-rate-details">
+                 <ul class="rg-card-checklist">
+                   <li class="rg-board"><i class="fa-solid {{ rg_board_icon }}"></i> {{ rate.board_name|default(rate.board_code) }}</li>
+                   {% if rate.cancellation %}
+                     <li class="{{ rg_is_non_refundable ? 'rg-strict' : (rg_is_free_cancel ? 'rg-check' : 'rg-warn') }}">
+                       <i class="fa-solid fa-{{ rg_is_non_refundable ? 'xmark' : (rg_is_free_cancel ? 'shield-halved' : 'triangle-exclamation') }}"></i> {{ rate.cancellation }}
+                     </li>
+                   {% endif %}
+                   {% if rate.needs_confirmation %}
+                     <li class="rg-warn" title="This rate's final price and availability will be re-checked with the property right before you pay — it may change slightly from what's shown here.">
+                       <i class="fa-solid fa-clock-rotate-left"></i> Price will be re-confirmed before you pay
+                     </li>
+                   {% endif %}
+                   {% if rate.allotment is not null and rate.allotment <= 5 %}
+                     <li class="rg-urgent"><i class="fa-solid fa-triangle-exclamation"></i> Only {{ rate.allotment }} left at this price</li>
+                   {% endif %}
+                 </ul>
+               </div>
+               <div class="rg-card-rate-price">
+                 {% if rate.pre_discount_price_formatted %}
+                   <div class="rg-card-price-was">{{ rate.pre_discount_price_formatted }} {{ rate.currency }}</div>
+                 {% endif %}
+                 <div class="rg-card-price-now">{{ rate.price_formatted }} {{ rate.currency }}</div>
+                 <div class="rg-card-price-sub">Per night before taxes</div>
+                 {% if rate.savings_formatted %}
+                   <div class="rg-card-price-savings">Save {{ rate.savings_formatted }} {{ rate.currency }}</div>
+                 {% endif %}
+               </div>
+               <div class="rg-card-rate-action">
+                 <a href="{{ rate.link }}" class="btn mb-0 rg-card-book">Book</a>
+                 {% if rg_is_free_cancel %}
+                   <div class="rg-card-price-cancel">FREE Cancellation</div>
+                 {% endif %}
+               </div>
+             </div>
+           {% endfor %}
+         </div>
+       </div>
+     {% endfor %}
+   </div>
+  </div>
+</div>
+</div>
+{% endif %}
 </div>

@@ -33,12 +33,23 @@ class SRService {
     $price_info = array();
     if ($nid > 0) {
       $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
-      $field_price = $node->get('field_price')->getString();
       $field_deposit = $node->get('field_deposit')->getString();
-      $currency_code_tid = $node->get('field_currency_code')->getString();
-      $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($currency_code_tid);
-      $field_currency_code = $term->label();
       $field_property_source = $node->get('field_property_source')->getString();
+
+      // RateGain rooms aren't separate Drupal nodes, so the room the guest
+      // actually selected on the property page is passed through as
+      // rg_price/rg_currency instead of relying on the node's static
+      // field_price. Only applies to rategain nodes with that override present;
+      // every other source keeps reading price straight off the node as before.
+      if ($field_property_source == 'rategain' && isset($param['rg_price']) && is_numeric($param['rg_price']) && $param['rg_price'] > 0) {
+        $field_price = (float) $param['rg_price'];
+        $field_currency_code = !empty($param['rg_currency']) ? $param['rg_currency'] : 'USD';
+      } else {
+        $field_price = $node->get('field_price')->getString();
+        $currency_code_tid = $node->get('field_currency_code')->getString();
+        $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($currency_code_tid);
+        $field_currency_code = $term ? $term->label() : 'USD';
+      }
 
       // Since spacest price is of 30 days. so getting per night price.
       if ($field_property_source == 'spacest' && $field_price > 0) {
@@ -61,15 +72,15 @@ class SRService {
       // Calculate commission
       $calculated_price = \Drupal::service('sr.services')->calculateCommission($field_property_source, $result['value']);
 
-      $price_info['price'] = $calculated_price;
+      $price_info['price'] = ceil((float)$calculated_price);
       $price_info['currency_code'] = $result['to'];
-      $price_info['deposit'] = $result_deposit['value'];
+      $price_info['deposit'] = ceil((float)$result_deposit['value']);
       $price_info['days'] = $booking_days;
       $price_info['checkin_date'] = $from_date;
       $price_info['checkout_date'] = $to_date;
       $price_info['tax'] = 0;
       $price_info['price_for_days'] = $price_info['price'] * $price_info['days'];
-      $price_info['final_price'] = $price_info['price'] * $price_info['days'] + $price_info['deposit'];
+      $price_info['final_price'] = ceil((float)($price_info['price'] * $price_info['days'] + $price_info['deposit']));
 
       $price_info['booking_url'] =  Url::fromRoute('sr.booking', array_map('urlencode', $param)
        , ['absolute' => TRUE])->toString();
@@ -87,7 +98,11 @@ class SRService {
         'lat': '".$location_info['lat']."',
         'lng': '".$location_info['lng']."',
         'link': '".$location_info['link']."',
-        'id': '".$location_info['id'] ."'
+        'id': '".$location_info['id']."',
+        'image': '".addslashes($location_info['image'] ?? '')."',
+        'price': '".addslashes($location_info['price'] ?? 'On Request')."',
+        'bedrooms': '".($location_info['bedrooms'] ?? '')."',
+        'bathrooms': '".($location_info['bathrooms'] ?? '')."'
       },";
     }
     $str_location = rtrim($str_location, ",");
@@ -210,66 +225,99 @@ class SRService {
     return $arr_return_address;
   }
 
+  /**
+   * Loads a booking + its property and builds the shared variable set every
+   * booking email template renders from (dates, price, guest counts, etc.),
+   * plus 'payment_due_date' for the RateGain reserve-now-pay-later flow —
+   * used by both emailBooking() (status-triggered emails) and
+   * emailBookingReminder() (cron-triggered, not a status change).
+   *
+   * @return array|false
+   *   ['booking' => $node_booking, 'property' => $node_property,
+   *   'content' => $arr_content] or FALSE if either entity can't be
+   *   loaded / the property isn't published.
+   */
+  private function buildBookingEmailContent($booking_id) {
+    if ($booking_id <= 0) {
+      return false;
+    }
+
+    $node_booking = \Drupal::entityTypeManager()->getStorage('booking')->load($booking_id);
+    if ($node_booking == NULL) {
+      return false;
+    }
+
+    $property_id = $node_booking->get('field_property_id')->getString();
+    $node_property = Node::load($property_id);
+    if ($node_property == NULL || !$node_property->isPublished()) {
+      return false;
+    }
+
+    $booking_status = $node_booking->get('field_status')->getString();
+    $booking_id = $node_booking->id();
+    $property_title = $node_property->getTitle();
+
+    // Calculate Dates
+    $from_date_raw = $node_booking->get('field_from_date')->getString();
+    $from_date = date("jS F y", strtotime($from_date_raw));
+    $to_date = date("jS F y", strtotime($node_booking->get('field_to_date')->getString()));
+
+    // RateGain's reserve-now-pay-later window (BookingForm::submitForm())
+    // — the guest has until this many days before arrival to pay, after
+    // which sr_paytabs_cron() auto-cancels the reservation. Computed here
+    // (not just in BookingForm) so both the initial "reserved" email and
+    // the later reminder email quote the same deadline.
+    $payment_due_date = '';
+    if (!empty($from_date_raw)) {
+      $due_ts = strtotime($from_date_raw) - (\Drupal\sr\Form\BookingForm::RATEGAIN_PAYMENT_DUE_THRESHOLD_DAYS * 86400);
+      $payment_due_date = date("jS F y", $due_ts);
+    }
+
+    // Fetch and calculate price.
+    $final_price = $node_booking->get('field_price')->getString();
+    $final_price = ($final_price != '') ? commonUtil::formatCurrency($final_price) : '';
+
+    // Fetch currency
+    $arr_currency_list = commonUtil::get_term_list('currency');
+    $currency_code = $node_booking->get('field_currency_code')->getString();
+    $selected_currency = (isset($arr_currency_list[$currency_code])) ? $arr_currency_list[$currency_code] : 'NA';
+
+    $arr_content = [
+      'username' => $node_booking->get('field_name')->getString(),
+      'property_url' => $node_property->toUrl('canonical', ['absolute' => TRUE])->toString(),
+      'booking_url' => Url::fromRoute('sr.booking', [], ['absolute' => TRUE])->toString(),
+      'from_date' => $from_date,
+      'to_date' => $to_date,
+      'email' => $node_booking->get('field_email')->getString(),
+      'currency_code' => $selected_currency,
+      'price' => $final_price,
+      'status' => ucwords(str_replace(" ", "_", $booking_status)),
+      'property_title' => $property_title,
+      'booking_id' => $booking_id,
+      'town_city' => $property_id,
+      'adults' => $node_booking->get('field_adults')->getString(),
+      'kids' => $node_booking->get('field_kids')->getString(),
+      'additional_information' => $node_booking->get('field_remarks')->getString(),
+      'phone_number' => $node_booking->get('field_phone_number')->getString(),
+      'payment_due_date' => $payment_due_date,
+    ];
+
+    return ['booking' => $node_booking, 'property' => $node_property, 'content' => $arr_content];
+  }
+
   public function emailBooking($booking_id, $email_type = null)
   {
+    $loaded = $this->buildBookingEmailContent($booking_id);
+    if ($loaded === false) {
+      return false;
+    }
 
-    if ($booking_id > 0) {
-      # Load from node id
-      $node_booking = \Drupal::entityTypeManager()->getStorage('booking')->load($booking_id);
-      if ($node_booking == NULL) {
-        return false;
-      }
-      // echo '<pre>';
-      // print_r($node_booking);
-      // echo '</pre>';
-      // exit;
+    $node_property = $loaded['property'];
+    $arr_content = $loaded['content'];
+    $booking_id = $arr_content['booking_id'];
+    $property_title = $arr_content['property_title'];
 
-      $property_id = $node_booking->get('field_property_id')->getString();
-      # Load from node id
-      $node_property = Node::load($property_id);
-      if ($node_property == NULL || !$node_property->isPublished()) {
-        return false;
-      }
-
-      $booking_status = $node_booking->get('field_status')->getString();
-      $booking_id = $node_booking->id();
-      $property_title = $node_property->getTitle();
-
-      // Calculate Dates
-      $from_date = new DrupalDateTime($node_booking->get('field_from_date')->getString());
-      $from_date = date("jS F y", strtotime($from_date));
-
-      $to_date = new DrupalDateTime($node_booking->get('field_to_date')->getString());
-      $to_date = date("jS F y", strtotime($to_date));
-
-      // Fetch and calculate price.
-      $final_price = $node_booking->get('field_price')->getString();
-      $final_price = ($final_price != '') ? commonUtil::formatCurrency($final_price) : '';
-
-      // Fetch currency
-      $arr_currency_list = commonUtil::get_term_list('currency');
-      $currency_code = $node_booking->get('field_currency_code')->getString();
-      $selected_currency = (isset($arr_currency_list[$currency_code])) ? $arr_currency_list[$currency_code] : 'NA';
-
-      $arr_content = [
-        'username' => $node_booking->get('field_name')->getString(),
-        'property_url' => $node_property->toUrl('canonical', ['absolute' => TRUE])->toString(),
-        'booking_url' => Url::fromRoute('sr.booking', [], ['absolute' => TRUE])->toString(),
-        'from_date' => date("jS F y", strtotime($from_date)),
-        'to_date' => date("jS F y", strtotime($to_date)),
-        'email' => $node_booking->get('field_email')->getString(),
-        'currency_code' => $selected_currency,
-        'price' => $final_price,
-        'status' => ucwords(str_replace(" ", "_", $booking_status)),
-        'property_title' => $property_title,
-        'booking_id' => $booking_id,
-        'town_city' => $property_id,
-        'adults' => $node_booking->get('field_adults')->getString(),
-        'kids' => $node_booking->get('field_kids')->getString(),
-        'additional_information' => $node_booking->get('field_remarks')->getString(),
-        'phone_number' => $node_booking->get('field_phone_number')->getString(),
-      ];
-      \Drupal::logger('booking-data')->warning('<pre><code>' . print_r($arr_content['status'], TRUE) . '</code></pre>');
+    \Drupal::logger('booking-data')->warning('<pre><code>' . print_r($arr_content['status'], TRUE) . '</code></pre>');
 
 
       switch ($arr_content['status']) {
@@ -288,7 +336,7 @@ class SRService {
           $internal_params = [
             'module' => 'sr',
             'key' => 'booking',
-            'to' => 'vs2542000@gmail.com',
+            'to' => 'book@stayrelive.com',
             'subject' => "New Booking Request Received [#{$booking_id}] - Action Required",
             'message' => $this->bookingEmailBody($arr_content, 'emails/sr-email-booking-request-internal'),
           ];
@@ -322,6 +370,107 @@ class SRService {
 
         break;
 
+        case 'Payment_confirmed':
+
+          $payment_user_params = [
+            'module' => 'sr',
+            'key' => 'booking_confirm',
+            'to' => $arr_content['email'],
+            'subject' => "Booking Confirmed & Payment Received : " . $node_property->getTitle() . " [#{$booking_id}]",
+            'message' => $this->bookingEmailBody($arr_content, 'emails/sr-email-booking-confirmation'),
+          ];
+          $this->sendEmail($payment_user_params);
+
+          $payment_internal_params = [
+            'module' => 'sr',
+            'key' => 'booking',
+            'to' => 'book@stayrelive.com',
+            'subject' => "Payment Received - Booking #{$booking_id} Confirmed",
+            'message' => $this->bookingEmailBody($arr_content, 'emails/sr-email-booking-request-internal'),
+          ];
+          $this->sendEmail($payment_internal_params);
+
+        break;
+
+        case 'Payment_failed':
+
+          $failed_params = [
+            'module' => 'sr',
+            'key' => 'booking',
+            'to' => $arr_content['email'],
+            'subject' => "Payment Failed for Booking #{$booking_id} - " . $node_property->getTitle(),
+            'message' => $this->bookingEmailBody($arr_content, 'emails/sr-email-booking-canceled'),
+          ];
+          $this->sendEmail($failed_params);
+
+        break;
+
+        case 'Payment_bank_pending':
+
+          $bank_pending_params = [
+            'module' => 'sr',
+            'key' => 'booking',
+            'to' => $arr_content['email'],
+            'subject' => "Payment Under Review for Booking #{$booking_id} - " . $node_property->getTitle(),
+            'message' => $this->bookingEmailBody($arr_content, 'emails/sr-email-booking-request-user'),
+          ];
+          $this->sendEmail($bank_pending_params);
+
+          $bank_pending_internal = [
+            'module' => 'sr',
+            'key' => 'booking',
+            'to' => 'book@stayrelive.com',
+            'subject' => "Payment Pending Bank Review - Booking #{$booking_id}",
+            'message' => $this->bookingEmailBody($arr_content, 'emails/sr-email-booking-request-internal'),
+          ];
+          $this->sendEmail($bank_pending_internal);
+
+        break;
+
+        case 'Refunded':
+
+          $refund_user_params = [
+            'module' => 'sr',
+            'key' => 'booking',
+            'to' => $arr_content['email'],
+            'subject' => "Refund Processed for Booking #{$booking_id} - " . $node_property->getTitle(),
+            'message' => $this->bookingEmailBody($arr_content, 'emails/sr-email-booking-canceled'),
+          ];
+          $this->sendEmail($refund_user_params);
+
+          $refund_internal_params = [
+            'module' => 'sr',
+            'key' => 'booking',
+            'to' => 'book@stayrelive.com',
+            'subject' => "Refund Processed - Booking #{$booking_id}",
+            'message' => $this->bookingEmailBody($arr_content, 'emails/sr-email-booking-request-internal'),
+          ];
+          $this->sendEmail($refund_internal_params);
+
+        break;
+
+        case 'Reserved_unpaid':
+
+          $reserved_params = [
+            'module' => 'sr',
+            'key' => 'booking_confirm',
+            'to' => $arr_content['email'],
+            'subject' => "Booking Reserved : " . $property_title . " [#{$booking_id}]",
+            'message' => $this->bookingEmailBody($arr_content, 'emails/sr-email-booking-reserved'),
+          ];
+          $this->sendEmail($reserved_params);
+
+          $reserved_internal_params = [
+            'module' => 'sr',
+            'key' => 'booking',
+            'to' => 'book@stayrelive.com',
+            'subject' => "New Reservation (Payment Pending) - Booking #{$booking_id}",
+            'message' => $this->bookingEmailBody($arr_content, 'emails/sr-email-booking-request-internal'),
+          ];
+          $this->sendEmail($reserved_internal_params);
+
+        break;
+
         default:
 
           \Drupal::logger('BOOKING SWITCH DEBUG')
@@ -329,7 +478,35 @@ class SRService {
 
         break;
       }
+  }
+
+  /**
+   * Sends the "payment due soon" reminder for a RateGain reserved-unpaid
+   * booking — triggered by sr_paytabs_cron()'s deferred-booking sweep, not
+   * by a field_status change, so it doesn't go through emailBooking()'s
+   * status switch.
+   *
+   * @return boolean
+   */
+  public function emailBookingReminder($booking_id) {
+    $loaded = $this->buildBookingEmailContent($booking_id);
+    if ($loaded === false) {
+      return false;
     }
+
+    $arr_content = $loaded['content'];
+    $arr_content['payment_url'] = Url::fromRoute('sr_paytabs.initiate', ['booking_id' => $booking_id], ['absolute' => TRUE])->toString();
+
+    $reminder_params = [
+      'module' => 'sr',
+      'key' => 'booking',
+      'to' => $arr_content['email'],
+      'subject' => "Payment Due Soon - Booking #{$booking_id} - " . $arr_content['property_title'],
+      'message' => $this->bookingEmailBody($arr_content, 'emails/sr-email-booking-reminder'),
+    ];
+    $this->sendEmail($reminder_params);
+
+    return true;
   }
 
     /**

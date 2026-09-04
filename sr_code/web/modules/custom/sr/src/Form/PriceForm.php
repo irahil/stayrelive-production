@@ -102,6 +102,7 @@ class PriceForm extends FormBase {
 
     $arr_block_param['flag_product_detail'] = $flag_product_detail;
     $arr_block_param['flag_show_price'] = $flag_show_price;
+    $arr_block_param['property_source'] = $node->get('field_property_source')->getString();
 
     foreach ($arr_block_param as $key_block => $val_block) {
       $form['price_summary'][$key_block] = ['#markup' => $val_block];

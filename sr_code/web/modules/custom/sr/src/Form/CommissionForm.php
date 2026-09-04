@@ -11,6 +11,7 @@ class CommissionForm extends ConfigFormBase {
     'plumguide' => 'Plumguide',
     'ratehawk' => 'RateHawk',
     'interhome' => 'InterHome',
+    'rategain' => 'RateGain',
   );
 
   /**

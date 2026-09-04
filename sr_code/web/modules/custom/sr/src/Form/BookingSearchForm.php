@@ -38,9 +38,16 @@ class BookingSearchForm extends FormBase {
     $arr_currency_list = commonUtil::get_term_list('currency');
 
     $arr_status_list = array(
-      'pending_booking' => 'Pending Booking',
-      'confirmed' => 'Confirmed Booking',
-      'canceled_booking' => 'Canceled Booking',
+      'pending_booking'      => 'Pending Booking',
+      'confirmed'            => 'Confirmed Booking',
+      'canceled_booking'     => 'Canceled Booking',
+      'payment_pending'      => 'Payment Pending',
+      'payment_initiated'    => 'Payment Initiated',
+      'payment_confirmed'    => 'Confirmed (Paid)',
+      'payment_failed'       => 'Payment Failed',
+      'payment_bank_pending' => 'Payment Under Review',
+      'refunded'             => 'Refunded',
+      'reserved_unpaid'      => 'Reserved (Payment Deferred)',
     );
 
     $form_param = array('status' => '', 'uid' => '');
@@ -174,7 +181,8 @@ $form['search_result']['result'][$key_result]['property_source'] = array(
           $no_of_rooms = $property->get('field_total_bedrooms')->getString();
         }
 
-        $booking_status_link = $arr_status_list[$val_result['field_status']];
+        $booking_status_raw  = $val_result['field_status'] ?? '';
+        $booking_status_link = $arr_status_list[$booking_status_raw] ?? ucwords(str_replace('_', ' ', $booking_status_raw));
 
         $property_info = $property_link;
         if ($flag_is_admin == true) {
@@ -184,6 +192,22 @@ $form['search_result']['result'][$key_result]['property_source'] = array(
 
           $booking_status_link = commonUtil::my_generate_hyperlink($booking_status_link, $booking_url);
           $property_info = $property_link . "(".$property_source.")";
+        }
+
+        // Show "Pay Now" whenever the viewer owns this booking, whether or
+        // not they're also an admin — admins viewing bookings that belong
+        // to other users don't get it (PayTabsController rejects those
+        // anyway since it checks booking ownership).
+        $booking_owner_uid = $flag_is_admin
+          ? \Drupal::entityTypeManager()->getStorage('booking')->load($val_result['id'])?->getOwnerId()
+          : $current_uid;
+
+        if ($booking_owner_uid == $current_uid && in_array($booking_status_raw, ['payment_pending', 'reserved_unpaid'], TRUE)) {
+          $pay_url = Url::fromRoute('sr_paytabs.initiate', [
+            'booking_id' => $val_result['id'],
+          ], ['absolute' => TRUE])->toString();
+
+          $booking_status_link .= '<br>' . commonUtil::my_generate_hyperlink('Pay Now', $pay_url);
         }
 
         $form['search_result']['result'][$key_result]['property'] = array(
@@ -254,7 +278,7 @@ $form['search_result']['result'][$key_result]['property_source'] = array(
           'from_date' => $val_result['field_from_date'],
           'to_date' => $val_result['field_to_date'],
           'price' => $selected_currency . " " . $val_result['field_price'],
-          'status' => $arr_status_list[$val_result['field_status']],
+          'status' => $arr_status_list[$val_result['field_status']] ?? ucwords(str_replace('_', ' ', $val_result['field_status'] ?? '')),
           'additional_info' => $val_result['field_remarks'],
         ];
       }

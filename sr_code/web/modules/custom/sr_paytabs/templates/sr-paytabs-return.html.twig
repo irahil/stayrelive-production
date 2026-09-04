@@ -1,0 +1,154 @@
+<div class="sr-payment-return">
+  <div class="sr-payment-return__inner">
+
+  {% if is_pending %}
+    {% if attempt >= 5 %}
+      <div class="verifying">
+        <div class="check-badge is-pending">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#B8860B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>
+        </div>
+        <h1>Still confirming your payment</h1>
+        <p>Your payment is still being confirmed by the bank. This can sometimes take a few minutes.</p>
+        <p>We will send a confirmation email to <strong>{{ booking.field_email.value }}</strong> as soon as it is confirmed.</p>
+        <p>Your booking reference is <strong>#{{ booking_id }}</strong>. You can check the status anytime from your bookings page.</p>
+        <div class="actions">
+          <a href="/property/booking/search" class="btn btn-primary">View my bookings</a>
+          <a href="/payment/return/{{ booking_id }}?tok={{ return_tok }}&attempt=0" class="btn btn-outline-light">Check again</a>
+        </div>
+      </div>
+    {% else %}
+      <div class="verifying">
+        <div class="check-badge is-pending">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#B8860B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>
+        </div>
+        <h1>Verifying your payment&hellip;</h1>
+        <p>We are confirming your payment with PayTabs. This page will refresh automatically.</p>
+        <p class="attempt-count">Attempt {{ attempt + 1 }} of 5&hellip;</p>
+        <meta http-equiv="refresh" content="10; url=/payment/return/{{ booking_id }}?tok={{ return_tok }}&attempt={{ attempt + 1 }}">
+      </div>
+    {% endif %}
+
+  {% elseif is_success %}
+
+    <div class="hero">
+      <div class="check-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1F9D6D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h1>Booking confirmed</h1>
+      <p>Your payment went through and the apartment is yours for the dates below.</p>
+    </div>
+
+    {% if property %}
+      <div class="property">
+        {% if property_image %}
+          <img src="{{ property_image }}" alt="{{ property.label() }}">
+        {% endif %}
+        <div class="property-info">
+          <h2>{{ property.label() }}</h2>
+          {% if property.field_location_town.value %}
+            <p class="loc">{{ property.field_location_town.value }}</p>
+          {% elseif property.field_display_address.value %}
+            <p class="loc">{{ property.field_display_address.value }}</p>
+          {% endif %}
+          <div class="meta-row">
+            {% if checkin %}
+              <span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                {{ checkin }} &rarr; {{ checkout }}
+              </span>
+            {% endif %}
+            {% if booking.field_adults.value %}
+              <span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/></svg>
+                {{ booking.field_adults.value }} Adult{{ booking.field_adults.value > 1 ? 's' : '' }}{% if booking.field_kids.value > 0 %}, {{ booking.field_kids.value }} Kid{{ booking.field_kids.value > 1 ? 's' : '' }}{% endif %}
+              </span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="stub">
+      <div class="stub-top">
+        <div class="stub-label">Booking reference</div>
+        <div class="stub-ref">
+          #{{ booking_id }}
+          <button class="copy-btn" onclick="srCopyRef(this, '#{{ booking_id }}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+      </div>
+      <div class="perforation"></div>
+      <div class="stub-bottom">
+        {% if transaction %}
+          <div class="detail-row">
+            <span class="label">Transaction ref</span>
+            <span class="value">{{ transaction.tran_ref }}</span>
+          </div>
+          <div class="detail-row amount">
+            <span class="label">Amount paid</span>
+            <span class="value">{{ transaction.currency }} {{ transaction.amount|number_format(2) }}</span>
+          </div>
+        {% endif %}
+        <div class="detail-row">
+          <span class="label">Status</span>
+          <span class="status-pill"><span class="dot"></span>Confirmed</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
+      <span>We've sent a copy of this confirmation to your registered email address. Save it &mdash; you'll need the booking reference for any future changes or support requests.</span>
+    </div>
+
+    <div class="actions">
+      <a href="/property/booking/search" class="btn btn-primary">View my bookings</a>
+      <a href="/property/search" class="btn btn-outline-light">Search more properties</a>
+    </div>
+
+    <p class="footnote">Booking reference <strong>#{{ booking_id }}</strong> is required for all future correspondence about this stay.</p>
+
+    <script>
+      function srCopyRef(btn, text) {
+        navigator.clipboard.writeText(text).then(function () {
+          var original = btn.innerHTML;
+          btn.innerHTML = 'Copied';
+          setTimeout(function () { btn.innerHTML = original; }, 1500);
+        });
+      }
+    </script>
+
+  {% else %}
+
+    <div class="hero">
+      <div class="check-badge is-failed">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#D6293E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </div>
+      <h1>Payment not completed</h1>
+      <p>Your payment could not be processed or was cancelled. Your booking has not been confirmed.</p>
+    </div>
+
+    {% if transaction and transaction.response_message %}
+      <div class="stub">
+        <div class="stub-bottom" style="padding-top:20px;">
+          <div class="detail-row">
+            <span class="label">Reason</span>
+            <span class="value">{{ transaction.response_message }}</span>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="actions">
+      <a href="/payment/initiate/{{ booking_id }}" class="btn btn-primary">Try payment again</a>
+      <a href="/property/booking/search" class="btn btn-outline-light">My bookings</a>
+    </div>
+
+    <p class="footnote">Need help? <a href="/contact">Contact our support team</a>.</p>
+
+  {% endif %}
+
+  </div>
+</div>

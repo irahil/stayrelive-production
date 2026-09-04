@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\views\Views;
 use Drupal\common_utilities\Utilities\commonUtil;
 use Drupal\sr\Controller\SrController;
+use Drupal\sr\Rategain;
 use Drupal\Core\Datetime\DrupalDateTime;
 
 
@@ -20,9 +21,10 @@ class PropertySearchForm extends FormBase {
     'town_city' => '',
     'price_min' => '', 'price_max' => '',
     'bathroom' => '', 'bedroom' => '',
-    'date_range' => '',
-    'adult' => '', 'kid' => '',
+    'date_range' => '', 'rooms' => '',
+    'adult' => '', 'kid' => '', 'child_age' => '',
     'amenities' => '', 'sort' => '',
+    'property_type' => '',
   );
 
   public function getFormId() {
@@ -63,6 +65,11 @@ class PropertySearchForm extends FormBase {
       }
     }
 
+    $arr_property_type_list = array_combine(
+      Rategain::filterableAccommodationTypes(),
+      Rategain::filterableAccommodationTypes()
+    );
+
     $arr_bathroom[''] = 'Bathroom';
     $arr_bedroom[''] = 'Bedroom';
 
@@ -74,7 +81,13 @@ class PropertySearchForm extends FormBase {
     $form_param = array();
 
     foreach ($this->arr_request_param as $key_param => $val_param) {
-      $query_value = \Drupal::request()->query->get($key_param);
+      // Use all() rather than get() — get() throws BadRequestException on
+      // a non-scalar (e.g. an old shared link with town_city[]=.. still
+      // in the URL), which Drupal surfaces as "A client error happened".
+      $query_value = \Drupal::request()->query->all()[$key_param] ?? '';
+      if (is_array($query_value)) {
+        $query_value = implode(',', $query_value);
+      }
       if ($query_value != '') {
         $form_param[$key_param] = urldecode(trim($query_value));
       } else {
@@ -92,18 +105,40 @@ class PropertySearchForm extends FormBase {
 
     list($from_date, $to_date) = explode(" to ", $form_param['date_range']);
     $form_param['amenities'] = ($form_param['amenities']!='') ? explode(',', $form_param['amenities']) : array();
+    $form_param['property_type'] = ($form_param['property_type']!='') ? explode(',', $form_param['property_type']) : array();
 
     // Adding js and css
     $form['#attached']['library'][] = 'sr/sr_lib';
     $form['#attached']['library'][] = 'sr/sr_gmap_lib';
     $form['#attached']['library'][] = 'sr/sr_autocomplete_lib';
     $form['#attached']['library'][] = 'sr/sr_occupants';
+    $form['#attached']['library'][] = 'sr/sr_search_loader';
 
-    $arr_town_city = commonUtil::get_term_list('town_city');
-    $str_country_list = 'var countries = ["'. implode('","', $arr_town_city) . '"];';
+    // Marks this form for sr_search_loader.js — every filter change here
+    // (sort auto-submit, the inline price/room/amenities/property-type
+    // "Search" buttons, the main Search button) reloads the page, so a
+    // loading overlay covers that transition.
+    $form['#attributes']['class'][] = 'sr-search-form';
 
-    $form['js_town_city'] = [
-      '#markup' => $str_country_list,
+    // City suggestions are fetched from sr.town_city_autocomplete as the
+    // user types (see sr_autocomplete.js) rather than loaded here — the
+    // town_city vocabulary has ~71k terms, and loading/hydrating all of
+    // them to embed as a JS array on every page load was exhausting PHP's
+    // memory limit on every request.
+    //
+    // Separately: RateGain's API here points at their production endpoint
+    // (see Rategain.php), but the town_city taxonomy's field_dest_code
+    // values were last synced from RateGain's sandbox destination list —
+    // only a fixed set of demand-partner test destinations has been
+    // re-synced against production so far (see
+    // SrCommands::syncRG_Destinations()); every other town_city term
+    // still carries a stale sandbox destCode and returns no RateGain
+    // results (Drupal-side results are unaffected). That's a data-sync
+    // gap, not a reason to restrict which cities are suggested here.
+
+    $existing_child_ages = Rategain::parseChildAges($form_param['child_age'], (int) $form_param['kid']);
+    $form['js_child_ages'] = [
+      '#markup' => 'var srChildAges = [' . implode(',', array_map('intval', $existing_child_ages)) . '];',
     ];
 
     $form['sort'] = [
@@ -111,7 +146,9 @@ class PropertySearchForm extends FormBase {
       '#title' => $this->t('Sort by'),
       '#options' => array('lh_price' => "Price: Low to High", 'hl_price' => "Price: High to Low"),
       '#default_value' => $form_param['sort'],
-      '#attributes' => array('onchange' => 'this.form.submit();'),
+      // requestSubmit() (unlike submit()) fires the form's 'submit' event,
+      // which sr_search_loader.js listens for to show the loading overlay.
+      '#attributes' => array('onchange' => 'this.form.requestSubmit ? this.form.requestSubmit() : this.form.submit();'),
     ];
 
     $form['city'] = array(
@@ -167,7 +204,7 @@ class PropertySearchForm extends FormBase {
     $form['price']['price_min'] = array(
       '#type' => 'number',
       '#title' => $this->t('Price range Min'),
-      '#default_value' => $form_param['price_min'],
+      '#value' => $form_param['price_min'],
       '#attributes' => array(
         'placeholder' => array('Minimum Price'),
         'id' => array('edit-price-min'),
@@ -177,7 +214,7 @@ class PropertySearchForm extends FormBase {
     $form['price']['price_max'] = array(
       '#type' => 'number',
       '#title' => $this->t('Price range Max'),
-      '#default_value' => $form_param['price_max'],
+      '#value' => $form_param['price_max'],
       '#attributes' => array(
         'placeholder' => array('Maximum Price'),
         'id' => array('edit-price-max'),
@@ -213,6 +250,19 @@ class PropertySearchForm extends FormBase {
     $form['room']['submit_room'] = [
       '#type' => 'submit',
       '#value' => $this->t('Search'),
+    ];
+
+    $form['rooms'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Rooms'),
+      '#options' => [
+        '1' => $this->t('1 Room'),
+        '2' => $this->t('2 Room'),
+      ],
+      '#default_value' => ($form_param['rooms'] != '') ? $form_param['rooms'] : '1',
+      '#attributes' => array(
+        'id' => array('edit-rooms'),
+      ),
     ];
 
     $form['occupants'] = array(
@@ -268,6 +318,27 @@ class PropertySearchForm extends FormBase {
       '#value' => $this->t('Search'),
     ];
 
+    $form['property_type_list'] = array(
+      '#type' => 'fieldset',
+      '#title' => $this
+        ->t('Property Type'),
+      '#attributes' => array(
+          'class' => array('SectionContainer'),
+      )
+    );
+
+    $form['property_type_list']['property_type'] = [
+      '#type' => 'checkboxes',
+      '#options' => $arr_property_type_list,
+      '#title' => $this->t('Property Type'),
+      '#default_value' => $form_param['property_type'],
+    ];
+
+    $form['property_type_list']['submit_property_type_list'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Search'),
+    ];
+
     $form['actions'] = [
       '#type' => 'actions',
     ];
@@ -315,40 +386,20 @@ class PropertySearchForm extends FormBase {
 
     if (!empty($form_param['town_city'])) {
 
-      // Call a custom controller method to get matching city term IDs
-      // based on a partial search string.
-      $matched_tids = \Drupal\sr\Controller\SrController::getMatchingTownCityTermIds($form_param['town_city']);
-
-      if (!empty($matched_tids)) {
-        $search_perm['query']['town_city'] = array_column($matched_tids, 'tid');
-      }
-
-      // echo "<pre>";
-      // print_r($matched_tids);
-      // echo "</pre>";
-      // exit;
+      // Call a custom controller method to get matching city term IDs.
+      // SrController::getDrupalResults() sets these directly on the Views
+      // filter (bypassing the exposed entity_autocomplete widget, which
+      // can't handle a large set of programmatically-matched term IDs).
+      $all_terms = SrController::getMatchingTownCityTermIds($form_param['town_city'], 500, 'all');
+      $search_perm['query']['town_city'] = $all_terms;
+      $search_perm['query']['town_city_api'] = $all_terms;
     }
     
-    // if ($form_param['town_city'] != "") {
-    //   $properties = [
-    //     'name' => $form_param['town_city'],
-    //     'vid' => 'town_city',
-    //   ];
-    //   $terms = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term')->loadByProperties($properties);
-    //   $term = reset($terms);
-    //   $id = !empty($term) ? $term->id() : 0;
-    //   if ($id > 0 ) {
-    //     $search_perm['query']['town_city'] = array($id);
-    //   }
-    // }
-
-    //list($from_date, $to_date, $booking_days) = \Drupal::service('sr.services')->convertDate($from_date, $to_date);
-
     $from_date = new DrupalDateTime($from_date);
     $to_date = new DrupalDateTime($to_date);
     $booking_days = $to_date->diff($from_date)->format("%a");
 
-    $search_perm['query']['property_source'] = array('plumguide', 'ratehawk', 'interhome', 'spacest');
+    $search_perm['query']['property_source'] = array('plumguide', 'ratehawk', 'interhome', 'spacest', 'rategain');
 
     if ($booking_days >= 31) {
       array_push($search_perm['query']['property_source'], 'spacest');
@@ -365,16 +416,19 @@ class PropertySearchForm extends FormBase {
       $arr_param['bedroom'] = 1;
     }
 
+    // An explicit Rooms selection overrides the adult/kid-derived minimum.
+    if ($form_param['rooms'] != '') {
+      $arr_param['bedroom'] = (int) $form_param['rooms'];
+    }
+
     for($i = $arr_param['bedroom']; $i <= 5; $i++) {
       $arr_bedroom[] = $i;
     }
     $search_perm['query']['bedroom'] = $arr_bedroom;
 
-//echo "<pre>";print_r($search_perm);exit;
-
     $arr_result = array();
     //$list_item_per_page = ($config->get('list_item_per_page') > 0) ? $config->get('list_item_per_page') : 5;
-    if (isset($search_perm['query']['town_city']) && $search_perm['query']['town_city'] > 0) {
+    if (!empty($search_perm['query']['town_city']) || !empty($search_perm['query']['town_city_api'])) {
       $list_item_per_page = 20;
       $arr_result = SrController::searchProperty($search_perm, $list_item_per_page);
     }
@@ -409,27 +463,24 @@ class PropertySearchForm extends FormBase {
       );
 
       foreach ($arr_result['search_result'] as $key_result => $val_result) {
+        $image = "<img src='https://images.unsplash.com/photo-1517840901100-8179e982acb7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG90ZWx8ZW58MHx8MHx8fDA%3D&w=1000&q=80' width='200' height='200' loading='lazy'/>";
         if ($val_result['field_media'] != '') {
-          $arr_image = unserialize($val_result['field_media']);
-          if(isset($arr_image[0]['url'])) {
-            $image = "<img src='".$arr_image[0]['url']."' width='200' height='200' loading='lazy'/>";
-          }
+          $image = "<img src='".$val_result['field_media']."' width='200' height='200' loading='lazy'/>";
         }
 
         $base_path = Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString();
 
-        $selected_amenities = $this->convertAmenities($form_param['amenities']);
+        $selected_amenities = commonUtil::convertAmenitiesUtil($form_param['amenities']);
 
         $url = $val_result['link'] . "?";
         foreach ($this->arr_request_param as $key_param => $val_param) {
-          if ($key_param != 'amenities') {
+          if ($key_param != 'amenities' && $key_param != 'property_type') {
             $url.= $key_param."=".urlencode($form_param[$key_param])."&";
           }
         }
-        $url.= "amenities=".urlencode($selected_amenities);
+        $url.= "amenities=".urlencode($selected_amenities)."&";
+        $url.= "property_type=".urlencode(implode(',', $form_param['property_type']));
 
-        //$image_link = "<a href='".$url."'>".$image."</a>";
-        //$title_link = "<a href='".$url."'>".$val_result['title']."</a>";
         $image_link = $image;
         //$title_link = $val_result['title'] . " - " . $val_result['nid'];
         $title_link = $val_result['title'];
@@ -447,7 +498,7 @@ class PropertySearchForm extends FormBase {
 
           $actual_price = $val_result['field_price'];
 
-          // ✅ CONDITION ONLY FOR SPACEST
+          // CONDITION ONLY FOR SPACEST
           if ($val_result['field_property_source'] == 'spacest' && $booking_days > 0) {
 
             // spacest stores MONTHLY price so convert to PER NIGHT
@@ -491,7 +542,7 @@ class PropertySearchForm extends FormBase {
         );
 
         // For ratehawk, dont show bedroom and bathroom count.
-        if ($val_result['field_property_source'] != 'ratehawk') {
+        if ($val_result['field_property_source'] != 'ratehawk' && $val_result['field_property_source'] != 'rategain') {
           $form['search_result']['result'][$key_result]['bedroom'] = [
             '#title_display' => 'invisible',
             '#markup' => $val_result['field_total_bedrooms'] . ' bedroom & ',
@@ -516,17 +567,26 @@ class PropertySearchForm extends FormBase {
           ];
         }
 
-
-
         $price_value = 'Price on Request';
         $price_prefix = '<div class="result-price"><span><i class="fa-solid fa-credit-card"></i>';
 
         $price_suffix = '</div>';
 
-        $price_type = ($val_result['field_property_source'] == 'homelike') ? "Per Month" : "Per Night";
+        if ($val_result['field_property_source'] == 'homelike') {
+          $price_type = 'Per Month';
+        } else {
+          // RateGain's field_price is normalized to a true per-night rate
+          // in SrController::getRateGainResults() (its API returns a
+          // stay total, confirmed by testing), so it's safe to label the
+          // same as every other source here.
+          $price_type = 'Per Night';
+        }
 
         if ($calculated_price != 'NA') {
-          $price_value = 'Price ' . $calculated_currency_code . " " . $calculated_price . " - " . $price_type;
+          $price_value = 'Price ' . $calculated_currency_code . " " . $calculated_price;
+          if ($price_type != '') {
+            $price_value .= " - " . $price_type;
+          }
         }
 
         $form['search_result']['result'][$key_result]['price'] = array(
@@ -542,11 +602,30 @@ class PropertySearchForm extends FormBase {
         );
 
         // Creating Maps param
+        $map_image_url = '';
+        
+        if (!empty($val_result['field_media']) && is_string($val_result['field_media'])) {
+          $raw = trim($val_result['field_media']);
+        
+          $map_media = false;
+        
+          if (preg_match('/^(a|s|i|b|d|O|C|N):/', $raw)) {
+            $map_media = @unserialize($raw, ['allowed_classes' => false]);
+          }
+        
+          if (is_array($map_media) && !empty($map_media[0]['url'])) {
+            $map_image_url = $map_media[0]['url'];
+          }
+        }
         $arr_location[$key_result]['title'] = $val_result['title'];
         $arr_location[$key_result]['lat'] = $val_result['field_location_coords_latitude'];
         $arr_location[$key_result]['lng'] = $val_result['field_location_coords_longitude'];
         $arr_location[$key_result]['id'] = $val_result['nid'];
         $arr_location[$key_result]['link'] = $url;
+        $arr_location[$key_result]['image'] = $map_image_url;
+        $arr_location[$key_result]['price'] = ($calculated_price != 'NA') ? $calculated_currency_code . ' ' . $calculated_price : 'On Request';
+        $arr_location[$key_result]['bedrooms'] = (isset($val_result['field_total_bedrooms']) && $val_result['field_property_source'] != 'ratehawk') ? (string) $val_result['field_total_bedrooms'] : '';
+        $arr_location[$key_result]['bathrooms'] = (isset($val_result['field_total_bathrooms']) && $val_result['field_property_source'] != 'ratehawk') ? (string) $val_result['field_total_bathrooms'] : '';
       }
       if (isset($arr_result['search_pager'])) {
         $form['search_result']['pager'] = [
@@ -584,15 +663,26 @@ class PropertySearchForm extends FormBase {
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $selected_amenities = $this->convertAmenities($form_state->getValue('amenities'));
+    $selected_amenities = commonUtil::convertAmenitiesUtil($form_state->getValue('amenities'));
+    $selected_property_types = implode(',', array_filter((array) $form_state->getValue('property_type')));
 
     $arr_param = array();
     foreach ($this->arr_request_param as $key_param => $val_param) {
-      if ($key_param != 'amenities') {
+      if ($key_param != 'amenities' && $key_param != 'property_type') {
         $arr_param[$key_param] = urlencode($form_state->getValue($key_param));
       }
     }
     $arr_param['amenities'] = $selected_amenities;
+    $arr_param['property_type'] = $selected_property_types;
+
+    // child_age[] selects are generated client-side (sr_occupants.js) to
+    // match the current Kids Count, one per child — they aren't declared
+    // FAPI elements, so they're read from raw user input rather than
+    // $form_state->getValue().
+    $child_ages = array_filter((array) ($form_state->getUserInput()['child_age'] ?? []), function ($v) {
+      return $v !== '';
+    });
+    $arr_param['child_age'] = urlencode(implode(',', $child_ages));
 //$values = $form_state->getValues();
 //echo "<pre>";
 //print_r($values);exit;
@@ -616,18 +706,4 @@ class PropertySearchForm extends FormBase {
     }
     return $arr_param;
   }
-
-  private function convertAmenities($param_amenities = array()) {
-    $arr_amenities = array();
-    if (is_array($param_amenities) && count($param_amenities)>0) {
-      foreach($param_amenities as $val_amenities) {
-        if ($val_amenities > 0) {
-          array_push($arr_amenities, $val_amenities);
-        }
-      }
-    }
-    return implode(",", $arr_amenities);
-  }
-
-
 }

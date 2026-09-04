@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>Account Approved — StayRelive</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body style="margin:0; padding:0; background-color:#f4f6f9; font-family:'Roboto', Arial, sans-serif;">
+  <center style="width:100%; background-color:#f4f6f9;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td align="center" style="padding:40px 0;">
+          <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff; border-radius:8px; overflow:hidden; border:1px solid #e0e0e0;">
+
+            <!-- LOGO -->
+            <tr>
+              <td align="center" style="padding:28px 30px; background:#ffffff; border-bottom:1px solid #f0f0f0;">
+                <img src="https://stayrelive.com/sites/default/files/sr-logo.png" height="48" alt="StayRelive Logo" style="display:block;">
+              </td>
+            </tr>
+
+            <!-- HERO BANNER -->
+            <tr>
+              <td style="background:#0B8D9F; padding:36px 30px; text-align:center;">
+                <h1 style="margin:0 0 8px; font-size:26px; font-weight:700; color:#ffffff; letter-spacing:0.5px;">Account Approved!</h1>
+                <p style="margin:0; font-size:15px; color:#d6f5f8;">Your agent account is now active</p>
+              </td>
+            </tr>
+
+            <!-- MAIN CONTENT -->
+            <tr>
+              <td style="padding:40px 36px 32px; background:#ffffff; color:#1D1D1D; font-size:15px; line-height:26px;">
+
+                <p style="margin:0 0 18px; color:#1D1D1D;">Dear <strong style="color:#0B8D9F;">{{ username }}</strong>,</p>
+
+                <p style="margin:0 0 18px; color:#333333;">We are pleased to inform you that your agent application with <strong>StayRelive</strong> has been reviewed and <strong style="color:#0B8D9F;">approved</strong>. Your account is now active and ready to use.</p>
+
+                <!-- Info Box -->
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f0fbfc; border-left:4px solid #0B8D9F; border-radius:4px; margin:24px 0;">
+                  <tr>
+                    <td style="padding:18px 20px;">
+                      <p style="margin:0 0 10px; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:#0B8D9F;">Account Details</p>
+                      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                        <tr>
+                          <td style="padding:5px 0; font-size:14px; color:#555555; width:45%;">Agent ID</td>
+                          <td style="padding:5px 0; font-size:14px; color:#1D1D1D; font-weight:600;">#{{ user_id }}</td>
+                        </tr>
+                        <tr>
+                          <td style="padding:5px 0; font-size:14px; color:#555555;">Full Name</td>
+                          <td style="padding:5px 0; font-size:14px; color:#1D1D1D; font-weight:600;">{{ username }}</td>
+                        </tr>
+                        <tr>
+                          <td style="padding:5px 0; font-size:14px; color:#555555;">Email</td>
+                          <td style="padding:5px 0; font-size:14px; color:#1D1D1D; font-weight:600;">{{ email }}</td>
+                        </tr>
+                        <tr>
+                          <td style="padding:5px 0; font-size:14px; color:#555555;">Status</td>
+                          <td style="padding:5px 0;">
+                            <span style="display:inline-block; background:#D4EDDA; color:#155724; font-size:12px; font-weight:700; padding:3px 10px; border-radius:12px;">APPROVED</span>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+
+                <p style="margin:0 0 28px; color:#333333;">You can now log in to your account using your registered email address and password. Click the button below to get started:</p>
+
+                <!-- CTA Button -->
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 32px;">
+                  <tr>
+                    <td align="center">
+                      <a href="{{ login_url }}" style="display:inline-block; background:#0B8D9F; color:#ffffff; font-size:15px; font-weight:700; text-decoration:none; padding:14px 36px; border-radius:6px; letter-spacing:0.3px;">Log In to Your Account</a>
+                    </td>
+                  </tr>
+                </table>
+
+                <p style="margin:0 0 6px; color:#1D1D1D;">Warm regards,</p>
+                <p style="margin:0; color:#1D1D1D; font-weight:600;">The StayRelive Team</p>
+
+                <hr style="border:none; border-top:1px solid #eeeeee; margin:32px 0 24px;">
+
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td style="font-size:13px; color:#777777;">
+                      For assistance: <a href="mailto:book@stayrelive.com" style="color:#0B8D9F; text-decoration:none; font-weight:600;">book@stayrelive.com</a>
+                      &nbsp;&nbsp;|&nbsp;&nbsp;
+                      <a href="tel:+971551076902" style="color:#0B8D9F; text-decoration:none;">+971 55 107 6902</a>
+                    </td>
+                  </tr>
+                </table>
+
+              </td>
+            </tr>
+
+            <!-- SOCIAL FOOTER -->
+            <tr>
+              <td align="center" style="padding:28px 30px; background:#f8f9fa; border-top:1px solid #eeeeee;">
+                <p style="margin:0 0 14px; font-size:15px; font-weight:700; color:#1D1D1D;">StayRelive</p>
+                <table align="center" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td style="padding:0 7px;"><a href="https://www.instagram.com/stayrelive" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/1077/1077042.png" width="26" height="26" alt="Instagram" style="display:block;"></a></td>
+                    <td style="padding:0 7px;"><a href="https://www.linkedin.com/company/stayrelive/" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/13266/13266142.png" width="26" height="26" alt="LinkedIn" style="display:block;"></a></td>
+                    <td style="padding:0 7px;"><a href="https://www.facebook.com/StayRelive/" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/13266/13266170.png" width="26" height="26" alt="Facebook" style="display:block;"></a></td>
+                    <td style="padding:0 7px;"><a href="https://wa.me/916362730626" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/466/466966.png" width="26" height="26" alt="WhatsApp" style="display:block;"></a></td>
+                    <td style="padding:0 7px;"><a href="https://x.com/StayRelive" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/14417/14417460.png" width="26" height="26" alt="Twitter/X" style="display:block;"></a></td>
+                  </tr>
+                </table>
+                <p style="margin:16px 0 0; font-size:12px; color:#aaaaaa;">&copy; {{ "now"|date("Y") }} StayRelive. All rights reserved.</p>
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </center>
+</body>
+</html>

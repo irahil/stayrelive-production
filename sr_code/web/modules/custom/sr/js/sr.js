@@ -226,7 +226,15 @@ jQuery(document).ready(function () {
 
         element.addEventListener('change', function () {
           if (element.value.includes(' to ')) {
-            element.closest('form').submit();
+            var form = element.closest('form');
+            // requestSubmit() (unlike submit()) fires the form's 'submit'
+            // event, which sr_search_loader.js listens for to show the
+            // loading overlay.
+            if (form.requestSubmit) {
+              form.requestSubmit();
+            } else {
+              form.submit();
+            }
           }
         });
 

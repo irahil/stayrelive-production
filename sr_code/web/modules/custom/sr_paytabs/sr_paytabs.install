@@ -1,0 +1,99 @@
+<?php
+
+/**
+ * @file
+ * Install and schema definitions for the sr_paytabs module.
+ */
+
+function sr_paytabs_schema() {
+  $schema['sr_payment_transactions'] = [
+    'description' => 'Stores PayTabs PT2 payment transactions linked to bookings.',
+    'fields' => [
+      'id' => [
+        'type'     => 'serial',
+        'not null' => TRUE,
+      ],
+      'booking_id' => [
+        'type'     => 'int',
+        'not null' => TRUE,
+        'default'  => 0,
+        'description' => 'FK to booking entity id.',
+      ],
+      'cart_id' => [
+        'type'     => 'varchar',
+        'length'   => 120,
+        'not null' => TRUE,
+        'default'  => '',
+        'description' => 'Unique cart ID sent to PayTabs (SR-{booking_id}-{timestamp}).',
+      ],
+      'tran_ref' => [
+        'type'     => 'varchar',
+        'length'   => 120,
+        'not null' => FALSE,
+        'default'  => '',
+        'description' => 'PayTabs transaction reference returned on callback.',
+      ],
+      'payment_status' => [
+        'type'     => 'varchar',
+        'length'   => 50,
+        'not null' => TRUE,
+        'default'  => 'initiated',
+        'description' => 'Local status: initiated, approved, declined, refunded.',
+      ],
+      'response_status' => [
+        'type'     => 'varchar',
+        'length'   => 5,
+        'not null' => FALSE,
+        'default'  => '',
+        'description' => 'PayTabs response_status: A, D, E, H, P, V.',
+      ],
+      'response_code' => [
+        'type'     => 'varchar',
+        'length'   => 20,
+        'not null' => FALSE,
+        'default'  => '',
+      ],
+      'response_message' => [
+        'type'     => 'varchar',
+        'length'   => 255,
+        'not null' => FALSE,
+        'default'  => '',
+      ],
+      'amount' => [
+        'type'     => 'float',
+        'not null' => FALSE,
+      ],
+      'currency' => [
+        'type'     => 'varchar',
+        'length'   => 10,
+        'not null' => FALSE,
+        'default'  => '',
+      ],
+      'raw_response' => [
+        'type'     => 'text',
+        'size'     => 'big',
+        'not null' => FALSE,
+        'description' => 'Full JSON response from PayTabs for audit.',
+      ],
+      'created' => [
+        'type'     => 'int',
+        'not null' => TRUE,
+        'default'  => 0,
+      ],
+      'updated' => [
+        'type'     => 'int',
+        'not null' => TRUE,
+        'default'  => 0,
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'booking_id'     => ['booking_id'],
+      'cart_id'        => ['cart_id'],
+      'tran_ref'       => ['tran_ref'],
+      'payment_status' => ['payment_status'],
+      'created'        => ['created'],
+    ],
+  ];
+  return $schema;
+}

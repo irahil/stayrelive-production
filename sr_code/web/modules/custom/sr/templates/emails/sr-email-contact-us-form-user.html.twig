@@ -1,143 +1,79 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>New Confirmation: We've Received Your Query [#Booking ID]</title>
-    <style type="text/css">
-        /* For better mobile experience and general resets */
-        body {
-            margin: 0;
-            padding: 0;
-            -webkit-text-size-adjust: 100%;
-            -ms-text-size-adjust: 100%;
-            font-family: 'Roboto', Arial, Helvetica, sans-serif;
-        }
-
-        table {
-            border-collapse: collapse;
-        }
-
-        img {
-            border: 0;
-            height: auto;
-            line-height: 100%;
-            outline: none;
-            text-decoration: none;
-            -ms-interpolation-mode: bicubic;
-        }
-
-        a img {
-            border: 0;
-        }
-
-        .apple-link a {
-            color: #333333 !important;
-            text-decoration: none !important;
-        }
-
-        .button {
-            background-color: #007bff;
-            /* Example blue color */
-            color: #ffffff;
-            padding: 12px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            display: inline-block;
-            /* Essential for padding on anchor tags */
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>We've Received Your Query — StayRelive</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    @media (prefers-color-scheme: dark) { .dark-bg { background-color: #ffffff !important; } }
+  </style>
 </head>
+<body style="margin:0; padding:0; background-color:#ffffff; font-family:'Roboto', Arial, sans-serif;">
+  <center style="width:100%; background-color:#ffffff;" class="dark-bg">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td align="center" style="padding:40px 0;">
+          <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff; border-radius:8px; overflow:hidden; border:1px solid #eeeeee;" class="dark-bg">
 
-<body style="margin: 0; padding: 0;">
-    <center style="width: 100%;">
-        <table role="presentation" align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
+            <!-- LOGO -->
             <tr>
-                <td valign="top" style="padding: 0;">
-                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="650" style="border-collapse: collapse; background-color: #ffffff; margin: 0 auto;">
-                        <tr>
-                            <td style="padding: 0;">
-                                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                                    <tr>
-                                        <td style="text-align: center; padding: 20px 0;">
-                                            <a href="https://www.stayrelive.com" target="_blank" style="text-decoration: none;">
-                                                <img src="https://stayrelive.com/sites/default/files/sr-logo.png" alt="StayRelive Logo" width="auto" height="50" style="display: block; margin: 0 auto; border: 0;" />
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </table>
-
-                                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                                    <tr>
-                                        <td valign="middle" style="background: url(https://stayrelive.com/themes/srdesign/assets/images/home/email_image.png) no-repeat center center / cover; background-color: #1C234F; height: 250px; text-align: center;">
-                                            <div style="height: 250px;">&nbsp;</div>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td style="padding: 40px 30px; font-family: 'Roboto', Arial, Helvetica, sans-serif; font-size: 16px; line-height: 22px; color: #1D1D1D; background-color: #F9F9F9">
-                                <p style="margin-bottom: 20px;">Dear {{ first_name }}, </p>
-
-                                <p style="margin-bottom: 20px;">Thank you for contacting StayRelive. We have received your query and our team is working on it. We
-                                    will respond within 24 hrs. For urgent matters, please contact us directly at book@stayrelive.com or
-                                    +971 55 107 6902.</p>
-
-                                <p style="margin-bottom: 20px;">If you need to provide additional information or have further questions, please reply to this email or
-                                    reference your query number in any future correspondence.</p>
-
-                                <p style="margin-bottom: 40px;">Thank you for your patience.</p>
-
-                                <p style="margin-bottom: 20px;">Regards, </p>
-                                <p style="margin-bottom: 30px;">StayRelive</p>
-                            </td>
-                        </tr>
-
-                         <!-- SOCIAL FOOTER -->
-                        <tr>
-                            <td style="padding: 30px; background-color: #F9F9F9; text-align: center; color: #1D1D1D; font-family: 'Roboto', Arial, Helvetica, sans-serif !important;">
-                                <h2 style="margin-bottom: 20px;">StayRelive</h2>
-                                <table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto 20px;">
-                                <tr class="social-icons">
-                                    <td style="padding: 0 5px;">
-                                    <a href="https://www.instagram.com/stayrelive" target="_blank">
-                                        <img src="https://cdn-icons-png.flaticon.com/512/1077/1077042.png" alt="Instagram" width="32" height="32" />
-                                    </a>
-                                    </td>
-                                    <td style="padding: 0 5px;">
-                                    <a href="https://www.linkedin.com/company/stayrelive/?viewAsMember=true" target="_blank">
-                                        <img src="https://cdn-icons-png.flaticon.com/512/13266/13266142.png" alt="LinkedIn" width="32" height="32" />
-                                    </a>
-                                    </td>
-                                    <td style="padding: 0 5px;">
-                                    <a href="https://www.facebook.com/StayRelive/" target="_blank">
-                                        <img src="https://cdn-icons-png.flaticon.com/512/13266/13266170.png" alt="Facebook" width="32" height="32" />
-                                    </a>
-                                    </td>
-                                    <td style="padding: 0 5px;">
-                                    <a href="https://wa.me/916362730626" target="_blank">
-                                        <img src="https://cdn-icons-png.flaticon.com/512/466/466966.png" alt="WhatsApp" width="32" height="32" />
-                                    </a>
-                                    </td>
-                                    <td style="padding: 0 5px;">
-                                    <a href="https://x.com/StayRelive" target="_blank">
-                                        <img src="https://cdn-icons-png.flaticon.com/512/14417/14417460.png" alt="Twitter" width="32" height="32" />
-                                    </a>
-                                    </td>
-                                </tr>
-                                </table>
-                                <hr style="margin: 30px auto 15px; border: none; border-top: 1px solid #ccc; width: 80%;" />
-                                <p style="margin: 0; font-size: 13px; color: #777;">&copy; 2026 StayRelive. All rights reserved.</p>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
+              <td align="center" style="padding:25px;">
+                <img src="https://stayrelive.com/sites/default/files/sr-logo.png" height="50" alt="StayRelive Logo" style="display:block;">
+              </td>
             </tr>
-        </table>
-    </center>
-</body>
 
+            <!-- HERO IMAGE -->
+            <tr>
+              <td>
+                <img src="https://stayrelive.com/themes/srdesign/assets/images/home/hero-3.webp" width="600" alt="StayRelive" style="display:block; width:100%; height:auto;">
+              </td>
+            </tr>
+
+            <!-- MAIN CONTENT -->
+            <tr>
+              <td style="padding:40px 30px; background:#f9f9f9; color:#000000; font-size:16px; line-height:24px;">
+
+                <p style="margin:0 0 16px;">Dear <strong>{{ first_name }}</strong>,</p>
+
+                <p style="margin:0 0 20px;">Thank you for contacting StayRelive. We have received your query and our team is working on it. We will respond within 24 hrs.</p>
+
+                <p style="margin:0 0 20px;">If you need to provide additional information or have further questions, please reply to this email or reference your query number in any future correspondence.</p>
+
+                <p style="margin:0 0 24px;">Thank you for your patience.</p>
+
+                <p style="margin:0 0 8px;">Regards,<br><strong>StayRelive</strong></p>
+
+                <hr style="border:none; border-top:1px solid #e0e0e0; margin:30px 0;">
+
+                <p style="margin:0; font-size:14px;">For urgent matters, email: <a href="mailto:book@stayrelive.com" style="color:#1D1D1D; text-decoration:none; font-weight:600;">book@stayrelive.com</a></p>
+                <p style="margin:5px 0 0; font-size:14px;">Phone: <a href="tel:+971551076902" style="color:#1D1D1D; text-decoration:none;">+971 55 107 6902</a></p>
+
+              </td>
+            </tr>
+
+            <!-- SOCIAL FOOTER -->
+            <tr>
+              <td align="center" style="padding:40px 30px; background:#f9f9f9; text-align:center;">
+                <h2 style="margin:0 0 20px; font-size:22px; color:#000000;">StayRelive</h2>
+                <table align="center" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td style="padding:0 8px;"><a href="https://www.instagram.com/stayrelive" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/1077/1077042.png" width="28" height="28" alt="Instagram"></a></td>
+                    <td style="padding:0 8px;"><a href="https://www.linkedin.com/company/stayrelive/" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/13266/13266142.png" width="28" height="28" alt="LinkedIn"></a></td>
+                    <td style="padding:0 8px;"><a href="https://www.facebook.com/StayRelive/" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/13266/13266170.png" width="28" height="28" alt="Facebook"></a></td>
+                    <td style="padding:0 8px;"><a href="https://wa.me/916362730626" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/466/466966.png" width="28" height="28" alt="WhatsApp"></a></td>
+                    <td style="padding:0 8px;"><a href="https://x.com/StayRelive" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/14417/14417460.png" width="28" height="28" alt="Twitter/X"></a></td>
+                  </tr>
+                </table>
+                <p style="margin:25px 0 0; font-size:12px; color:#999999;">&copy; {{ "now"|date("Y") }} StayRelive. All rights reserved.</p>
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </center>
+</body>
 </html>

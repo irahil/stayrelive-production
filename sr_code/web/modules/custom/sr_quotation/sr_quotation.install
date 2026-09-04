@@ -40,9 +40,10 @@ function sr_quotation_schema() {
       'location_screenshot' => ['type' => 'text', 'size' => 'big'],
       'currency' => ['type' => 'varchar', 'length' => 10],
       'quote' => ['type' => 'varchar', 'length' => 255],
-      'taxes' => ['type' => 'varchar', 'length' => 100],
+      'quote_value' => ['type' => 'float', 'not null' => FALSE, 'default' => NULL],
+      'taxes' => ['type' => 'text', 'size' => 'big'],
       'fx_rate' => ['type' => 'varchar', 'length' => 255],
-      'addon_prices' => ['type' => 'varchar', 'length' => 300],
+      'addon_prices' => ['type' => 'text', 'size' => 'big'],
       'amenities' => ['type' => 'text', 'size' => 'big'],
       'cancellation_policy' => ['type' => 'text', 'size' => 'big'],
       'images' => ['type' => 'text', 'size' => 'big'],
@@ -50,6 +51,7 @@ function sr_quotation_schema() {
       'note' => ['type' => 'text', 'size' => 'big'],
       'supplier_reference' => ['type' => 'text','size' => 'big','not null' => FALSE],
       'confirmation_status' => ['type' => 'varchar','length' => 50],
+      'finalized' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0],
       'avg_nightly_rate' => ['type' => 'varchar', 'length' => 255],
       'extras_tax' => ['type' => 'varchar', 'length' => 255],
       'total_outlay' => ['type' => 'varchar', 'length' => 255],
@@ -148,5 +150,81 @@ function sr_quotation_update_9004() {
       'type' => 'varchar',
       'length' => 255,
     ]);
+  }
+}
+
+/**
+ * Add quote_value field to sr_quotation table.
+ */
+function sr_quotation_update_9005() {
+  $schema = \Drupal::database()->schema();
+
+  // Add the quote_value field if it doesn't exist
+  if (!$schema->fieldExists('sr_quotation', 'quote_value')) {
+    $spec = [
+      'type' => 'float',
+      'not null' => FALSE,
+      'default' => NULL,
+    ];
+    $schema->addField('sr_quotation', 'quote_value', $spec);
+  }
+}
+
+/**
+ * Widen taxes and addon_prices columns to hold CKEditor markup.
+ */
+function sr_quotation_update_9006() {
+  $schema = \Drupal::database()->schema();
+
+  // Both fields moved from plain textfields to CKEditor (text_format)
+  // widgets, so their stored value now includes HTML markup and can exceed
+  // the old varchar limits. Widening to TEXT preserves existing data.
+  if ($schema->fieldExists('sr_quotation', 'taxes')) {
+    $schema->changeField('sr_quotation', 'taxes', 'taxes', [
+      'type' => 'text',
+      'size' => 'big',
+    ]);
+  }
+
+  if ($schema->fieldExists('sr_quotation', 'addon_prices')) {
+    $schema->changeField('sr_quotation', 'addon_prices', 'addon_prices', [
+      'type' => 'text',
+      'size' => 'big',
+    ]);
+  }
+}
+
+/**
+ * Add finalized field to sr_quotation table.
+ */
+function sr_quotation_update_9007() {
+  $schema = \Drupal::database()->schema();
+
+  if (!$schema->fieldExists('sr_quotation', 'finalized')) {
+    $schema->addField('sr_quotation', 'finalized', [
+      'type' => 'int',
+      'size' => 'tiny',
+      'not null' => TRUE,
+      'default' => 0,
+    ]);
+  }
+}
+
+/**
+ * Sync any fields (e.g. enquired_location, room_category) that were added
+ * to sr_quotation_schema() without a dedicated update hook, so sites that
+ * installed the module before those fields existed catch up.
+ */
+function sr_quotation_update_9008() {
+  $schema = \Drupal::database()->schema();
+  $table_schema = sr_quotation_schema();
+
+  foreach ($table_schema['sr_quotation']['fields'] as $field_name => $spec) {
+    if ($spec['type'] === 'serial') {
+      continue;
+    }
+    if (!$schema->fieldExists('sr_quotation', $field_name)) {
+      $schema->addField('sr_quotation', $field_name, $spec);
+    }
   }
 }

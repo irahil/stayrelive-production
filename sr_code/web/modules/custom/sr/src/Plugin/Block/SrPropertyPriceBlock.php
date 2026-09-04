@@ -46,7 +46,15 @@ class SrPropertyPriceBlock extends BlockBase {
       // Load child property if available.
       return \Drupal::formBuilder()->getForm('Drupal\sr\Form\PropertySubForm');
     } else {
-      return \Drupal::formBuilder()->getForm('Drupal\sr\Form\PriceForm');
+      $node = \Drupal::routeMatch()->getParameter('node');
+      // Rategain properties show their room types via the "Available Rates"
+      // section (Rategain::buildRoomRateList()) further down the page instead —
+      // skip the sidebar's APIPriceForm to avoid showing the same rooms twice.
+      if ($node->get('field_property_source')->value == 'rategain' && $node->get('field_reference_id')->value) {
+         return [];
+      } else {
+        return \Drupal::formBuilder()->getForm('Drupal\sr\Form\PriceForm');
+      }
     }
   } else {
     // redirect user to error page.

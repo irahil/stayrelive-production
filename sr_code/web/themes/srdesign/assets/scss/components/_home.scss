@@ -36,8 +36,6 @@
       overflow: hidden;
       flex: 1 0 32%;
 
-
-
       @include media-breakpoint-up(lg) {
         flex: 1 0 48%;
       }
@@ -47,7 +45,8 @@
         gap: 15px;
       }
 
-      @include media-breakpoint-up(xxl) {}
+      @include media-breakpoint-up(xxl) {
+      }
 
       &.show-top .city-details {
         @include media-breakpoint-up(lg) {
@@ -58,13 +57,13 @@
       &.show-bottom .city-details {
         @include media-breakpoint-up(lg) {
           bottom: 5px;
-          top: auto
+          top: auto;
         }
       }
 
       img {
         @extend .bdr-radius;
-        transition: all .5s ease;
+        transition: all 0.5s ease;
         height: 100%;
         width: 100%;
         object-fit: cover;
@@ -91,7 +90,7 @@
 
       &:hover {
         img {
-          transition: all .5s ease;
+          transition: all 0.5s ease;
           transform: scale(1.1);
         }
       }
@@ -341,7 +340,7 @@
 .why-we {
   h3 {
     font-size: toRem(48);
-    margin-bottom: toRem(30)
+    margin-bottom: toRem(30);
   }
 
   .col-md-6 {
@@ -350,7 +349,7 @@
 
   .why-we-wrapper {
     @extend .bdr-radius;
-    border: 2px solid #BABECB;
+    border: 2px solid #babecb;
     color: $secondary;
     padding: toRem(130) toRem(25) toRem(25) toRem(25);
     position: relative;
@@ -372,19 +371,19 @@
     }
 
     &.icon-one::before {
-      background-image: url('../images/home/icon-booking.png');
+      background-image: url("../images/home/icon-booking.png");
     }
 
     &.icon-two::before {
-      background-image: url('../images/home/icon-bespoke.png');
+      background-image: url("../images/home/icon-bespoke.png");
     }
 
     &.icon-three::before {
-      background-image: url('../images/home/icon-safety.png');
+      background-image: url("../images/home/icon-safety.png");
     }
 
     &.icon-four::before {
-      background-image: url('../images/home/icon-hospitality.png');
+      background-image: url("../images/home/icon-hospitality.png");
     }
 
     h4 {
@@ -400,7 +399,11 @@
 .simplify-search {
   .simplify-wrapper {
     @extend .bdr-radius;
-    background: linear-gradient(162deg, rgba(245, 248, 248, 1) 0%, rgba(186, 223, 228, 1) 100%);
+    background: linear-gradient(
+      162deg,
+      rgba(245, 248, 248, 1) 0%,
+      rgba(186, 223, 228, 1) 100%
+    );
     color: $secondary;
     padding: toRem(25) 0 0 toRem(15);
     position: relative;
@@ -409,7 +412,6 @@
       padding: toRem(55) 0 0 toRem(25);
     }
   }
-
 
   .simplify-title {
     flex-direction: column;
@@ -463,7 +465,11 @@
 .sr-types {
   .sr-types-wrapper {
     @extend .bdr-radius;
-    background: linear-gradient(162deg, rgba(245, 248, 248, 1) 0%, rgba(186, 223, 228, 1) 100%);
+    background: linear-gradient(
+      162deg,
+      rgba(245, 248, 248, 1) 0%,
+      rgba(186, 223, 228, 1) 100%
+    );
     color: $secondary;
     padding: toRem(25) toRem(15);
     position: relative;
@@ -640,7 +646,6 @@
     background: url(../images/home/icon-studio.png) 20px 28px no-repeat;
   }
 
-
   h6 {
     font-size: toRem(25);
     font-weight: bold;
@@ -659,7 +664,11 @@
   .featured-wrapper {
     @extend .bdr-radius;
     background: rgb(245, 248, 248);
-    background: linear-gradient(162deg, rgba(245, 248, 248, 1) 0%, rgba(186, 223, 228, 1) 100%);
+    background: linear-gradient(
+      162deg,
+      rgba(245, 248, 248, 1) 0%,
+      rgba(186, 223, 228, 1) 100%
+    );
     padding: toRem(24);
 
     @include media-breakpoint-up(md) {
@@ -669,20 +678,33 @@
     .card {
       @extend .bdr-radius;
       background-color: $white;
-      padding: toRem(10) ;
-      .card-body {
-        padding: toRem(15) toRem(10) ;
-        @include media-breakpoint-up(md) {
-          padding: toRem(25) toRem(10) ;
-        }
-      }
-      h5 {
-        font-weight: bold;
-      }
+      padding: toRem(10);
 
-      h6 {
-        .fa-star {
-          color: $primary;
+      a {
+        transition: 0.5s ease-in-out;
+        .card-body {
+          padding: toRem(15) toRem(10);
+          @include media-breakpoint-up(md) {
+            padding: toRem(25) toRem(10);
+          }
+        }
+        h5 {
+          font-weight: bold;
+        }
+
+        h6 {
+          .fa-star {
+            color: $primary;
+          }
+        }
+
+        &:hover {
+          .card-body {
+            i.fa-star {
+              color: $fav;
+              transform: rotate(180deg);
+            }
+          }
         }
       }
     }
@@ -708,7 +730,6 @@
       padding: 20px 80px 20px 20px;
 
       &::hover {
-
         &:before,
         &:after {
           transform: rotate(90deg);
@@ -721,7 +742,6 @@
         color: $primary;
         display: block;
         background-color: $primary;
-        ;
         background-image: initial;
         position: absolute;
         top: 50%;

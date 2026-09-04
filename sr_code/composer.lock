@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fb81b2efe04349a1c3f659ba2e8ff1f6",
+    "content-hash": "c6cbb0b1327606a81732b95046277ee9",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2384,6 +2384,82 @@
             }
         },
         {
+            "name": "drupal/memcache",
+            "version": "2.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/memcache.git",
+                "reference": "8.x-2.8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/memcache-8.x-2.8.zip",
+                "reference": "8.x-2.8",
+                "shasum": "d18a691c1a8fe779c7f55fc58504ac0b6cbff06d"
+            },
+            "require": {
+                "drupal/core": "^9.5 || ^10 || ^11"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-2.8",
+                    "datestamp": "1776218688",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                },
+                "branch-alias": {
+                    "dev-8.x-2.x": "2.x-dev"
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "bdragon",
+                    "homepage": "https://www.drupal.org/user/53081"
+                },
+                {
+                    "name": "catch",
+                    "homepage": "https://www.drupal.org/user/35733"
+                },
+                {
+                    "name": "damiankloip",
+                    "homepage": "https://www.drupal.org/user/1037976"
+                },
+                {
+                    "name": "fabianx",
+                    "homepage": "https://www.drupal.org/user/693738"
+                },
+                {
+                    "name": "japerry",
+                    "homepage": "https://www.drupal.org/user/45640"
+                },
+                {
+                    "name": "jeremy",
+                    "homepage": "https://www.drupal.org/user/409"
+                },
+                {
+                    "name": "jvandyk",
+                    "homepage": "https://www.drupal.org/user/2375"
+                },
+                {
+                    "name": "robertdouglass",
+                    "homepage": "https://www.drupal.org/user/5449"
+                }
+            ],
+            "description": "High performance integration with memcache.",
+            "homepage": "http://drupal.org/project/memcache",
+            "support": {
+                "source": "https://git.drupalcode.org/project/memcache",
+                "issues": "https://www.drupal.org/project/issues/memcache"
+            }
+        },
+        {
             "name": "drupal/metatag",
             "version": "2.1.0",
             "source": {
@@ -2794,6 +2870,72 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/recaptcha.git",
                 "issues": "https://www.drupal.org/project/issues/recaptcha"
+            }
+        },
+        {
+            "name": "drupal/redis",
+            "version": "1.11.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/redis.git",
+                "reference": "8.x-1.11"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/redis-8.x-1.11.zip",
+                "reference": "8.x-1.11",
+                "shasum": "4a32e50b85523fd09500b6c6398cf18504bdc652"
+            },
+            "require": {
+                "drupal/core": "^9.3 || ^10 || ^11"
+            },
+            "suggest": {
+                "ext-redis": "Required to use the PhpRedis as redis driver (^4.0|^5.0).",
+                "ext-relay": "Required to use the Relay as Redis driver (^0.5|^1.0).",
+                "predis/predis": "Required to use the Predis as redis driver (^1.1|^2.0)."
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.11",
+                    "datestamp": "1762688846",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Drupal\\redis\\": "src"
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "berdir",
+                    "homepage": "https://www.drupal.org/user/214652"
+                },
+                {
+                    "name": "greg.1.anderson",
+                    "homepage": "https://www.drupal.org/user/438598"
+                },
+                {
+                    "name": "kporras07",
+                    "homepage": "https://www.drupal.org/user/1349780"
+                },
+                {
+                    "name": "pounard",
+                    "homepage": "https://www.drupal.org/user/240164"
+                }
+            ],
+            "description": "Integration of Drupal with the Redis key-value store.",
+            "homepage": "https://www.drupal.org/project/redis",
+            "support": {
+                "source": "https://git.drupalcode.org/project/redis"
             }
         },
         {

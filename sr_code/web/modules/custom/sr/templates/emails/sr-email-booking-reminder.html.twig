@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>Payment Due Soon — StayRelive</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    @media (prefers-color-scheme: dark) { .dark-bg { background-color: #ffffff !important; } }
+  </style>
+</head>
+<body style="margin:0; padding:0; background-color:#ffffff; font-family:'Roboto', Arial, sans-serif;">
+  <center style="width:100%; background-color:#ffffff;" class="dark-bg">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td align="center" style="padding:40px 0;">
+          <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff; border-radius:8px; overflow:hidden; border:1px solid #eeeeee;" class="dark-bg">
+
+            <!-- LOGO -->
+            <tr>
+              <td align="center" style="padding:25px;">
+                <img src="https://stayrelive.com/sites/default/files/sr-logo.png" height="50" alt="StayRelive Logo" style="display:block;">
+              </td>
+            </tr>
+
+            <!-- MAIN CONTENT -->
+            <tr>
+              <td style="padding:40px 30px; background:#f9f9f9; color:#000000; font-size:16px; line-height:24px;">
+
+                <p style="margin:0 0 16px;">Dear <strong><a href="mailto:{{ email }}" style="color:#1D1D1D; text-decoration:none; font-weight:bold;">{{ username }}</a></strong>,</p>
+
+                <p style="margin:0 0 24px;">This is a reminder that payment for your reserved booking is due soon. Complete payment by <strong>{{ payment_due_date }}</strong> to keep your reservation — after that, it will be automatically released.</p>
+
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 24px; background:#ffffff; border:1px solid #e0e0e0; border-radius:6px;">
+                  <tr>
+                    <td style="padding:20px;">
+                      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size:14px; line-height:22px;">
+                        <tr>
+                          <td style="padding:4px 0; color:#666666;">Booking Reference</td>
+                          <td style="padding:4px 0; text-align:right; font-weight:600;">#{{ booking_id }}</td>
+                        </tr>
+                        <tr>
+                          <td style="padding:4px 0; color:#666666;">Property</td>
+                          <td style="padding:4px 0; text-align:right; font-weight:600;"><a href="{{ property_url }}" style="color:#1D1D1D; text-decoration:none;">{{ property_title }}</a></td>
+                        </tr>
+                        <tr>
+                          <td style="padding:4px 0; color:#666666;">Check-in</td>
+                          <td style="padding:4px 0; text-align:right; font-weight:600;">{{ from_date }}</td>
+                        </tr>
+                        <tr>
+                          <td style="padding:4px 0; color:#666666;">Check-out</td>
+                          <td style="padding:4px 0; text-align:right; font-weight:600;">{{ to_date }}</td>
+                        </tr>
+                        <tr>
+                          <td style="padding:4px 0; color:#666666;">Amount Due</td>
+                          <td style="padding:4px 0; text-align:right; font-weight:600;">{{ currency_code }} {{ price }}</td>
+                        </tr>
+                        <tr>
+                          <td style="padding:4px 0; color:#666666;">Payment Due By</td>
+                          <td style="padding:4px 0; text-align:right; font-weight:600; color:#b8860b;">{{ payment_due_date }}</td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+
+                {% if payment_url %}
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 24px;">
+                  <tr>
+                    <td align="center">
+                      <a href="{{ payment_url }}" style="display:inline-block; padding:14px 32px; background:#0B8D9F; color:#ffffff; text-decoration:none; font-weight:600; border-radius:6px;">Complete Payment</a>
+                    </td>
+                  </tr>
+                </table>
+                {% endif %}
+
+                <p style="margin:0 0 8px;">Best regards,<br><strong>Stay Relive</strong></p>
+
+                <hr style="border:none; border-top:1px solid #e0e0e0; margin:30px 0;">
+
+                <p style="margin:0; font-size:14px;">For any questions, email: <a href="mailto:book@stayrelive.com" style="color:#1D1D1D; text-decoration:none; font-weight:600;">book@stayrelive.com</a></p>
+                <p style="margin:5px 0 0; font-size:14px;">Phone: <a href="tel:+971551076902" style="color:#1D1D1D; text-decoration:none;">+971 55 107 6902</a></p>
+
+                <p style="margin:24px 0 0; font-size:14px; font-weight:500;">*Please save this email for your records. Your reference number will be needed for all future correspondence regarding this booking.*</p>
+
+              </td>
+            </tr>
+
+            <!-- SOCIAL FOOTER -->
+            <tr>
+              <td align="center" style="padding:40px 30px; background:#f9f9f9; text-align:center;">
+                <h2 style="margin:0 0 20px; font-size:22px; color:#000000;">StayRelive</h2>
+                <table align="center" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td style="padding:0 8px;"><a href="https://www.instagram.com/stayrelive" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/1077/1077042.png" width="28" height="28" alt="Instagram"></a></td>
+                    <td style="padding:0 8px;"><a href="https://www.linkedin.com/company/stayrelive/" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/13266/13266142.png" width="28" height="28" alt="LinkedIn"></a></td>
+                    <td style="padding:0 8px;"><a href="https://www.facebook.com/StayRelive/" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/13266/13266170.png" width="28" height="28" alt="Facebook"></a></td>
+                    <td style="padding:0 8px;"><a href="https://wa.me/916362730626" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/466/466966.png" width="28" height="28" alt="WhatsApp"></a></td>
+                    <td style="padding:0 8px;"><a href="https://x.com/StayRelive" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/14417/14417460.png" width="28" height="28" alt="Twitter/X"></a></td>
+                  </tr>
+                </table>
+                <p style="margin:25px 0 0; font-size:12px; color:#999999;">&copy; {{ "now"|date("Y") }} StayRelive. All rights reserved.</p>
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </center>
+</body>
+</html>

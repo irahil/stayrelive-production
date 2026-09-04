@@ -2,9 +2,11 @@
 
 namespace Drupal\sr_quotation\Controller;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Link;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\user\Entity\User;
@@ -52,8 +54,10 @@ class QuotationController extends ControllerBase
       'partner' => $request->query->get('partner'),
       'date_from' => $request->query->get('date_from'),
       'date_to' => $request->query->get('date_to'),
+      'created_by' => $request->query->get('created_by'),
     ];
 
+    
     $query = $this->db->select('sr_quotation', 'q')
       ->fields('q')
       ->orderBy('created', 'DESC');
@@ -96,6 +100,12 @@ class QuotationController extends ControllerBase
       $query->condition('checkout_date', strtotime($filters['date_to'] . ' 23:59:59'), '<=');
     }
 
+    /** 5. Filter by Created by User */
+    if (!empty($filters['created_by'])) {
+      // Filter by user ID (numeric)
+      $query->condition('q.uid', (int) $filters['created_by'], '=');
+    }
+
     $results = $query->execute()->fetchAll();
 
     $rows = [];
@@ -122,14 +132,34 @@ class QuotationController extends ControllerBase
         'id' => $record->id,
         'encrypted_id' => $encrypted_id,
         'formatted_id' => $formatted_id,
+        'booker_name' => $record->booker_name ?? '',
         'preview_url' => Url::fromRoute(
           'sr_quotation.preview_encrypted',
           ['token' => $encrypted_id]
         )->toString(),
         'title' => $record->unit_type . ' - ' . $record->room_type,
         'location_details' => $record->location . '<br><small><strong>Author:</strong> ' . $author_name . '<br><strong>Created:</strong> ' . date('d-m-Y', $record->created) . '</small>',
+        'status' => $record->confirmation_status ?? '',
+        'finalized' => (bool) ($record->finalized ?? 0),
+        'can_edit' => empty($record->finalized) || $this->currentUser()->hasPermission('bypass quotation finalize lock'),
       ];
     }
+
+    // Get unique authors from quotations
+    $author_query = $this->db->select('sr_quotation', 'q')
+      ->fields('q', ['uid'])
+      ->condition('q.uid', 0, '>')
+      ->distinct()
+      ->execute();
+    
+    $authors = [];
+    foreach ($author_query as $record) {
+      if ($user = User::load($record->uid)) {
+        $authors[$record->uid] = $user->getDisplayName();
+      }
+    }
+    
+    asort($authors); // Sort by display name
 
     return [
       '#theme' => 'quotation_dashboard',
@@ -139,6 +169,54 @@ class QuotationController extends ControllerBase
       '#attached' => ['library' => ['sr_quotation/quotation-dashboard-style']],
       '#cache' => ['max-age' => 0],
     ];
+  }
+
+  /**
+   * Access check: block editing/finalizing of finalized quotations unless
+   * the user has the bypass permission (admins).
+   */
+  public function editAccess($id, AccountInterface $account)
+  {
+    $finalized = (bool) $this->db->select('sr_quotation', 'q')
+      ->fields('q', ['finalized'])
+      ->condition('id', $id)
+      ->execute()
+      ->fetchField();
+
+    if ($finalized && !$account->hasPermission('bypass quotation finalize lock')) {
+      return AccessResult::forbidden('This quotation has been finalized and can no longer be edited.')
+        ->addCacheContexts(['user.permissions'])
+        ->setCacheMaxAge(0);
+    }
+
+    return AccessResult::allowed()
+      ->addCacheContexts(['user.permissions'])
+      ->setCacheMaxAge(0);
+  }
+
+  /**
+   * Finalize a quotation, locking it from further edits except by admins.
+   */
+  public function finalize($id)
+  {
+    $exists = $this->db->select('sr_quotation', 'q')
+      ->fields('q', ['id'])
+      ->condition('id', $id)
+      ->execute()
+      ->fetchField();
+
+    if (!$exists) {
+      $this->messenger()->addError('Quotation not found.');
+      return $this->redirect('sr_quotation.list');
+    }
+
+    $this->db->update('sr_quotation')
+      ->fields(['finalized' => 1])
+      ->condition('id', $id)
+      ->execute();
+
+    $this->messenger()->addStatus('Quotation finalized. It can no longer be edited except by an administrator.');
+    return $this->redirect('sr_quotation.list');
   }
 
   /**
@@ -357,7 +435,7 @@ class QuotationController extends ControllerBase
       '#image_urls' => $image_urls,
       '#location_screenshot_urls' => $location_screenshot_urls,
       '#attached' => [
-        'library' => ['sr_quotation/quotation-pdf-preview'],
+        'library' => ['sr_quotation/quotation-pdf-preview', 'sr_quotation/currency-hider'],
       ],
       '#cache' => ['max-age' => 0],
     ];
@@ -728,6 +806,9 @@ class QuotationController extends ControllerBase
       '#data' => $data,
       '#image_urls' => $this->loadImages($record),
       '#location_screenshot_urls' => $this->loadLocationScreenshots($record),
+      '#attached' => [
+        'library' => ['sr_quotation/currency-hider'],
+      ],
       '#cache' => ['max-age' => 0],
     ];
   }

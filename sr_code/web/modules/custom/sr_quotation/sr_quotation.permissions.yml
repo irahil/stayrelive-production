@@ -9,3 +9,7 @@ add quotation:
 edit quotation:
   title: 'Edit quotation'
   description: 'Allow users to edit quotations'
+
+bypass quotation finalize lock:
+  title: 'Bypass quotation finalize lock'
+  description: 'Allow editing quotations even after they have been finalized. Grant to administrators only.'
